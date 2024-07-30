@@ -5,17 +5,19 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-public class Controller {
-    private User[] users = new User[1000];
-    private int i = 0;
+import java.util.Arrays;
 
+public class Controller {
+    User user1 = new User("1", "nhan", "nhan", "admin");
+    private User[] users = {user1};
     @FXML
     TextField username;
     @FXML
     PasswordField password;
 
     public void add(User user) {
-        users[i++] = user;
+        users = Arrays.copyOf(users, users.length + 1);
+        users[users.length - 1] = user;
     }
 
     public void setRole(String username, String role) {
@@ -23,12 +25,21 @@ public class Controller {
     }
 
     public User findUser(String username) {
-        for (int a = 0; a < i; a++) {
-            if (users[a].getUsername().equalsIgnoreCase(username)) {
-                return users[a];
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return user;
             }
         }
         return null;
+    }
+
+    public boolean findUserBoolean(String username) {
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -36,29 +47,29 @@ public class Controller {
     protected void login() {
         String username = this.username.getText();
         String password = this.password.getText();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
-        if (findUser(username) == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        System.out.println(users.length);
+
+        if (!findUserBoolean(username)) {
             alert.setContentText("Username không tồn tại.");
-            alert.show();
-        }
-
-        for (int a = 0; a < i; a++) {
-            if (users[a].getUsername().equals(username) && users[a].getPassword().equals(password)) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                if (users[a].getRole().equalsIgnoreCase("admin")) {
-                    alert.setContentText("Success! Xin chào admin" + users[a].getUsername() + ".");
+        } else {
+            if(findUser(username).getUsername().equals(username) && findUser(username).getPassword().equals(password)) {
+                if (findUser(username).getRole().equalsIgnoreCase("admin")) {
+                    alert.setContentText("Success! Xin chào admin " + findUser(username).getUsername() + ".");
                 } else {
-                    alert.setContentText("Success! Xin chào user " + users[a].getUsername() + ".");
+                    alert.setContentText("Success! Xin chào user " + findUser(username).getUsername() + ".");
                 }
-                alert.show();
+            } else {
+                alert.setContentText("Incorrect username or password!");
             }
         }
+        alert.show();
     }
 
     public void display() {
-        for (int a = 0; a < i; a++) {
-            System.out.println(users[a].toString());
+        for (User user : users) {
+            System.out.println(user.toString());
         }
     }
 }

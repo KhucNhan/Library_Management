@@ -19,11 +19,11 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         Controller master = new Controller();
-        master.add(new Admin("Nhan12345","khucnhan","nhan2005"));
-        master.add(new Admin("Khanh23456","baokhanh","khanh2005"));
-        master.add(new Admin("Dam34567","vandam","dam2005"));
-        master.add(new User("Phuong45678","nguyenphuong","phuong2005"));
-        master.setRole("nguyenphuong", "admin");
+        master.add(new Admin("Nhan12345","khucnhan","nhan2005", "admin"));
+        master.add(new Admin("Khanh23456","baokhanh","khanh2005", "admin"));
+        master.add(new Admin("Dam34567","vandam","dam2005", "admin"));
+        master.add(new User("Phuong45678","nguyenphuong","phuong2005", "user"));
+//        master.setRole("nguyenphuong", "admin");
         master.display();
         launch();
     }
