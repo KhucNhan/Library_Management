@@ -64,8 +64,10 @@ public class BookController {
         return Books.length == 0;
     }
 
-    public Book[] display() {
-        return Books;
+    public void display() {
+        for (Book book : Books) {
+            System.out.println(book.toString());
+        }
     }
 
     public int getBookAmount() {

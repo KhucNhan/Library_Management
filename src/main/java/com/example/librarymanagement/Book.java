@@ -61,10 +61,12 @@ public class Book {
     }
 
     public String toString() {
-        return "ID: " + getId()
+        return "Book: ["
+                + "ID: " + getId()
                 + "  ||  Author: " + getAuthor()
                 + "  ||  Title: " + getTitle()
                 + "  ||  Genre: " + getGenre()
-                + "  ||  Release year: " + getReleaseYear();
+                + "  ||  Release year: " + getReleaseYear()
+                + "]";
     }
 }

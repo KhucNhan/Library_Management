@@ -5,11 +5,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-public class Controller {
+public class UserController {
     User user1 = new Admin("Nhan12345","khucnhan","nhan2005", "admin");
     User user2 = new Admin("Khanh23456","baokhanh","khanh2005", "admin");
     User user3 = new Admin("Dam34567","vandam","dam2005", "admin");
