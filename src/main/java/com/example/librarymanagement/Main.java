@@ -17,6 +17,10 @@ public class Main extends Application {
         stage.show();
     }
 
+    public void testApp () {
+        // thay Duy
+    }
+
     public static void main(String[] args) {
         launch();
     }
