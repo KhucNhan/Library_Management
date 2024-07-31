@@ -1,10 +1,24 @@
 package com.example.librarymanagement;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
 public class BookController {
-    private Book[] Books = new Book[0];
+    Book book1 = new Book("b1", "toan", "nhan", "2018","Subject");
+    Book book2 = new Book("b2", "tieng anh", "khanh", "2018", "Subject");
+    Book book3 = new Book("b3", "one piece", "oda", "1999", "Animation");
+    Book book4 = new Book("b4", "doraemon", "fuji", "2000", "Animation");
+    private Book[] Books = {book1, book2, book3, book4};
 
     public boolean add(Book Book) {
         if (isExist(Book)) {
@@ -64,11 +78,59 @@ public class BookController {
         return Books.length == 0;
     }
 
-    public Book[] display() {
-        return Books;
+    public void display() {
+        for (Book book : Books) {
+            System.out.println(book.toString());
+        }
     }
 
     public int getBookAmount() {
         return Books.length;
+    }
+
+    private Stage stage;
+    private Scene scene;
+    private Parent root;
+
+    public void goToLoginScene(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root,720,480);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void goToAddBookScene(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("AddBook.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root,720,480);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void goToBookScene(ActionEvent event) throws IOException {
+            Parent root = FXMLLoader.load(getClass().getResource("Book.fxml"));
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root, 720,480);
+            stage.setTitle("Home");
+            stage.setScene(scene);
+            stage.show();
+    }
+    @FXML
+    TextField name;
+    @FXML
+    TextField author;
+    @FXML
+    TextField releaseYear;
+    @FXML
+    TextField genre;
+    public void edit(){
+        Book book = getBook(name.getText());
+        if(book != null){
+            book.setTitle(name.getText());
+            book.setAuthor(author.getText());
+            book.setReleaseYear(releaseYear.getText());
+            book.setGenre(genre.getText());
+        }
     }
 }

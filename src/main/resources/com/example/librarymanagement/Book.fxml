@@ -1,24 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.example.librarymanagement.BookController">
-    <Label text="Product Name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+    <Label text="Ten sach" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+    <Label text="Tac gia" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+    <Label text="Nam xuat ban" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+    <Label text="The loai" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+    <Label text="--------------------------------------------------------------" GridPane.rowIndex="1" GridPane.columnSpan="4"/>
+    <Label text="Toan 12" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+    <Label text="Nhan" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+    <Label text="2018" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+    <Label text="Subject" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+    <Button text="Edit" GridPane.columnIndex="4" GridPane.rowIndex="2" onAction="#goToAddBookScene" />
+    <Button text="Delete" GridPane.columnIndex="5" GridPane.rowIndex="2" />
 
-    <Label text="123" GridPane.rowIndex="1" />
-    <Button text="Edit" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-    <Button text="Delete" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+    <Label text="Tieng anh 12" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+    <Label text="Khanh" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+    <Label text="2018" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+    <Label text="Subject" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+    <Button text="Edit" GridPane.columnIndex="4" GridPane.rowIndex="3" onAction="#goToAddBookScene" />
+    <Button text="Delete" GridPane.columnIndex="5" GridPane.rowIndex="3" />
 
-    <Label text="345" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-    <Button text="Edit" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-    <Button text="Delete" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+    <Label text="One pice" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+    <Label text="Oda" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+    <Label text="1999" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+    <Label text="Animation" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+    <Button text="Edit" GridPane.columnIndex="4" GridPane.rowIndex="4" onAction="#goToAddBookScene" />
+    <Button text="Delete" GridPane.columnIndex="5" GridPane.rowIndex="4" />
 
-    <Label text="567" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-    <Button text="Edit" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-    <Button text="Delete" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+    <Label text="Doraemon" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+    <Label text="Fuji" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+    <Label text="2000" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+    <Label text="Animation" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+    <Button text="Edit" GridPane.columnIndex="4" GridPane.rowIndex="5" onAction="#goToAddBookScene" />
+    <Button text="Delete" GridPane.columnIndex="5" GridPane.rowIndex="5" />
 
-    <Label text="789" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-    <Button text="Edit" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-    <Button text="Delete" GridPane.columnIndex="2" GridPane.rowIndex="4" />
 </GridPane>

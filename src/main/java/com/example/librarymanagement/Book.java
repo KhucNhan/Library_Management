@@ -1,3 +1,4 @@
+
 package com.example.librarymanagement;
 
 public class Book {
@@ -43,8 +44,8 @@ public class Book {
         this.author = author;
     }
 
-    public int getReleaseYear() {
-        return Integer.parseInt(releaseYear);
+    public String getReleaseYear() {
+        return releaseYear;
     }
 
     public void setReleaseYear(String releaseYear) {
@@ -60,10 +61,12 @@ public class Book {
     }
 
     public String toString() {
-        return "ID: " + getId()
+        return "Book: ["
+                + "ID: " + getId()
                 + "  ||  Author: " + getAuthor()
                 + "  ||  Title: " + getTitle()
                 + "  ||  Genre: " + getGenre()
-                + "  ||  Release year: " + getReleaseYear();
+                + "  ||  Release year: " + getReleaseYear()
+                + "]";
     }
 }
