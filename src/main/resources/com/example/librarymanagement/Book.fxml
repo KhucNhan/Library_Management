@@ -4,21 +4,10 @@
 <?import javafx.scene.layout.*?>
 
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.example.librarymanagement.BookController">
-    <Label text="Product Name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Label text="Ten sach" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Label text="Tac gia: " GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Label text="Nam xuat ban :" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+        <Label text="The loai:" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+        <Label text="-----------------------------------------------------------"/>
 
-    <Label text="123" GridPane.rowIndex="1" />
-    <Button text="Edit" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-    <Button text="Delete" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-
-    <Label text="345" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-    <Button text="Edit" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-    <Button text="Delete" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-
-    <Label text="567" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-    <Button text="Edit" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-    <Button text="Delete" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-
-    <Label text="789" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-    <Button text="Edit" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-    <Button text="Delete" GridPane.columnIndex="2" GridPane.rowIndex="4" />
 </GridPane>
