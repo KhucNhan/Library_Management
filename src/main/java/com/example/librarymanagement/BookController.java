@@ -89,7 +89,7 @@ public class BookController {
     public void goToLoginScene(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root,320,240);
+        scene = new Scene(root,720,480);
         stage.setScene(scene);
         stage.show();
     }

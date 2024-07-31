@@ -5,6 +5,7 @@
 
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.example.librarymanagement.BookController">
     <Label text="Product Name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+    <Button text="Login" GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#goToLoginScene"/>
 
     <Label text="123" GridPane.rowIndex="1" />
     <Button text="Edit" GridPane.columnIndex="1" GridPane.rowIndex="1" />

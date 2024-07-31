@@ -95,9 +95,9 @@ public class UserController {
 
     public void login(ActionEvent event) throws IOException {
         if (login()) {
-            Parent root = FXMLLoader.load(getClass().getResource("Home.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("Book.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root, 320,240);
+            scene = new Scene(root, 720,480);
             stage.setTitle("Home");
             stage.setScene(scene);
             stage.show();
