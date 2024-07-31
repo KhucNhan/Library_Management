@@ -12,7 +12,11 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class BookController {
-    private Book[] Books = new Book[0];
+    Book book1 = new Book("b1", "toan", "nhan", "2018","Subject");
+    Book book2 = new Book("b2", "tieng anh", "khanh", "2018", "Subject");
+    Book book3 = new Book("b3", "one piece", "oda", "1999", "Animation");
+    Book book4 = new Book("b4", "doraemon", "fuji", "2000", "Animation");
+    private Book[] Books = {book1, book2, book3, book4};
 
     public boolean add(Book Book) {
         if (isExist(Book)) {
