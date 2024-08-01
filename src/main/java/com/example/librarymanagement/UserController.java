@@ -18,11 +18,16 @@ import java.util.Arrays;
 
 public class UserController {
     @FXML
-    Button buttonLogin;
+    public TextField signUpUsername;
+    @FXML
+    public PasswordField signUpPassword;
+    @FXML
+    public PasswordField re_password;
+    private int count = 4;
     User user1 = new Admin("Nhan12345", "khucnhan", "nhan2005", "admin");
     User user2 = new Admin("Khanh23456", "baokhanh", "khanh2005", "admin");
     User user3 = new Admin("Dam34567", "vandam", "dam2005", "admin");
-    User user4 = new User("Phuong45678", "nguyenphuong", "phuong2005", "user");
+    User user4 = new User("Phuong45678", "nguyenphuong", "phuong2005");
     public User[] users = {user1, user2, user3, user4};
     @FXML
     TextField username;
@@ -102,5 +107,41 @@ public class UserController {
             stage.setScene(scene);
             stage.show();
         }
+    }
+    @FXML
+    public void signup(ActionEvent event) throws IOException{
+        String username = this.signUpUsername.getText();
+        String password = this.signUpPassword.getText();
+        String repassword = this.re_password.getText();
+        String id = String.valueOf(count);
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        if(password.equals(repassword)) {
+            alert.setContentText("Tạo tài khoản thành công! Bạn vui lòng đăng nhập lại.");
+            alert.show();
+            User newuser = new User(id, username, password);
+            users = Arrays.copyOf(users, users.length + 1);
+            users[users.length - 1] = newuser;
+            Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root, 720,480);
+            stage.setTitle("Home");
+            stage.setScene(scene);
+            stage.show();
+        } else {
+            alert.setContentText("Mật khẩu khng trùng khớp. Vui lòng nhập lại!");
+            alert.show();
+        }
+    }
+
+    @FXML
+    public void goToSignup(ActionEvent event) throws IOException{
+        Parent root = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, 720,480);
+        stage.setTitle("Home");
+        stage.setScene(scene);
+        stage.show();
     }
 }

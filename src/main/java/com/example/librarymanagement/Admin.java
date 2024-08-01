@@ -4,7 +4,7 @@ public class Admin extends User{
     private String role = "Admin";
 
     public Admin(String userId, String username, String password, String role) {
-        super(userId, username, password, role);
+        super(userId, username, password);
     }
 
     public String getRole() {
