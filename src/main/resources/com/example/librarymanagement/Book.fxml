@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.*?>
 
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.example.librarymanagement.BookController">
+    <Button alignment="TOP_RIGHT" text="Log out" onAction="#goToLoginScene" GridPane.columnIndex="5" GridPane.rowIndex="0"/>
     <Label alignment="CENTER" text="Ten sach" GridPane.columnIndex="0" GridPane.rowIndex="0" />
     <Label text="Tac gia" GridPane.columnIndex="1" GridPane.rowIndex="0" />
     <Label text="Nam xuat ban" GridPane.columnIndex="2" GridPane.rowIndex="0" />

@@ -116,6 +116,17 @@ public class UserController {
         String id = String.valueOf(count);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        if(username.isEmpty()) {
+            alert.setContentText("Không được để trống username.");
+            alert.show();
+            return;
+        }
+
+        if(password.isEmpty()) {
+            alert.setContentText("Không được để trống password.");
+            alert.show();
+            return;
+        }
 
         if(password.equals(repassword)) {
             alert.setContentText("Tạo tài khoản thành công! Bạn vui lòng đăng nhập lại.");
