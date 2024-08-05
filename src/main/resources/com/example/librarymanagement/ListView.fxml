@@ -1,56 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarymanagement.BookController">
-    <Label alignment="CENTER" text="Ten sach" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-    <Label text="Tac gia" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-    <Label text="Nam xuat ban" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-    <Label text="The loai" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-    <Label text="------------------------------------------------------------------------------------------------" GridPane.columnSpan="6" GridPane.rowIndex="1" />
-    <Label text="Toan 12" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-    <Label text="Nhan" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-    <Label text="2018" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-    <Label text="Subject" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-    <Button onAction="#goToAddBookScene" text="Edit" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-    <Button text="Delete" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+<GridPane hgap="10.0" vgap="10.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarymanagement.BookController">
+    <VBox prefHeight="608.0" prefWidth="556.0" BorderPane.alignment="CENTER">
+            <HBox alignment="CENTER_LEFT">
+                <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT">
+                    <Label minWidth="100.0" text="Ten sach" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <Label minWidth="100.0" text="Tac gia" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <Label minWidth="100.0" text="Nam xuat ban" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                    <Label minWidth="100.0" text="The loai" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+               <HBox.margin>
+                  <Insets bottom="10.0" right="80.0" top="10.0" />
+               </HBox.margin>
+                </HBox>
+                <Button alignment="TOP_RIGHT" onAction="#goToLoginScene" text="Log out" GridPane.columnIndex="5" GridPane.rowIndex="0" />
+         <VBox.margin>
+            <Insets left="10.0" />
+         </VBox.margin>
+            </HBox>
+        <ListView fixedCellSize="50.0" prefHeight="608.0" prefWidth="576.0">
+            <HBox alignment="CENTER_LEFT">
+                <Label minWidth="100.0" text="Toan 12" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <Label minWidth="100.0" text="Nhan" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Label minWidth="100.0" text="2018" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                <Label minWidth="100.0" text="Subject" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                <Button onAction="#goToAddBookScene" text="Edit" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                    </HBox.margin>
+                </Button>
+                <Button text="Delete" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+            </HBox>
 
-    <Label text="Tieng anh 12" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-    <Label text="Khanh" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-    <Label text="2018" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-    <Label text="Subject" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-    <Button onAction="#goToAddBookScene" text="Edit" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-    <Button text="Delete" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+            <HBox alignment="CENTER_LEFT">
+                <Label minWidth="100.0" text="Tieng anh 12" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <Label minWidth="100.0" text="Khanh" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Label minWidth="100.0" text="2018" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                <Label minWidth="100.0" text="Subject" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                <Button onAction="#goToAddBookScene" text="Edit" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                    </HBox.margin>
+                </Button>
+                <Button text="Delete" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+            </HBox>
 
-    <Label text="One pice" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-    <Label text="Oda" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-    <Label text="1999" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-    <Label text="Animation" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-    <Button onAction="#goToAddBookScene" text="Edit" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-    <Button text="Delete" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+            <HBox alignment="CENTER_LEFT">
+                <Label minWidth="100.0" text="One pice" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                <Label minWidth="100.0" text="Oda" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <Label minWidth="100.0" text="1999" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                <Label minWidth="100.0" text="Animation" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                <Button onAction="#goToAddBookScene" text="Edit" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                    </HBox.margin>
+                </Button>
+                <Button text="Delete" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+            </HBox>
 
-    <Label text="Doraemon" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-    <Label text="Fuji" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-    <Label text="2000" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-    <Label text="Animation" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-    <Button onAction="#goToAddBookScene" text="Edit" GridPane.columnIndex="4" GridPane.rowIndex="5" />
-    <Button text="Delete" GridPane.columnIndex="5" GridPane.rowIndex="5" />
-   <columnConstraints>
-      <ColumnConstraints halignment="CENTER" percentWidth="25.0" />
-      <ColumnConstraints halignment="CENTER" percentWidth="15.0" />
-      <ColumnConstraints halignment="CENTER" percentWidth="15.0" />
-      <ColumnConstraints halignment="CENTER" percentWidth="15.0" />
-      <ColumnConstraints halignment="CENTER" percentWidth="10.0" />
-      <ColumnConstraints halignment="CENTER" percentWidth="20.0" />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints valignment="CENTER" />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-   </rowConstraints>
-
+            <HBox alignment="CENTER_LEFT">
+                <Label minWidth="100.0" text="Doraemon" GridPane.columnIndex="0" GridPane.rowIndex="5">
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+                </Label>
+                <Label minWidth="100.0" text="Fuji" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                <Label minWidth="100.0" text="2000" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                <Label minWidth="100.0" text="Animation" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                <Button onAction="#goToAddBookScene" text="Edit" GridPane.columnIndex="4" GridPane.rowIndex="5">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                    </HBox.margin>
+                </Button>
+                <Button text="Delete" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+            </HBox>
+            <cursor>
+                <Cursor fx:constant="DEFAULT" />
+            </cursor>
+        </ListView>
+    </VBox>
+    <columnConstraints>
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+    </rowConstraints>
 </GridPane>
