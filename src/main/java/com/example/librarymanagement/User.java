@@ -6,11 +6,10 @@ public class User {
     private String password;
     private String role;
 
-    public User(String userId,String username, String password, String role) {
+    public User(String userId,String username, String password) {
         this.userId = userId;
         this.username = username;
         this.password = password;
-        this.role = role;
     }
 
     public String getUsername() {
