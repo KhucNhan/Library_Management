@@ -7,17 +7,19 @@ public class Book {
     private String author;
     private String releaseYear;
     private String genre;
+    private String status;
 
     public Book() {
 
     }
 
-    public Book(String id, String title, String author, String releaseYear, String genre) {
+    public Book(String id, String title, String author, String releaseYear, String genre, String status) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.releaseYear = releaseYear;
         this.genre = genre;
+        this.status = status;
     }
 
     public String getId() {
@@ -60,13 +62,11 @@ public class Book {
         this.genre = genre;
     }
 
-    public String toString() {
-        return "Book: ["
-                + "ID: " + getId()
-                + "  ||  Author: " + getAuthor()
-                + "  ||  Title: " + getTitle()
-                + "  ||  Genre: " + getGenre()
-                + "  ||  Release year: " + getReleaseYear()
-                + "]";
+    public String isStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
