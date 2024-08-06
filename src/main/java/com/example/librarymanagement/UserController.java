@@ -100,7 +100,7 @@ public class UserController {
 
     public void login(ActionEvent event) throws IOException {
         if (login()) {
-            Parent root = FXMLLoader.load(getClass().getResource("Book.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("ListView.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root, 720,480);
             stage.setTitle("Home");
@@ -149,6 +149,15 @@ public class UserController {
     @FXML
     public void goToSignup(ActionEvent event) throws IOException{
         Parent root = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, 720,480);
+        stage.setTitle("Home");
+        stage.setScene(scene);
+        stage.show();
+    }
+    @FXML
+    public void goToLogin(ActionEvent event) throws IOException{
+        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root, 720,480);
         stage.setTitle("Home");
