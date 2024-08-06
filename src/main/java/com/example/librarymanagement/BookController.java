@@ -24,7 +24,7 @@ public class BookController implements Initializable {
 
     public Book getBook(String text) {
         for (Book book : Books) {
-            if (((book.getId()).equalsIgnoreCase((text)) || (book.getTitle().equalsIgnoreCase(text)))) {
+            if (((book.getId()).equals((text)) || (book.getTitle().equals(text)))) {
                 return book;
             }
         }
@@ -98,15 +98,37 @@ public class BookController implements Initializable {
     @FXML
     TextField statusAdd;
 
-    public void add() {
+    public boolean add() {
         Book book = getBook(idAdd.getText());
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        if (idAdd.getText().isEmpty() || titleAdd.getText().isEmpty() || authorAdd.getText().isEmpty() || releaseYearAdd.getText().isEmpty() || genreAdd.getText().isEmpty() || statusAdd.getText().isEmpty()) {
+            alert.setContentText("Không được để trống");
+            alert.show();
+            return false;
+        }
+
+        if (!statusAdd.getText().equalsIgnoreCase("true") || !statusAdd.getText().equalsIgnoreCase("false")) {
+            alert.setContentText("Status phải là true hoặc false");
+            alert.show();
+            return false;
+        }
+
+        try {
+            Double num = Double.parseDouble(releaseYearAdd.getText());
+        } catch (NumberFormatException e) {
+            alert.setContentText("Hãy nhập đúng giá trị năm xuất bản");
+            alert.show();
+            return false;
+        }
+
         if (book == null) {
             Books.add(new Book(idAdd.getText(), titleAdd.getText(), authorAdd.getText(), releaseYearAdd.getText(), genreAdd.getText(), statusAdd.getText()));
+            return true;
         } else {
             alert.setContentText("This id is exist. Try again please.");
             alert.show();
         }
+        return false;
     }
 
     @FXML

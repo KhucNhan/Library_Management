@@ -4,62 +4,58 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane hgap="10.0" prefHeight="720.0" prefWidth="1080.0" vgap="10.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
-          xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarymanagement.BookController">
+<GridPane hgap="10.0" prefHeight="720.0" prefWidth="1080.0" vgap="10.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarymanagement.BookController">
     <VBox prefHeight="720.0" prefWidth="1080.0" BorderPane.alignment="CENTER">
         <HBox prefHeight="720.0" prefWidth="0.0" style="-fx-background-color: white;">
-            <TableView fx:id="table" fixedCellSize="50.0" focusTraversable="false" prefHeight="670.0" prefWidth="605.0"
-                       style="-fx-border-color: white; -fx-background-color: white;">
+            <TableView fx:id="table" fixedCellSize="50.0" focusTraversable="false" prefHeight="670.0" prefWidth="605.0" style="-fx-border-color: white; -fx-background-color: white;">
                 <columns>
-                    <TableColumn fx:id="idCol" minWidth="100.0"
-                                 style="-fx-border-color: lightgray; -fx-background-color: white;" text="ID"/>
-                    <TableColumn fx:id="titleCol" minWidth="100.0"
-                                 style="-fx-background-color: white; -fx-border-color: lightgray;" text="Title"/>
-                    <TableColumn fx:id="authorCol" minWidth="100.0"
-                                 style="-fx-border-color: lightgray; -fx-background-color: white;" text="Author"/>
-                    <TableColumn fx:id="releaseYearCol" minWidth="100.0"
-                                 style="-fx-background-color: white; -fx-border-color: lightgray;" text="Release Year"/>
-                    <TableColumn fx:id="genreCol" minWidth="100.0"
-                                 style="-fx-background-color: white; -fx-border-color: lightgray;" text="Genre"/>
-                    <TableColumn fx:id="statusCol" minWidth="100.0"
-                                 style="-fx-border-color: lightgray; -fx-background-color: white;" text="Status"/>
+                    <TableColumn fx:id="idCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="ID" />
+                    <TableColumn fx:id="titleCol" minWidth="100.0" style="-fx-background-color: white; -fx-border-color: lightgray;" text="Title" />
+                    <TableColumn fx:id="authorCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Author" />
+                    <TableColumn fx:id="releaseYearCol" minWidth="100.0" style="-fx-background-color: white; -fx-border-color: lightgray;" text="Release Year" />
+                    <TableColumn fx:id="genreCol" minWidth="100.0" style="-fx-background-color: white; -fx-border-color: lightgray;" text="Genre" />
+                    <TableColumn fx:id="statusCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Status" />
                 </columns>
             </TableView>
         </HBox>
 
         <VBox prefHeight="100.0" prefWidth="603.5">
             <children>
-                <HBox alignment="CENTER_LEFT" focusTraversable="true" prefHeight="52.0" prefWidth="719.0"
-                      style="-fx-border-color: lightgray;">
+                <HBox alignment="CENTER_LEFT" focusTraversable="true" prefHeight="52.0" prefWidth="719.0" style="-fx-border-color: lightgray;">
                     <children>
-                        <TextField fx:id="idAdd" prefWidth="90.0">
+                        <TextField fx:id="idAdd" prefWidth="90.0" promptText="ID">
                             <HBox.margin>
-                                <Insets left="5.0" right="5.0"/>
+                                <Insets left="5.0" right="5.0" />
                             </HBox.margin>
                         </TextField>
-                        <TextField fx:id="titleAdd" prefWidth="90.0">
+                        <TextField fx:id="titleAdd" prefWidth="90.0" promptText="Title">
                             <HBox.margin>
-                                <Insets left="5.0" right="5.0"/>
+                                <Insets left="5.0" right="5.0" />
                             </HBox.margin>
                         </TextField>
-                        <TextField fx:id="authorAdd" prefWidth="90.0">
+                        <TextField fx:id="authorAdd" prefWidth="90.0" promptText="Author">
                             <HBox.margin>
-                                <Insets left="5.0" right="5.0"/>
+                                <Insets left="5.0" right="5.0" />
                             </HBox.margin>
                         </TextField>
-                        <TextField fx:id="releaseYearAdd" prefWidth="90.0">
+                        <TextField fx:id="releaseYearAdd" prefWidth="90.0" promptText="Release year">
                             <HBox.margin>
-                                <Insets left="5.0" right="5.0"/>
+                                <Insets left="5.0" right="5.0" />
                             </HBox.margin>
                         </TextField>
-                        <TextField fx:id="genreAdd" prefWidth="90.0">
+                        <TextField fx:id="genreAdd" prefWidth="90.0" promptText="Genre">
                             <HBox.margin>
-                                <Insets left="5.0" right="5.0"/>
+                                <Insets left="5.0" right="5.0" />
                             </HBox.margin>
                         </TextField>
+                  <TextField fx:id="statusAdd" prefWidth="90.0" promptText="Status">
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </HBox.margin>
+                  </TextField>
                         <Button mnemonicParsing="false" onAction="#add" prefWidth="80.0" text="Add">
                             <HBox.margin>
-                                <Insets left="10.0"/>
+                                <Insets left="10.0" />
                             </HBox.margin>
                         </Button>
                     </children>
@@ -68,9 +64,9 @@
         </VBox>
     </VBox>
     <columnConstraints>
-        <ColumnConstraints/>
+        <ColumnConstraints />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints/>
+        <RowConstraints />
     </rowConstraints>
 </GridPane>

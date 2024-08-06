@@ -1,22 +1,20 @@
 package com.example.librarymanagement;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.Arrays;
 
 public class UserController {
     @FXML
@@ -25,23 +23,24 @@ public class UserController {
     public PasswordField signUpPassword;
     @FXML
     public PasswordField re_password;
-//    User user1 = new Admin("1", "khucnhan", "nhan2005", "admin");
-//    User user2 = new Admin("2", "baokhanh", "khanh2005", "admin");
-//    User user3 = new Admin("3","vandam","dam2005","admin");
-//    User user4 = new User("4","nguyenphuong","phuong2005");
-    private ArrayList<User> users;
+    private int count = 4;
+    User user1 = new Admin("Nhan12345", "khucnhan", "nhan2005", "admin");
+    User user2 = new Admin("Khanh23456", "baokhanh", "khanh2005", "admin");
+    User user3 = new Admin("Dam34567", "vandam", "dam2005", "admin");
+    User user4 = new User("Phuong45678", "nguyenphuong", "phuong2005");
+    public User[] users = {user1, user2, user3, user4};
     @FXML
     TextField username;
     @FXML
     PasswordField password;
-    public void setRole(String username, String role) {
-        findUser(username).setRole(role);
-    }
 
     public void add(User user) {
-        if(findUser(user.getUsername()) == null) {
-            users.add(user);
-        }
+        users = Arrays.copyOf(users, users.length + 1);
+        users[users.length - 1] = user;
+    }
+
+    public void setRole(String username, String role) {
+        findUser(username).setRole(role);
     }
 
     @FXML
@@ -103,7 +102,7 @@ public class UserController {
         if (login()) {
             Parent root = FXMLLoader.load(getClass().getResource("ListView.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root, 1080,720);
+            scene = new Scene(root, 720,480);
             stage.setTitle("Home");
             stage.setScene(scene);
             stage.show();
@@ -114,10 +113,7 @@ public class UserController {
         String username = this.signUpUsername.getText();
         String password = this.signUpPassword.getText();
         String repassword = this.re_password.getText();
-        String id = String.valueOf(users.size());
-        if (users.isEmpty()) {
-            id = "0";
-        }
+        String id = String.valueOf(count);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         if(username.isEmpty()) {
@@ -136,15 +132,16 @@ public class UserController {
             alert.setContentText("Tạo tài khoản thành công! Bạn vui lòng đăng nhập lại.");
             alert.show();
             User newuser = new User(id, username, password);
-            users.add(newuser);
+            users = Arrays.copyOf(users, users.length + 1);
+            users[users.length - 1] = newuser;
             Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root, 1080,720);
+            scene = new Scene(root, 720,480);
             stage.setTitle("Home");
             stage.setScene(scene);
             stage.show();
         } else {
-            alert.setContentText("Mật khẩu khng trùng khớp. Vui lòng nhập lại!");
+            alert.setContentText("Mật khẩu không trùng khớp. Vui lòng nhập lại!");
             alert.show();
         }
     }
@@ -153,42 +150,9 @@ public class UserController {
     public void goToSignup(ActionEvent event) throws IOException{
         Parent root = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1080,720);
+        scene = new Scene(root, 720,480);
         stage.setTitle("Home");
         stage.setScene(scene);
         stage.show();
     }
-    @FXML
-    public void goToLogin(ActionEvent event) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1080,720);
-        stage.setTitle("Home");
-        stage.setScene(scene);
-        stage.show();
-    }
-//    @FXML
-//    private TableView<User> tableUser;
-//    @FXML
-//    private TableColumn<User, String> userIdCol;
-//    @FXML
-//    private TableColumn<User, String> usernameCol;
-//    @FXML
-//    private TableColumn<User, String> passwordCol;
-//    @FXML
-//    private TableColumn<User, String> roleCol;
-//    @Override
-//    public void initialize(URL url, ResourceBundle resourceBundle) {
-//        users = FXCollections.observableArrayList(
-//                new Admin("1", "khucnhan", "nhan2005", "admin"),
-//                new Admin("2", "baokhanh", "khanh2005", "admin"),
-//                new Admin("3", "vandam", "dam2005", "admin"),
-//                new User("4", "nguyenphuong", "phuong2005")
-//        );
-//        userIdCol.setCellValueFactory(new PropertyValueFactory<User, String>("userId"));
-//        usernameCol.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
-//        passwordCol.setCellValueFactory(new PropertyValueFactory<User, String>("password"));
-//        roleCol.setCellValueFactory(new PropertyValueFactory<User, String>("role"));
-//        tableUser.setItems(users);
-//    }
 }
