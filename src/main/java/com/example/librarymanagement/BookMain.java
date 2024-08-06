@@ -1,23 +1,10 @@
 package com.example.librarymanagement;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-import java.io.IOException;
-
-public class BookMain extends Application {
-    @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Book.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 360, 240);
-        stage.setTitle("Login");
-        stage.setScene(scene);
-        stage.show();
-    }
-
+public class BookMain {
     public static void main(String[] args) {
-        launch();
+        BookController admin = new BookController();
+        admin.add(new Book("1","Doraemon", "Fuji", "2000", "Animation"));
+        admin.add(new Book("2","One Piece", "Nhan", "1999", "Animation"));
+        admin.display();
     }
 }

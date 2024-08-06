@@ -18,6 +18,6 @@
         <PasswordField fx:id="password"/>
     </HBox>
     <HBox alignment="CENTER">
-        <Button text="Login" onAction="#login"/>
+        <Button fx:id="buttonLogin" text="Login" onAction="#login"/>
     </HBox>
 </VBox>

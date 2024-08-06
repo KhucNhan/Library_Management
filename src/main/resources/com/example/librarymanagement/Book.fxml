@@ -1,13 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.example.librarymanagement.BookController">
+<GridPane prefHeight="184.0" prefWidth="370.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarymanagement.BookController">
+
         <Label text="Ten sach" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <Label text="Tac gia: " GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <Label text="Nam xuat ban :" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-        <Label text="The loai:" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-        <Label text="-----------------------------------------------------------"/>
+        <Label prefHeight="18.0" prefWidth="42.0" text="Tac gia" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Label text="Nam xuat ban" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+        <Label text="The loai" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+        <Label text="--------------------------------------------------------------" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+        <Label text="Toan 12" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Label text="Nhan" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Label text="2018" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+        <Label text="Subject" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+
+        <Label text="Tieng anh 12" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Label text="Khanh" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Label text="2018" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+        <Label text="Subject" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+
+        <Label text="One pice" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Label text="Oda" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Label text="1999" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+        <Label text="Animation" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+
+        <Label text="Doraemon" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <Label text="Fuji" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        <Label text="2000" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+        <Label text="Animation" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+   <columnConstraints>
+      <ColumnConstraints maxWidth="102.80000000000001" minWidth="64.19999999999999" prefWidth="79.19999999999999" />
+      <ColumnConstraints maxWidth="71.0" minWidth="31.599999999999966" prefWidth="56.0" />
+      <ColumnConstraints maxWidth="152.39999999999998" minWidth="72.80000000000001" prefWidth="88.80000000000001" />
+      <ColumnConstraints maxWidth="80.0" minWidth="0.0" prefWidth="66.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints maxHeight="26.600007629394526" minHeight="0.0" prefHeight="17.00000762939453" />
+      <RowConstraints maxHeight="35.19999999999999" minHeight="8.599992370605463" prefHeight="18.99999237060547" />
+   </rowConstraints>
+
+
 
 </GridPane>
