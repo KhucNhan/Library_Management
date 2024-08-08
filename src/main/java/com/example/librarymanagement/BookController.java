@@ -107,7 +107,7 @@ public class BookController implements Initializable {
             return false;
         }
 
-        if (!statusAdd.getText().equalsIgnoreCase("true") || !statusAdd.getText().equalsIgnoreCase("false")) {
+        if (!statusAdd.getText().equalsIgnoreCase("true") && !statusAdd.getText().equalsIgnoreCase("false")) {
             alert.setContentText("Status phải là true hoặc false");
             alert.show();
             return false;
