@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Arrays;
-
 public class UserController {
     @FXML
     public TextField signUpUsername;
@@ -33,6 +32,8 @@ public class UserController {
     TextField username;
     @FXML
     PasswordField password;
+
+    private static final String FILE_PATH = "skyBaseForUser.txt";
 
     public void add(User user) {
         users = Arrays.copyOf(users, users.length + 1);
@@ -149,6 +150,15 @@ public class UserController {
     @FXML
     public void goToSignup(ActionEvent event) throws IOException{
         Parent root = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, 720,480);
+        stage.setTitle("Home");
+        stage.setScene(scene);
+        stage.show();
+    }
+    @FXML
+    public void goToLogin(ActionEvent event) throws IOException{
+        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root, 720,480);
         stage.setTitle("Home");
