@@ -103,33 +103,43 @@ public class UserController {
         if (login()) {
             Parent root = FXMLLoader.load(getClass().getResource("ListView.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root, 720,480);
+            scene = new Scene(root, 720, 480);
             stage.setTitle("Home");
             stage.setScene(scene);
             stage.show();
         }
     }
+
+    public void goToLogin(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("ListView.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, 720, 480);
+        stage.setTitle("Home");
+        stage.setScene(scene);
+        stage.show();
+    }
+
     @FXML
-    public void signup(ActionEvent event) throws IOException{
+    public void signup(ActionEvent event) throws IOException {
         String username = this.signUpUsername.getText();
         String password = this.signUpPassword.getText();
         String repassword = this.re_password.getText();
         String id = String.valueOf(count);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        if(username.isEmpty()) {
+        if (username.isEmpty()) {
             alert.setContentText("Không được để trống username.");
             alert.show();
             return;
         }
 
-        if(password.isEmpty()) {
+        if (password.isEmpty()) {
             alert.setContentText("Không được để trống password.");
             alert.show();
             return;
         }
 
-        if(password.equals(repassword)) {
+        if (password.equals(repassword)) {
             alert.setContentText("Tạo tài khoản thành công! Bạn vui lòng đăng nhập lại.");
             alert.show();
             User newuser = new User(id, username, password);
@@ -137,7 +147,7 @@ public class UserController {
             users[users.length - 1] = newuser;
             Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root, 720,480);
+            scene = new Scene(root, 720, 480);
             stage.setTitle("Home");
             stage.setScene(scene);
             stage.show();
@@ -148,19 +158,10 @@ public class UserController {
     }
 
     @FXML
-    public void goToSignup(ActionEvent event) throws IOException{
+    public void goToSignup(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 720,480);
-        stage.setTitle("Home");
-        stage.setScene(scene);
-        stage.show();
-    }
-    @FXML
-    public void goToLogin(ActionEvent event) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 720,480);
+        scene = new Scene(root, 720, 480);
         stage.setTitle("Home");
         stage.setScene(scene);
         stage.show();
