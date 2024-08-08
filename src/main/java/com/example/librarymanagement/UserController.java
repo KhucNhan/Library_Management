@@ -127,6 +127,11 @@ public class UserController {
         String id = String.valueOf(count);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        if (findUserBoolean(username)) {
+            alert.setContentText("Username này đã tồn tại.");
+            alert.show();
+            return;
+        }
         if (username.isEmpty()) {
             alert.setContentText("Không được để trống username.");
             alert.show();
