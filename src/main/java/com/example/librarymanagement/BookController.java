@@ -47,23 +47,6 @@ public class BookController implements Initializable {
         stage.show();
     }
 
-    public void goToAddBookScene(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("AddBook.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1080, 720);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public void goToBookScene(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("ListView.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1080, 720);
-        stage.setTitle("Home");
-        stage.setScene(scene);
-        stage.show();
-    }
-
     public void goToLoanSlip(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("LoanSlipView.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -71,31 +54,6 @@ public class BookController implements Initializable {
         stage.setTitle("Loan Slip");
         stage.setScene(scene);
         stage.show();
-    }
-
-    @FXML
-    TextField id;
-    @FXML
-    TextField title;
-    @FXML
-    TextField author;
-    @FXML
-    TextField releaseYear;
-    @FXML
-    TextField genre;
-    @FXML
-    TextField status;
-
-    public void edit() {
-        Book book = getBook(id.getText());
-        if (book != null) {
-            book.setId(id.getText());
-            book.setTitle(title.getText());
-            book.setAuthor(author.getText());
-            book.setReleaseYear(releaseYear.getText());
-            book.setGenre(genre.getText());
-            book.setStatus(status.getText());
-        }
     }
 
     @FXML
@@ -249,6 +207,14 @@ public class BookController implements Initializable {
                 alert.setContentText("Hãy nhập đúng giá trị năm xuất bản");
                 alert.show();
                 return;
+            }
+
+            for(Book b : Books) {
+                if (b.getId().equals(id)) {
+                    alert.setContentText("This id is exist. Try again please.");
+                    alert.show();
+                    return;
+                }
             }
 
             book.setId(id.getText());

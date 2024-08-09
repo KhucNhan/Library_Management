@@ -11,11 +11,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarymanagement.BookController">
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarymanagement.LoanSlipController">
 
     <HBox prefHeight="34.0" prefWidth="751.0">
         <Button text="Book" onAction="#goToBookScene"/>
-        <Button text="Loan Slip" onAction="#goToLoanSlip"/>
         <Button text="Log out" onAction="#goToLoginScene"/>
     </HBox>
 
