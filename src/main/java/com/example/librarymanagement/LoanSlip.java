@@ -9,9 +9,8 @@ public class LoanSlip {
     private String returnDate;
     private String status;
 
-    public LoanSlip(String id, ArrayList<Book> books, String date, String returnDate, String status) {
+    public LoanSlip(String id, String date, String returnDate, String status) {
         this.id = id;
-        this.books = books;
         this.date = date;
         this.returnDate = returnDate;
         this.status = status;
