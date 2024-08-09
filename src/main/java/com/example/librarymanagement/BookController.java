@@ -210,7 +210,7 @@ public class BookController implements Initializable {
             }
 
             for(Book b : Books) {
-                if (b.getId().equals(id)) {
+                if (b.getId().equals(id.getText())) {
                     alert.setContentText("This id is exist. Try again please.");
                     alert.show();
                     return;
