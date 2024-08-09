@@ -6,12 +6,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -65,6 +68,8 @@ public class LoanSlipController implements Initializable {
     private TableColumn<LoanSlip, String> returnDateCol;
     @FXML
     private TableColumn<LoanSlip, String> statusCol;
+    @FXML
+    private TableColumn<LoanSlip, Void> actionCol;
 
     private ObservableList<LoanSlip> loanSlips;
 
@@ -81,14 +86,45 @@ public class LoanSlipController implements Initializable {
         dateCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("date"));
         returnDateCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("returnDate"));
         statusCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("status"));
-        tableView.setItems(loanSlips);
-    }
+        actionCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, Void>(" "));
+        Callback<TableColumn<LoanSlip, Void>, TableCell<LoanSlip, Void>> cellFactory = new Callback<>() {
+            @Override
+            public TableCell<LoanSlip, Void> call(TableColumn<LoanSlip, Void> loanSlipVoidTableColumn) {
+                final TableCell<LoanSlip, Void> cell = new TableCell<>() {
 
-    @FXML
-    public void ChangeStatus() {
-        LoanSlip selectedLoanSlip = tableView.getSelectionModel().getSelectedItem();
-        if (selectedLoanSlip != null) {
-            selectedLoanSlip.setStatus("false");
-        }
+                    private final Button changeStatusButton = new Button("Change status");
+
+                    {
+                        changeStatusButton.setOnAction((ActionEvent event) -> {
+                            LoanSlip loanSlip = getTableView().getItems().get(getIndex());
+                            if (loanSlip.getStatus().equalsIgnoreCase("true")) {
+                                loanSlip.setStatus("false");
+                                tableView.refresh();
+                            } else {
+                                loanSlip.setStatus("true");
+                                tableView.refresh();
+                            }
+                        });
+                        changeStatusButton.setPrefWidth(150);
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            HBox hBox = new HBox(changeStatusButton);
+                            hBox.setSpacing(10);
+                            HBox.setMargin(changeStatusButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Edit
+                            setGraphic(hBox);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+        actionCol.setCellFactory(cellFactory);
+        tableView.setItems(loanSlips);
     }
 }
