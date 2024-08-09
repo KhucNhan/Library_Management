@@ -1,58 +1,50 @@
 package com.example.librarymanagement;
 
+import java.util.ArrayList;
+
 public class LoanSlip {
-    private String maPhieuMuon;
-    private String maSach;
-    private String maDocGia;
-    private String ngayMuon;
-    private String ngayTra;
+    private String id;
+    private ArrayList<Book> books;
+    private  String date;
+    private String returnDate;
+    private String status;
 
-    // Constructors, getters, and setters
-    public LoanSlip(String maPhieuMuon, String maSach, String maDocGia, String ngayMuon, String ngayTra) {
-        this.maPhieuMuon = maPhieuMuon;
-        this.maSach = maSach;
-        this.maDocGia = maDocGia;
-        this.ngayMuon = ngayMuon;
-        this.ngayTra = ngayTra;
+    public LoanSlip(String id, String date, String returnDate, String status) {
+        this.id = id;
+        this.date = date;
+        this.returnDate = returnDate;
+        this.status = status;
     }
 
-    public String getMaPhieuMuon() {
-        return maPhieuMuon;
+    public String getId() {
+        return id;
     }
 
-    public void setMaPhieuMuon(String maPhieuMuon) {
-        this.maPhieuMuon = maPhieuMuon;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getMaSach() {
-        return maSach;
+    public String getDate() {
+        return date;
     }
 
-    public void setMaSach(String maSach) {
-        this.maSach = maSach;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public String getMaDocGia() {
-        return maDocGia;
+    public String getReturnDate() {
+        return returnDate;
     }
 
-    public void setMaDocGia(String maDocGia) {
-        this.maDocGia = maDocGia;
+    public void setReturnDate(String returnDate) {
+        this.returnDate = returnDate;
     }
 
-    public String getNgayMuon() {
-        return ngayMuon;
+    public String getStatus() {
+        return status;
     }
 
-    public void setNgayMuon(String ngayMuon) {
-        this.ngayMuon = ngayMuon;
-    }
-
-    public String getNgayTra() {
-        return ngayTra;
-    }
-
-    public void setNgayTra(String ngayTra) {
-        this.ngayTra = ngayTra;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
