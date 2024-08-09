@@ -27,30 +27,11 @@
 
     <TableView fx:id="tableView">
         <columns>
-            <TableColumn fx:id="LoanCodeColumn" text="loanCode "/>
-            <TableColumn fx:id="BookCodeColumn" text="BookCode "/>
-            <TableColumn fx:id="ReaderCodeColumn" text="ReaderCode"/>
-            <TableColumn fx:id="BorroweddateColumn" text="Borroweddate"/>
-            <TableColumn fx:id="PaymentDateColumn" text="PaymentDate "/>
+            <TableColumn fx:id="idUserCol" text="User ID"/>
+            <TableColumn fx:id="idBookCol" text="Book ID"/>
+            <TableColumn fx:id="dateCol" text="Date"/>
+            <TableColumn fx:id="returnDateCol" text="Return date"/>
+            <TableColumn fx:id="statusCol" text="Status "/>
         </columns>
     </TableView>
-
-    <HBox spacing="10">
-        <VBox>
-            <Label text="LoanCode"/>
-            <TextField fx:id="LoanCodeField"/>
-            <Label text="BookCode"/>
-            <TextField fx:id="BookCodeField"/>
-            <Label text="ReaderCode"/>
-            <TextField fx:id="ReaderCodeField"/>
-            <Label text="Borroweddate"/>
-            <DatePicker fx:id="BorroweddatePicker"/>
-            <Label text="PaymentDate"/>
-            <DatePicker fx:id="PaymentDatePicker"/>
-        </VBox>
-        <VBox alignment="CENTER">
-            <Button fx:id="addButton" text="more"/>
-            <Button fx:id="deleteButton" text="erase"/>
-        </VBox>
-    </HBox>
 </VBox>
