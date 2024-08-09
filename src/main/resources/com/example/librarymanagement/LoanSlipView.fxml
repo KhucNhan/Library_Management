@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarymanagement.BookController">
+    <TableView fx:id="tableView">
+        <columns>
+            <TableColumn fx:id="maPhieuMuonColumn" text="Mã Phiếu Mượn"/>
+            <TableColumn fx:id="maSachColumn" text="Mã Sách"/>
+            <TableColumn fx:id="maDocGiaColumn" text="Mã Độc Giả"/>
+            <TableColumn fx:id="ngayMuonColumn" text="Ngày Mượn"/>
+            <TableColumn fx:id="ngayTraColumn" text="Ngày Trả"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10">
+        <VBox>
+            <Label text="Mã Phiếu Mượn"/>
+            <TextField fx:id="maPhieuMuonField"/>
+            <Label text="Mã Sách"/>
+            <TextField fx:id="maSachField"/>
+            <Label text="Mã Độc Giả"/>
+            <TextField fx:id="maDocGiaField"/>
+            <Label text="Ngày Mượn"/>
+            <DatePicker fx:id="ngayMuonPicker"/>
+            <Label text="Ngày Trả"/>
+            <DatePicker fx:id="ngayTraPicker"/>
+        </VBox>
+        <VBox alignment="CENTER">
+            <Button fx:id="addButton" text="Thêm"/>
+            <Button fx:id="deleteButton" text="Xóa"/>
+        </VBox>
+    </HBox>
+</VBox>
