@@ -62,7 +62,7 @@ public class Book {
         this.genre = genre;
     }
 
-    public String isStatus() {
+    public String getStatus() {
         return status;
     }
 
