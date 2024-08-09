@@ -138,7 +138,7 @@ public class UserController {
             return;
         }
 
-        if (username.length() < 9) {
+        if (username.length() < 8) {
             alert.setContentText("Username phải có số ký tự lớn hơn hoặc bằng 8.");
             alert.show();
             return;
@@ -150,7 +150,7 @@ public class UserController {
             return;
         }
 
-        if (password.length() < 9) {
+        if (password.length() < 8) {
             alert.setContentText("Password phải có số ký tự lớn hơn hoặc bằng 8.");
             alert.show();
             return;
