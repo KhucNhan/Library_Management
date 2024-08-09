@@ -6,12 +6,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
@@ -43,46 +47,13 @@ public class BookController implements Initializable {
         stage.show();
     }
 
-    public void goToAddBookScene(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("AddBook.fxml"));
+    public void goToLoanSlip(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("LoanSlipView.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root, 1080, 720);
+        stage.setTitle("Loan Slip");
         stage.setScene(scene);
         stage.show();
-    }
-
-    public void goToBookScene(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("ListView.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1080, 720);
-        stage.setTitle("Home");
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    @FXML
-    TextField id;
-    @FXML
-    TextField title;
-    @FXML
-    TextField author;
-    @FXML
-    TextField releaseYear;
-    @FXML
-    TextField genre;
-    @FXML
-    TextField status;
-
-    public void edit() {
-        Book book = getBook(id.getText());
-        if (book != null) {
-            book.setId(id.getText());
-            book.setTitle(title.getText());
-            book.setAuthor(author.getText());
-            book.setReleaseYear(releaseYear.getText());
-            book.setGenre(genre.getText());
-            book.setStatus(status.getText());
-        }
     }
 
     @FXML
@@ -145,6 +116,8 @@ public class BookController implements Initializable {
     private TableColumn<Book, String> genreCol;
     @FXML
     private TableColumn<Book, String> statusCol;
+    @FXML
+    private TableColumn<Book, Void> actionCol;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -160,6 +133,106 @@ public class BookController implements Initializable {
         releaseYearCol.setCellValueFactory(new PropertyValueFactory<Book, String>("ReleaseYear"));
         genreCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Genre"));
         statusCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Status"));
+        actionCol.setCellValueFactory(new PropertyValueFactory<Book, Void>(""));
+        Callback<TableColumn<Book, Void>, TableCell<Book, Void>> cellFactory = new Callback<>() {
+            @Override
+            public TableCell<Book, Void> call(TableColumn<Book, Void> bookVoidTableColumn) {
+                final TableCell<Book, Void> cell = new TableCell<>() {
+
+                    private final Button editButton = new Button("Edit");
+                    private final Button removeButton = new Button("Remove");
+
+                    {
+                        editButton.setOnAction((ActionEvent event) -> {
+                            Book book = getTableView().getItems().get(getIndex());
+                            showEditDialog(book);
+                        });
+                        editButton.setPrefWidth(75);
+
+                        removeButton.setOnAction((ActionEvent event) -> {
+                            Book book = getTableView().getItems().get(getIndex());
+                            getTableView().getItems().remove(book);
+                        });
+                        removeButton.setPrefWidth(75);
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            HBox hBox = new HBox(editButton, removeButton);
+                            hBox.setSpacing(10);
+                            HBox.setMargin(editButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Edit
+                            HBox.setMargin(removeButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Remove
+                            setGraphic(hBox);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+        actionCol.setCellFactory(cellFactory);
         table.setItems(Books);
+    }
+
+    private void showEditDialog(Book book) {
+        // Tạo một dialog để chỉnh sửa sản phẩm
+        TextField id = new TextField(book.getId());
+        TextField title = new TextField(book.getTitle());
+        TextField author = new TextField(book.getAuthor());
+        TextField releaseYear = new TextField(book.getReleaseYear());
+        TextField genre = new TextField(book.getGenre());
+        TextField status = new TextField(book.getStatus());
+
+        Button saveButton = new Button("Save");
+        saveButton.setOnAction(e -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            if (id.getText().isEmpty() || title.getText().isEmpty() || author.getText().isEmpty() || releaseYear.getText().isEmpty() || genre.getText().isEmpty() || status.getText().isEmpty()) {
+                alert.setContentText("Không được để trống");
+                alert.show();
+                return;
+            }
+
+            if (!status.getText().equalsIgnoreCase("true") && !status.getText().equalsIgnoreCase("false")) {
+                alert.setContentText("Status phải là true hoặc false");
+                alert.show();
+                return;
+            }
+
+            try {
+                Double num = Double.parseDouble(releaseYear.getText());
+            } catch (NumberFormatException exception) {
+                alert.setContentText("Hãy nhập đúng giá trị năm xuất bản");
+                alert.show();
+                return;
+            }
+
+            for(Book b : Books) {
+                if (b.getId().equals(id)) {
+                    alert.setContentText("This id is exist. Try again please.");
+                    alert.show();
+                    return;
+                }
+            }
+
+            book.setId(id.getText());
+            book.setTitle(title.getText());
+            book.setAuthor(author.getText());
+            book.setReleaseYear(releaseYear.getText());
+            book.setGenre(genre.getText());
+            book.setStatus(status.getText());
+
+            table.refresh(); // Cập nhật lại TableView
+        });
+
+        VBox vbox = new VBox(id, title, author, releaseYear, genre, status, saveButton);
+        vbox.setSpacing(10);
+        Scene scene = new Scene(vbox, 240,480);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Edit");
+        stage.show();
     }
 }

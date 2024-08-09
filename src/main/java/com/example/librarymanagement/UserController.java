@@ -103,7 +103,7 @@ public class UserController {
         if (login()) {
             Parent root = FXMLLoader.load(getClass().getResource("ListView.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root, 720, 480);
+            scene = new Scene(root, 1080, 720);
             stage.setTitle("Home");
             stage.setScene(scene);
             stage.show();
@@ -113,7 +113,7 @@ public class UserController {
     public void goToLogin(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 720, 480);
+        scene = new Scene(root, 1080, 720);
         stage.setTitle("Home");
         stage.setScene(scene);
         stage.show();
@@ -138,7 +138,7 @@ public class UserController {
             return;
         }
 
-        if (username.length() < 9) {
+        if (username.length() < 8) {
             alert.setContentText("Username phải có số ký tự lớn hơn hoặc bằng 8.");
             alert.show();
             return;
@@ -150,7 +150,7 @@ public class UserController {
             return;
         }
 
-        if (password.length() < 9) {
+        if (password.length() < 8) {
             alert.setContentText("Password phải có số ký tự lớn hơn hoặc bằng 8.");
             alert.show();
             return;
@@ -164,7 +164,7 @@ public class UserController {
             users[users.length - 1] = newuser;
             Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root, 720, 480);
+            scene = new Scene(root, 1080, 720);
             stage.setTitle("Home");
             stage.setScene(scene);
             stage.show();
@@ -178,7 +178,7 @@ public class UserController {
     public void goToSignup(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 720, 480);
+        scene = new Scene(root, 1080, 720);
         stage.setTitle("Home");
         stage.setScene(scene);
         stage.show();

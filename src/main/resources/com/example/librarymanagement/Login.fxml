@@ -11,13 +11,6 @@
 <?import javafx.scene.layout.GridPane?>
 <GridPane alignment="CENTER" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="com.example.librarymanagement.UserController">
-<!--        <Label text="Username: "/>-->
-<!--        <TextField fx:id="username"/>-->
-<!--        <Label text="Password: "/>-->
-<!--        <PasswordField fx:id="password"/>-->
-<!--        <Button text="Login" onAction="#login"/>-->
-<!--        <Label text="      "/>-->
-<!--        <Button text="Sign up" onAction="#goToSignup"/>-->
         <Label text="Username: " GridPane.columnIndex="0" GridPane.rowIndex="0">
                 <GridPane.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
