@@ -33,8 +33,6 @@ public class UserController {
     @FXML
     PasswordField password;
 
-    private static final String FILE_PATH = "skyBaseForUser.txt";
-
     public void add(User user) {
         users = Arrays.copyOf(users, users.length + 1);
         users[users.length - 1] = user;
@@ -69,12 +67,6 @@ public class UserController {
         }
         alert.show();
         return true;
-    }
-
-    public void display() {
-        for (User user : users) {
-            System.out.println(user.toString());
-        }
     }
 
     public User findUser(String username) {

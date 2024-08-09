@@ -39,14 +39,6 @@ public class LoanSlipController implements Initializable {
         stage.show();
     }
 
-    public void goToAddBookScene(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("AddBook.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1080, 720);
-        stage.setScene(scene);
-        stage.show();
-    }
-
     public void goToBookScene(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("ListView.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -71,14 +63,12 @@ public class LoanSlipController implements Initializable {
     @FXML
     private TableColumn<LoanSlip, Void> actionCol;
 
-    private ObservableList<LoanSlip> loanSlips;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        loanSlips = FXCollections.observableArrayList(
+        ObservableList<LoanSlip> loanSlips = FXCollections.observableArrayList(
                 new LoanSlip("Nhan12345", "b1", "9/8/2024", "10/9/2024", "true"),
                 new LoanSlip("Nhan12345", "b2", "9/8/2024", "10/9/2024", "true"),
-                new LoanSlip("Nhan12345", "b3","9/8/2024", "10/9/2024", "true"),
+                new LoanSlip("Nhan12345", "b3", "9/8/2024", "10/9/2024", "true"),
                 new LoanSlip("Nhan12345", "b4", "9/8/2024", "10/9/2024", "true")
         );
         idUserCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idUser"));

@@ -6,7 +6,7 @@
 
 <VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarymanagement.LoanSlipController">
 
-    <HBox prefHeight="34.0">
+    <HBox prefHeight="34.0" prefWidth="1079">
         <Button onAction="#goToBookScene" prefWidth="80.0" text="Book">
             <HBox.margin>
                 <Insets left="10.0" right="10.0" />
@@ -17,14 +17,14 @@
             </HBox.margin></Button>
     </HBox>
 
-    <TableView fx:id="tableView" focusTraversable="false">
+    <TableView fx:id="tableView" fixedCellSize="50.0" focusTraversable="false" prefHeight="719" prefWidth="1079">
         <columns>
-            <TableColumn fx:id="idUserCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="User ID" />
-            <TableColumn fx:id="idBookCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Book ID" />
-            <TableColumn fx:id="dateCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Date" />
-            <TableColumn fx:id="returnDateCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Return date" />
-            <TableColumn fx:id="statusCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Status " />
-            <TableColumn fx:id="actionCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text=" " />
+            <TableColumn fx:id="idUserCol" minWidth="200.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="User ID" />
+            <TableColumn fx:id="idBookCol" minWidth="200.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Book ID" />
+            <TableColumn fx:id="dateCol" minWidth="200.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Date" />
+            <TableColumn fx:id="returnDateCol" minWidth="200.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Return date" />
+            <TableColumn fx:id="statusCol" minWidth="80.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Status" />
+            <TableColumn fx:id="actionCol" minWidth="200.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text=" " />
         </columns>
     </TableView>
 </VBox>

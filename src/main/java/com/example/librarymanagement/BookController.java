@@ -141,7 +141,7 @@ public class BookController implements Initializable {
 
                     private final Button editButton = new Button("Edit");
                     private final Button removeButton = new Button("Remove");
-
+                    private final Button changeStatusButton = new Button("Change status");
                     {
                         editButton.setOnAction((ActionEvent event) -> {
                             Book book = getTableView().getItems().get(getIndex());
@@ -154,6 +154,17 @@ public class BookController implements Initializable {
                             getTableView().getItems().remove(book);
                         });
                         removeButton.setPrefWidth(75);
+
+                        changeStatusButton.setOnAction((ActionEvent event) -> {
+                            Book book = getTableView().getItems().get(getIndex());
+                            if (book.getStatus().equalsIgnoreCase("true")) {
+                                book.setStatus("false");
+                                table.refresh();
+                            } else {
+                                book.setStatus("true");
+                                table.refresh();
+                            }
+                        });
                     }
 
                     @Override
@@ -162,10 +173,11 @@ public class BookController implements Initializable {
                         if (empty) {
                             setGraphic(null);
                         } else {
-                            HBox hBox = new HBox(editButton, removeButton);
+                            HBox hBox = new HBox(editButton, removeButton, changeStatusButton);
                             hBox.setSpacing(10);
                             HBox.setMargin(editButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Edit
                             HBox.setMargin(removeButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Remove
+                            HBox.setMargin(changeStatusButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Change
                             setGraphic(hBox);
                         }
                     }
