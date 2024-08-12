@@ -66,10 +66,10 @@ public class LoanSlipController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<LoanSlip> loanSlips = FXCollections.observableArrayList(
-                new LoanSlip("Nhan12345", "b1", "9/8/2024", "10/9/2024", "true"),
-                new LoanSlip("Nhan12345", "b2", "9/8/2024", "10/9/2024", "true"),
-                new LoanSlip("Nhan12345", "b3", "9/8/2024", "10/9/2024", "true"),
-                new LoanSlip("Nhan12345", "b4", "9/8/2024", "10/9/2024", "true")
+                new LoanSlip("Nhan12345", "b1", "9/8/2024", "10/9/2024", "On loan"),
+                new LoanSlip("Nhan12345", "b2", "9/8/2024", "10/9/2024", "On loan"),
+                new LoanSlip("Nhan12345", "b3", "9/8/2024", "10/9/2024", "On loan"),
+                new LoanSlip("Nhan12345", "b4", "9/8/2024", "10/9/2024", "On loan")
         );
         idUserCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idUser"));
         idBookCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idBook"));
@@ -87,11 +87,11 @@ public class LoanSlipController implements Initializable {
                     {
                         changeStatusButton.setOnAction((ActionEvent event) -> {
                             LoanSlip loanSlip = getTableView().getItems().get(getIndex());
-                            if (loanSlip.getStatus().equalsIgnoreCase("true")) {
-                                loanSlip.setStatus("false");
+                            if (loanSlip.getStatus().equalsIgnoreCase("On loan")) {
+                                loanSlip.setStatus("Paid");
                                 tableView.refresh();
                             } else {
-                                loanSlip.setStatus("true");
+                                loanSlip.setStatus("On loan");
                                 tableView.refresh();
                             }
                         });

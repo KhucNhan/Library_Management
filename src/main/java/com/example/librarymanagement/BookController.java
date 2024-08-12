@@ -73,13 +73,13 @@ public class BookController implements Initializable {
         Book book = getBook(idAdd.getText());
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         if (idAdd.getText().isEmpty() || titleAdd.getText().isEmpty() || authorAdd.getText().isEmpty() || releaseYearAdd.getText().isEmpty() || genreAdd.getText().isEmpty() || statusAdd.getText().isEmpty()) {
-            alert.setContentText("Không được để trống");
+            alert.setContentText("No blank!");
             alert.show();
             return false;
         }
 
         if (!statusAdd.getText().equalsIgnoreCase("true") && !statusAdd.getText().equalsIgnoreCase("false")) {
-            alert.setContentText("Status phải là true hoặc false");
+            alert.setContentText("Status must be activated or unactivated.");
             alert.show();
             return false;
         }
@@ -87,7 +87,7 @@ public class BookController implements Initializable {
         try {
             Double num = Double.parseDouble(releaseYearAdd.getText());
         } catch (NumberFormatException e) {
-            alert.setContentText("Hãy nhập đúng giá trị năm xuất bản");
+            alert.setContentText("Enter a numbers in Release year.");
             alert.show();
             return false;
         }
@@ -157,11 +157,11 @@ public class BookController implements Initializable {
 
                         changeStatusButton.setOnAction((ActionEvent event) -> {
                             Book book = getTableView().getItems().get(getIndex());
-                            if (book.getStatus().equalsIgnoreCase("true")) {
-                                book.setStatus("false");
+                            if (book.getStatus().equalsIgnoreCase("Activated")) {
+                                book.setStatus("Unactivated");
                                 table.refresh();
                             } else {
-                                book.setStatus("true");
+                                book.setStatus("Activated");
                                 table.refresh();
                             }
                         });
@@ -202,13 +202,13 @@ public class BookController implements Initializable {
         saveButton.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             if (id.getText().isEmpty() || title.getText().isEmpty() || author.getText().isEmpty() || releaseYear.getText().isEmpty() || genre.getText().isEmpty() || status.getText().isEmpty()) {
-                alert.setContentText("Không được để trống");
+                alert.setContentText("No blank!");
                 alert.show();
                 return;
             }
 
-            if (!status.getText().equalsIgnoreCase("true") && !status.getText().equalsIgnoreCase("false")) {
-                alert.setContentText("Status phải là true hoặc false");
+            if (!status.getText().equalsIgnoreCase("Activated") && !status.getText().equalsIgnoreCase("Unactivated")) {
+                alert.setContentText("Status must be activated or unactivated.");
                 alert.show();
                 return;
             }
@@ -216,7 +216,7 @@ public class BookController implements Initializable {
             try {
                 Double num = Double.parseDouble(releaseYear.getText());
             } catch (NumberFormatException exception) {
-                alert.setContentText("Hãy nhập đúng giá trị năm xuất bản");
+                alert.setContentText("Enter a numbers in Release year.");
                 alert.show();
                 return;
             }
