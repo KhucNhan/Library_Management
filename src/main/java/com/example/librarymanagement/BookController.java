@@ -122,10 +122,10 @@ public class BookController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Books = FXCollections.observableArrayList(
-                new Book("b1", "toan", "nhan", "2018", "Subject", "true"),
-                new Book("b2", "tieng anh", "khanh", "2018", "Subject", "true"),
-                new Book("b3", "one piece", "oda", "1999", "Animation", "true"),
-                new Book("b4", "doraemon", "fuji", "2000", "Animation", "true")
+                new Book("b1", "toan", "nhan", "2018", "Subject", "Activated"),
+                new Book("b2", "tieng anh", "khanh", "2018", "Subject", "Activated"),
+                new Book("b3", "one piece", "oda", "1999", "Animation", "Activated"),
+                new Book("b4", "doraemon", "fuji", "2000", "Animation", "Activated")
         );
         idCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Id"));
         titleCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Title"));
@@ -191,7 +191,6 @@ public class BookController implements Initializable {
 
     private void showEditDialog(Book book) {
         // Tạo một dialog để chỉnh sửa sản phẩm
-        TextField id = new TextField(book.getId());
         TextField title = new TextField(book.getTitle());
         TextField author = new TextField(book.getAuthor());
         TextField releaseYear = new TextField(book.getReleaseYear());
@@ -201,7 +200,7 @@ public class BookController implements Initializable {
         Button saveButton = new Button("Save");
         saveButton.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            if (id.getText().isEmpty() || title.getText().isEmpty() || author.getText().isEmpty() || releaseYear.getText().isEmpty() || genre.getText().isEmpty() || status.getText().isEmpty()) {
+            if (title.getText().isEmpty() || author.getText().isEmpty() || releaseYear.getText().isEmpty() || genre.getText().isEmpty() || status.getText().isEmpty()) {
                 alert.setContentText("No blank!");
                 alert.show();
                 return;
@@ -221,15 +220,15 @@ public class BookController implements Initializable {
                 return;
             }
 
-            for(Book b : Books) {
-                if (b.getId().equals(id.getText())) {
-                    alert.setContentText("This id is exist. Try again please.");
-                    alert.show();
-                    return;
-                }
-            }
+//            for (Book value : Books) {
+//                if (value.getId().equals(id.getText())) {
+//                    alert.setContentText("This id is exist. Try again please.");
+//                    alert.show();
+//                    return;
+//                }
+//            }
 
-            book.setId(id.getText());
+//            book.setId(id.getText());
             book.setTitle(title.getText());
             book.setAuthor(author.getText());
             book.setReleaseYear(releaseYear.getText());
@@ -239,7 +238,7 @@ public class BookController implements Initializable {
             table.refresh(); // Cập nhật lại TableView
         });
 
-        VBox vbox = new VBox(id, title, author, releaseYear, genre, status, saveButton);
+        VBox vbox = new VBox(title, author, releaseYear, genre, status, saveButton);
         vbox.setSpacing(10);
         Scene scene = new Scene(vbox, 240,480);
         Stage stage = new Stage();
