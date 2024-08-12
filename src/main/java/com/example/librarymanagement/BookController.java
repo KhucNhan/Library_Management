@@ -21,10 +21,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class BookController implements Initializable {
-    private ObservableList<Book> Books;
+    private static ObservableList<Book> Books;
 
     public Book getBook(String text) {
         for (Book book : Books) {
@@ -40,6 +41,7 @@ public class BookController implements Initializable {
     private Parent root;
 
     public void goToLoginScene(ActionEvent event) throws IOException {
+        table.refresh();
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root, 1080, 720);
@@ -48,6 +50,7 @@ public class BookController implements Initializable {
     }
 
     public void goToLoanSlip(ActionEvent event) throws IOException {
+        table.refresh();
         Parent root = FXMLLoader.load(getClass().getResource("LoanSlipView.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root, 1080, 720);
@@ -78,7 +81,7 @@ public class BookController implements Initializable {
             return false;
         }
 
-        if (!statusAdd.getText().equalsIgnoreCase("true") && !statusAdd.getText().equalsIgnoreCase("false")) {
+        if (!statusAdd.getText().equalsIgnoreCase("activated") && !statusAdd.getText().equalsIgnoreCase("unactivated")) {
             alert.setContentText("Status must be activated or unactivated.");
             alert.show();
             return false;
@@ -150,8 +153,10 @@ public class BookController implements Initializable {
                         editButton.setPrefWidth(75);
 
                         removeButton.setOnAction((ActionEvent event) -> {
-                            Book book = getTableView().getItems().get(getIndex());
-                            getTableView().getItems().remove(book);
+                            if (showConfirmation()) {
+                                Book book = getTableView().getItems().get(getIndex());
+                                getTableView().getItems().remove(book);
+                            }
                         });
                         removeButton.setPrefWidth(75);
 
@@ -159,11 +164,12 @@ public class BookController implements Initializable {
                             Book book = getTableView().getItems().get(getIndex());
                             if (book.getStatus().equalsIgnoreCase("Activated")) {
                                 book.setStatus("Unactivated");
-                                table.refresh();
+                                changeStatusButton.setText("Activated");
                             } else {
                                 book.setStatus("Activated");
-                                table.refresh();
+                                changeStatusButton.setText("Unactivated");
                             }
+                            table.refresh();
                         });
                     }
 
@@ -245,5 +251,16 @@ public class BookController implements Initializable {
         stage.setScene(scene);
         stage.setTitle("Edit");
         stage.show();
+    }
+
+    public boolean showConfirmation() {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete book");
+        alert.setHeaderText("Are you sure want to remove this book ?");
+
+        Optional<ButtonType> option = alert.showAndWait();
+
+        return option.get() == ButtonType.OK;
     }
 }

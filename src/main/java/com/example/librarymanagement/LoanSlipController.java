@@ -71,7 +71,7 @@ public class LoanSlipController implements Initializable {
                 new LoanSlip("Nhan12345", "b3", "9/8/2024", "10/9/2024", "On loan"),
                 new LoanSlip("Nhan12345", "b4", "9/8/2024", "10/9/2024", "On loan")
         );
-        idUserCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idUser"));
+//        idUserCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idUser"));
         idBookCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idBook"));
         dateCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("date"));
         returnDateCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("returnDate"));
@@ -89,9 +89,11 @@ public class LoanSlipController implements Initializable {
                             LoanSlip loanSlip = getTableView().getItems().get(getIndex());
                             if (loanSlip.getStatus().equalsIgnoreCase("On loan")) {
                                 loanSlip.setStatus("Paid");
+                                changeStatusButton.setText("On loan");
                                 tableView.refresh();
                             } else {
                                 loanSlip.setStatus("On loan");
+                                changeStatusButton.setText("Paid");
                                 tableView.refresh();
                             }
                         });
