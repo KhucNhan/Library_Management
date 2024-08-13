@@ -79,17 +79,4 @@ public class Book {
     public void setStatus(String status) {
         this.status = status;
     }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id='" + id + '\'' +
-                ", img='" + img + '\'' +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", releaseYear='" + releaseYear + '\'' +
-                ", genre='" + genre + '\'' +
-                ", status='" + status + '\'' +
-                '}';
-    }
 }

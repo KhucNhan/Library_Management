@@ -23,7 +23,6 @@
             <TableColumn fx:id="dateCol" minWidth="200.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Date" />
             <TableColumn fx:id="returnDateCol" minWidth="200.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Return date" />
             <TableColumn fx:id="statusCol" minWidth="80.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Status" />
-            <TableColumn fx:id="actionCol" minWidth="200.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text=" " />
         </columns>
     </TableView>
 </VBox>
