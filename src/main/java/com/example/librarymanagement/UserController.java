@@ -56,7 +56,7 @@ public class UserController {
             if (findUser(username).getUsername().equals(username) && findUser(username).getPassword().equals(password)) {
                 if (findUser(username).getRole().equalsIgnoreCase("admin")) {
                     alert.setContentText("Success! Xin chào admin " + findUser(username).getUsername() + ".");
-                    Parent root = FXMLLoader.load(getClass().getResource("ListView.fxml"));
+                    Parent root = FXMLLoader.load(getClass().getResource("AdminView.fxml"));
                     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     scene = new Scene(root, 1080, 720);
                     stage.setTitle("Home");
