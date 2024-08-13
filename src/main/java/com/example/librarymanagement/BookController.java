@@ -19,6 +19,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -29,6 +31,18 @@ import java.util.ResourceBundle;
 
 public class BookController implements Initializable {
     private static ObservableList<Book> Books;
+
+    public static void addBookToFile(Book book) throws IOException {
+        FileWriter fileWriter = new FileWriter("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\src\\main\\java\\com\\example\\librarymanagement\\book.txt", true);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        try {
+            bufferedWriter.write(book.toString());
+            bufferedWriter.newLine();
+            bufferedWriter.flush();
+        } finally {
+            bufferedWriter.close();
+        }
+    }
 
     public Book getBook(String text) {
         for (Book book : Books) {
@@ -77,7 +91,7 @@ public class BookController implements Initializable {
     @FXML
     TextField statusAdd;
 
-    public boolean add() {
+    public boolean add() throws IOException {
         Book book = getBook(idAdd.getText());
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         if (idAdd.getText().isEmpty() || titleAdd.getText().isEmpty() || authorAdd.getText().isEmpty() || releaseYearAdd.getText().isEmpty() || genreAdd.getText().isEmpty() || statusAdd.getText().isEmpty()) {
@@ -107,7 +121,9 @@ public class BookController implements Initializable {
         }
 
         if (book == null) {
-            Books.add(new Book(idAdd.getText(), imgAdd.getText(), titleAdd.getText(), authorAdd.getText(), releaseYearAdd.getText(), genreAdd.getText(), statusAdd.getText()));
+            Book bookAdd = new Book(idAdd.getText(), imgAdd.getText(), titleAdd.getText(), authorAdd.getText(), releaseYearAdd.getText(), genreAdd.getText(), statusAdd.getText());
+            Books.add(bookAdd);
+            addBookToFile(bookAdd);
             return true;
         } else {
             alert.setContentText("This id is exist. Try again please.");
@@ -138,10 +154,6 @@ public class BookController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Books = FXCollections.observableArrayList(
-                new Book("b1", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.Vft2Qo0-MMjvfI4FZ8391CJmhPK9Pvc_vqrS9_7gwxg.jpg" , "toan", "nhan", "2018", "Subject", "Activated"),
-                new Book("b2", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.VbhMsFVRRJ3A6vNB7I-_y4OO6EBXUATKAnhnvusjiuU.jpg" ,  "tieng anh", "khanh", "2018", "Subject", "Activated"),
-                new Book("b3", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.3GlCsPxLsXIL-mLj_UvwGJTiGfFB49UYUhZWVQpBUEQ.jpg" ,  "one piece", "oda", "1999", "Animation", "Activated"),
-                new Book("b4", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.cm6mbU9Q3v_YXeHPt4OInVIw2NgL0XNMKsZ_tfIcLCI.jpg" ,  "doraemon", "fuji", "2000", "Animation", "Activated")
         );
         idCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Id"));
         imgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
@@ -186,6 +198,7 @@ public class BookController implements Initializable {
                             if (showConfirmation()) {
                                 Book book = getTableView().getItems().get(getIndex());
                                 getTableView().getItems().remove(book);
+
                             }
                         });
                         removeButton.setPrefWidth(75);
@@ -278,6 +291,8 @@ public class BookController implements Initializable {
             book.setReleaseYear(releaseYear.getText());
             book.setGenre(genre.getText());
             book.setStatus(status.getText());
+
+
 
             table.refresh(); // Cập nhật lại TableView
         });

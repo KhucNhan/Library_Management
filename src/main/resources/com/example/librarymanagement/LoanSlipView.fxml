@@ -19,7 +19,6 @@
 
     <TableView fx:id="tableView" fixedCellSize="50.0" focusTraversable="false" prefHeight="719" prefWidth="1079">
         <columns>
-            <TableColumn fx:id="idUserCol" minWidth="200.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="User ID" />
             <TableColumn fx:id="idBookCol" minWidth="200.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Book ID" />
             <TableColumn fx:id="dateCol" minWidth="200.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Date" />
             <TableColumn fx:id="returnDateCol" minWidth="200.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Return date" />

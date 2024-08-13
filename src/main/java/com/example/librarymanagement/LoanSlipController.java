@@ -50,8 +50,8 @@ public class LoanSlipController implements Initializable {
 
     @FXML
     private TableView<LoanSlip> tableView;
-    @FXML
-    private TableColumn<LoanSlip, String> idUserCol;
+//    @FXML
+//    private TableColumn<LoanSlip, String> idUserCol;
     @FXML
     private TableColumn<LoanSlip, String> idBookCol;
     @FXML
