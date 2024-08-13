@@ -69,4 +69,9 @@ public class Book {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public static Book fromString(String line) {
+        String[] parts = line.split(",");
+        return new Book(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
+    }
 }

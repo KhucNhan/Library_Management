@@ -14,15 +14,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class BookController implements Initializable {
     private static ObservableList<Book> Books;
@@ -144,7 +142,7 @@ public class BookController implements Initializable {
 
                     private final Button editButton = new Button("Edit");
                     private final Button removeButton = new Button("Remove");
-                    private final Button changeStatusButton = new Button("Change status");
+
                     {
                         editButton.setOnAction((ActionEvent event) -> {
                             Book book = getTableView().getItems().get(getIndex());
@@ -159,18 +157,6 @@ public class BookController implements Initializable {
                             }
                         });
                         removeButton.setPrefWidth(75);
-
-                        changeStatusButton.setOnAction((ActionEvent event) -> {
-                            Book book = getTableView().getItems().get(getIndex());
-                            if (book.getStatus().equalsIgnoreCase("Activated")) {
-                                book.setStatus("Unactivated");
-                                changeStatusButton.setText("Activated");
-                            } else {
-                                book.setStatus("Activated");
-                                changeStatusButton.setText("Unactivated");
-                            }
-                            table.refresh();
-                        });
                     }
 
                     @Override
@@ -179,11 +165,10 @@ public class BookController implements Initializable {
                         if (empty) {
                             setGraphic(null);
                         } else {
-                            HBox hBox = new HBox(editButton, removeButton, changeStatusButton);
+                            HBox hBox = new HBox(editButton, removeButton);
                             hBox.setSpacing(10);
                             HBox.setMargin(editButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Edit
                             HBox.setMargin(removeButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Remove
-                            HBox.setMargin(changeStatusButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Change
                             setGraphic(hBox);
                         }
                     }
@@ -246,7 +231,7 @@ public class BookController implements Initializable {
 
         VBox vbox = new VBox(title, author, releaseYear, genre, status, saveButton);
         vbox.setSpacing(10);
-        Scene scene = new Scene(vbox, 240,480);
+        Scene scene = new Scene(vbox, 240, 480);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("Edit");
