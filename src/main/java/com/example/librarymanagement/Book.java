@@ -3,6 +3,7 @@ package com.example.librarymanagement;
 
 public class Book {
     private String id;
+    private String img;
     private String title;
     private String author;
     private String releaseYear;
@@ -13,13 +14,22 @@ public class Book {
 
     }
 
-    public Book(String id, String title, String author, String releaseYear, String genre, String status) {
+    public Book(String id, String img, String title, String author, String releaseYear, String genre, String status) {
         this.id = id;
+        this.img = img;
         this.title = title;
         this.author = author;
         this.releaseYear = releaseYear;
         this.genre = genre;
         this.status = status;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 
     public String getId() {
