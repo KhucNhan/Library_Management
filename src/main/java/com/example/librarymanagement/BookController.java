@@ -16,10 +16,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
@@ -166,12 +167,14 @@ public class BookController implements Initializable {
         releaseYearCol.setCellValueFactory(new PropertyValueFactory<Book, String>("ReleaseYear"));
         genreCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Genre"));
         statusCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Status"));
+        loadBooksFromFile();
         Callback<TableColumn<Book, String>, TableCell<Book, String>> statusCellFactory = new Callback<>() {
             @Override
             public TableCell<Book, String> call(TableColumn<Book, String> bookStatusTableColumn) {
                 final TableCell<Book, String> statusCellFactory = new TableCell<>() {
 
                     private final Button statusButton = new Button();
+
                     {
                         statusButton.setOnAction((ActionEvent event) -> {
                             Book book = getTableView().getItems().get(getIndex());
@@ -339,4 +342,47 @@ public class BookController implements Initializable {
             return false;
         }
     }
+
+    private void loadBooksFromFile() {
+        File file = new File("C:\\Users\\theho\\Downloads\\Library_Management\\Project.txt");
+        if (file.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    String id = parts[0];
+                    String title = parts[1];
+                    String author = parts[2];
+                    String releaseYear = parts[3];
+                    String genre = parts[4];
+                    String status = parts[5];
+                    Books.add(new Book(id, title, author, releaseYear, genre, status));
+                }
+                table.setItems(Books);
+            } catch (IOException e) {
+                e.printStackTrace(); // Hoặc sử dụng phương thức showError() để thông báo lỗi
+            }
+        }
+    }
+
+    @FXML
+    private void saveProductsToFile() {
+        FileChooser fileChooser = new FileChooser();
+        String file = "Project.txt";
+
+        if (file != null) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                for (Book product : Books) {
+                    writer.write(product.toString());
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                showError("Failed to save products: " + e.getMessage());
+            }
+        }
+    }
+    private void showError(String message) {
+        // Show an error dialog or alert here
+    }
 }
+

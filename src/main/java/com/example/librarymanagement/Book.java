@@ -24,6 +24,9 @@ public class Book {
         this.status = status;
     }
 
+    public Book(String id, String title, String author, String releaseYear, String genre, String status) {
+    }
+
     public String getImg() {
         return img;
     }
