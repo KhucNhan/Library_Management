@@ -1,4 +1,4 @@
-com.example.librarymanagement.Book@3beaa906
-com.example.librarymanagement.Book@762211e8
-com.example.librarymanagement.Book@3ae128c1
-com.example.librarymanagement.Book@32cd03d6
+b1,https://media-cdn-v2.laodong.vn/storage/newsportal/2023/8/26/1233821/Giai-Nhi-1--Nang-Tre.jpg,khanh,khanh,2005,khanh,activated
+b2,https://media-cdn-v2.laodong.vn/storage/newsportal/2023/8/26/1233821/Giai-Nhi-1--Nang-Tre.jpg,khanh,khanh,2005,khanh,activated
+b3,https://media-cdn-v2.laodong.vn/storage/newsportal/2023/8/26/1233821/Giai-Nhi-1--Nang-Tre.jpg,khanh,khanh,2005,khanh,activated
+b4,https://media-cdn-v2.laodong.vn/storage/newsportal/2023/8/26/1233821/Giai-Nhi-1--Nang-Tre.jpg,khanh,khanh,2005,khanh,activated

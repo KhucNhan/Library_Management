@@ -16,15 +16,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -78,43 +76,141 @@ public class BookController implements Initializable {
     @FXML
     TextField statusAdd;
 
+    @FXML
+    private void handleAddAction(ActionEvent event) {
+        if (add()) {
+            table.setItems(Books); // Cập nhật TableView
+            showConfirmation("Sách được thêm thành công");
+        }
+    }
+
     public boolean add() {
         Book book = getBook(idAdd.getText());
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        // Kiểm tra các trường thông tin
         if (idAdd.getText().isEmpty() || titleAdd.getText().isEmpty() || authorAdd.getText().isEmpty() || releaseYearAdd.getText().isEmpty() || genreAdd.getText().isEmpty() || statusAdd.getText().isEmpty()) {
-            alert.setContentText("No blank!");
+            alert.setContentText("No blank fields allowed!");
             alert.show();
             return false;
         }
 
+        // Kiểm tra trạng thái
         if (!statusAdd.getText().equalsIgnoreCase("activated") && !statusAdd.getText().equalsIgnoreCase("unactivated")) {
             alert.setContentText("Status must be activated or unactivated.");
             alert.show();
             return false;
         }
 
+        // Kiểm tra năm phát hành
         try {
-            Double num = Double.parseDouble(releaseYearAdd.getText());
+            Integer.parseInt(releaseYearAdd.getText());
         } catch (NumberFormatException e) {
-            alert.setContentText("Enter a numbers in Release year.");
+            alert.setContentText("Enter a valid number for Release Year.");
             alert.show();
             return false;
         }
 
+        // Kiểm tra URL
         if (!isValidURL(imgAdd.getText())) {
-            alert.setContentText("Can't use this url.");
+            alert.setContentText("Invalid URL.");
             alert.show();
             return false;
         }
 
+        // Kiểm tra ID đã tồn tại
         if (book == null) {
-            Books.add(new Book(idAdd.getText(), imgAdd.getText(), titleAdd.getText(), authorAdd.getText(), releaseYearAdd.getText(), genreAdd.getText(), statusAdd.getText()));
+            Books.add(new Book(
+                    idAdd.getText(),
+                    imgAdd.getText(),
+                    titleAdd.getText(),
+                    authorAdd.getText(),
+                    releaseYearAdd.getText(),
+                    genreAdd.getText(),
+                    statusAdd.getText()
+            ));
+            saveProductsToFile(); // Lưu vào file sau khi thêm thành công
             return true;
         } else {
-            alert.setContentText("This id is exist. Try again please.");
+            alert.setContentText("This ID already exists. Please try another.");
             alert.show();
+            return false;
         }
-        return false;
+    }
+
+    private void loadProductsFromFile() {
+        File file = new File("Project.txt");
+        if (!file.exists()) {
+            return;
+        }
+        clearInFile();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 7) {
+                    Book book = new Book(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6]);
+                    Books.add(book);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            showError("Invalid data format, " + "There was an error reading the product data.");
+        }
+    }
+
+
+    private void saveProductsToFile() {
+        // Xác định đường dẫn file trong thư mục dự án hoặc một thư mục cụ thể
+        File file = new File("C:\\Users\\theho\\Downloads\\Library_Management\\Project.txt");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (Book book : Books) {
+                // Tạo chuỗi dữ liệu cho từng sách
+                String line = String.join(",",
+                        book.getId(),
+                        book.getImg(),
+                        book.getTitle(),
+                        book.getAuthor(),
+                        book.getReleaseYear(),
+                        book.getGenre(),
+                        book.getStatus()
+                );
+                writer.write(line);
+                writer.newLine(); // Thêm dòng mới sau mỗi sản phẩm
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError("Error saving data: Could not save product data to file.");
+        }
+    }
+
+    public void clearInFile() {
+        File file = new File("C:\\Users\\theho\\Downloads\\Library_Management\\Project.txt");
+        try (FileWriter writer = new FileWriter(file, false)) {
+            writer.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void handleSaveAction(ActionEvent event) {
+        saveProductsToFile();
+    }
+
+    @FXML
+    private void handleLoadAction(ActionEvent event) {
+        loadProductsFromFile();
     }
 
     @FXML
@@ -138,12 +234,9 @@ public class BookController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Books = FXCollections.observableArrayList(
-                new Book("b1", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.Vft2Qo0-MMjvfI4FZ8391CJmhPK9Pvc_vqrS9_7gwxg.jpg", "toan", "nhan", "2018", "Subject", "Activated"),
-                new Book("b2", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.VbhMsFVRRJ3A6vNB7I-_y4OO6EBXUATKAnhnvusjiuU.jpg", "tieng anh", "khanh", "2018", "Subject", "Activated"),
-                new Book("b3", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.3GlCsPxLsXIL-mLj_UvwGJTiGfFB49UYUhZWVQpBUEQ.jpg", "one piece", "oda", "1999", "Animation", "Activated"),
-                new Book("b4", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.cm6mbU9Q3v_YXeHPt4OInVIw2NgL0XNMKsZ_tfIcLCI.jpg", "doraemon", "fuji", "2000", "Animation", "Unactivated")
-        );
+        Books = FXCollections.observableArrayList();
+        loadProductsFromFile();
+        table.setItems(Books);
         idCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Id"));
         imgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
         imgCol.setCellFactory(column -> new TableCell<Book, String>() {
@@ -167,7 +260,6 @@ public class BookController implements Initializable {
         releaseYearCol.setCellValueFactory(new PropertyValueFactory<Book, String>("ReleaseYear"));
         genreCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Genre"));
         statusCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Status"));
-        loadBooksFromFile();
         Callback<TableColumn<Book, String>, TableCell<Book, String>> statusCellFactory = new Callback<>() {
             @Override
             public TableCell<Book, String> call(TableColumn<Book, String> bookStatusTableColumn) {
@@ -227,7 +319,7 @@ public class BookController implements Initializable {
                         editButton.setPrefWidth(75);
 
                         removeButton.setOnAction((ActionEvent event) -> {
-                            if (showConfirmation()) {
+                            if (showConfirmation("Sách được thêm thành công")) {
                                 Book book = getTableView().getItems().get(getIndex());
                                 getTableView().getItems().remove(book);
                             }
@@ -322,7 +414,7 @@ public class BookController implements Initializable {
         stage.show();
     }
 
-    public boolean showConfirmation() {
+    public boolean showConfirmation(String sáchĐượcThêmThànhCông) {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete book");
@@ -341,48 +433,6 @@ public class BookController implements Initializable {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    private void loadBooksFromFile() {
-        File file = new File("C:\\Users\\theho\\Downloads\\Library_Management\\Project.txt");
-        if (file.exists()) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(",");
-                    String id = parts[0];
-                    String title = parts[1];
-                    String author = parts[2];
-                    String releaseYear = parts[3];
-                    String genre = parts[4];
-                    String status = parts[5];
-                    Books.add(new Book(id, title, author, releaseYear, genre, status));
-                }
-                table.setItems(Books);
-            } catch (IOException e) {
-                e.printStackTrace(); // Hoặc sử dụng phương thức showError() để thông báo lỗi
-            }
-        }
-    }
-
-    @FXML
-    private void saveProductsToFile() {
-        FileChooser fileChooser = new FileChooser();
-        String file = "Project.txt";
-
-        if (file != null) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-                for (Book product : Books) {
-                    writer.write(product.toString());
-                    writer.newLine();
-                }
-            } catch (IOException e) {
-                showError("Failed to save products: " + e.getMessage());
-            }
-        }
-    }
-    private void showError(String message) {
-        // Show an error dialog or alert here
     }
 }
 
