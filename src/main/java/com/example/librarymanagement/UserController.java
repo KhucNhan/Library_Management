@@ -42,6 +42,7 @@ public class UserController {
         findUser(username).setRole(role);
     }
 
+    public static User currentUser;
     @FXML
     protected boolean login(ActionEvent event) throws IOException {
         String username = this.username.getText();
@@ -53,25 +54,21 @@ public class UserController {
             alert.show();
             return false;
         } else {
-            User user = findUser(username);
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                UserSession session = UserSession.getInstance();
-                session.setUserRole(user.getRole());
-                session.setUsername(user.getUsername());
-
+            currentUser = findUser(username);
+            if (currentUser.getUsername().equals(username) && currentUser.getPassword().equals(password)) {
                 FXMLLoader loader;
                 Parent root;
-                if (user.getRole().equalsIgnoreCase("admin")) {
-                    alert.setContentText("Success! Xin chào admin " + user.getUsername() + ".");
+                if (currentUser.getRole().equalsIgnoreCase("admin")) {
+                    alert.setContentText("Success! Xin chào admin " + currentUser.getUsername() + ".");
                     loader = new FXMLLoader(getClass().getResource("AdminView.fxml"));
                     root = loader.load();
-                    System.out.println(user.getRole());
+                    System.out.println(currentUser.getRole());
                     // Không cần set role ở đây vì không cần truyền thông tin đến AdminView
                 } else {
-                    alert.setContentText("Success! Xin chào user " + user.getUsername() + ".");
+                    alert.setContentText("Success! Xin chào user " + currentUser.getUsername() + ".");
                     loader = new FXMLLoader(getClass().getResource("UserView.fxml"));
                     root = loader.load();
-                    System.out.println(user.getRole());
+                    System.out.println(currentUser.getRole());
                 }
 
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

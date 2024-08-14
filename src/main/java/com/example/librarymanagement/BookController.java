@@ -30,6 +30,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static com.example.librarymanagement.UserController.currentUser;
+
 public class BookController implements Initializable {
     private static ObservableList<Book> Books;
     public Book getBook(String text) {
@@ -136,21 +138,16 @@ public class BookController implements Initializable {
     private TableColumn<Book, String> statusCol;
     @FXML
     private TableColumn<Book, Void> actionCol;
-
-    UserSession session = UserSession.getInstance();
-    String currentUserRole = session.getUserRole();
-    String currentUsername = session.getUsername();
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if (currentUserRole != null) {
-            if (currentUserRole.equalsIgnoreCase("admin")) {
+        if (currentUser != null) {
+            if (currentUser.getRole().equalsIgnoreCase("admin")) {
                 initializeAdminTableView();
             } else {
                 initializeUserTableView();
             }
         } else {
-            System.out.println(currentUserRole);
+            System.out.println(currentUser.getRole());
         }
     }
 
@@ -403,15 +400,6 @@ public class BookController implements Initializable {
                 return;
             }
 
-//            for (Book value : Books) {
-//                if (value.getId().equals(id.getText())) {
-//                    alert.setContentText("This id is exist. Try again please.");
-//                    alert.show();
-//                    return;
-//                }
-//            }
-
-//            book.setId(id.getText());
             book.setTitle(title.getText());
             book.setImg(img.getText());
             book.setAuthor(author.getText());
@@ -466,7 +454,7 @@ public class BookController implements Initializable {
         stage.show();
 
         saveButton.setOnAction(e -> {
-            LoanSlip loanSlip = new LoanSlip(currentUsername,book.getId(), formattedDate,paidDate.getText(),"on loan");
+            LoanSlip loanSlip = new LoanSlip(currentUser.getUsername(),book.getId(), formattedDate,paidDate.getText(),"on loan");
             if (!isValidDate(paidDate.getText(),"yyyy/MM/dd")) {
                 alert.setContentText("Date format: yyyy/MM/dd");
                 alert.show();
