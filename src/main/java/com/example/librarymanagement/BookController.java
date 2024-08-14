@@ -1,10 +1,5 @@
 package com.example.librarymanagement;
 
-import javafx.collections.ObservableList;
-
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -151,11 +146,10 @@ public class BookController implements Initializable {
     }
 
     private void loadProductsFromFile() {
-        File file = new File("C:\\Users\\theho\\Downloads\\Library_Management\\Project.txt");
+        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\Project.txt");
         if (!file.exists()) {
             return;
         }
-        clearInFile();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -175,7 +169,7 @@ public class BookController implements Initializable {
 
     private void saveProductsToFile() {
         // Xác định đường dẫn file trong thư mục dự án hoặc một thư mục cụ thể
-        File file = new File("C:\\Users\\theho\\Downloads\\Library_Management\\Project.txt");
+        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\Project.txt");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for (Book book : Books) {
@@ -199,7 +193,7 @@ public class BookController implements Initializable {
     }
 
     public void clearInFile() {
-        File file = new File("Project.txt");
+        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\Project.txt");
         try (FileWriter writer = new FileWriter(file, false)) {
             writer.write("");
         } catch (IOException e) {
@@ -247,6 +241,7 @@ public class BookController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Books = FXCollections.observableArrayList();
+        loadProductsFromFile();
         table.setItems(Books);
         if (currentUser != null) {
             if (currentUser.getRole().equalsIgnoreCase("admin")) {
@@ -415,41 +410,35 @@ public class BookController implements Initializable {
         userReleaseYearCol.setCellValueFactory(new PropertyValueFactory<Book, String>("ReleaseYear"));
         userGenreCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Genre"));
         userStatusCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Status"));
-        userActionCol.setCellValueFactory(new PropertyValueFactory<Book, Void>(""));
-        Callback<TableColumn<Book, Void>, TableCell<Book, Void>> cellFactory = new Callback<>() {
-            @Override
-            public TableCell<Book, Void> call(TableColumn<Book, Void> bookVoidTableColumn) {
-                final TableCell<Book, Void> cell = new TableCell<>() {
+        userActionCol.setCellFactory(column -> new TableCell<Book, Void>() {
+            private final Button borrowButton = new Button("Borrow");
 
-                    private final Button borrowButton = new Button("Borrow");
-
-                    {
-                        borrowButton.setOnAction((ActionEvent event) -> {
-                            Book book = getTableView().getItems().get(getIndex());
-                            showBorrowDialog(book);
-                            book.setStatus("unactivated");
-                            borrowButton.setCancelButton(true);
-                        });
-                        borrowButton.setPrefWidth(75);
-                    }
-
-                    @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            HBox hBox = new HBox(borrowButton);
-                            hBox.setSpacing(10);
-                            HBox.setMargin(borrowButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Edit
-                            setGraphic(hBox);
-                        }
-                    }
-                };
-                return cell;
+            {
+                borrowButton.setOnAction((ActionEvent event) -> {
+                    Book book = getTableView().getItems().get(getIndex());
+                    showBorrowDialog(book);
+                });
+                borrowButton.setPrefWidth(75);
             }
-        };
-        userActionCol.setCellFactory(cellFactory);
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
+                    setGraphic(null);
+                } else {
+                    Book book = getTableRow().getItem();
+                    if ("Unactivated".equalsIgnoreCase(book.getStatus())) {
+                        setGraphic(null);
+                    } else {
+                        HBox hBox = new HBox(borrowButton);
+                        hBox.setSpacing(10);
+                        HBox.setMargin(borrowButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Borrow
+                        setGraphic(hBox);
+                    }
+                }
+            }
+        });
         tableUser.setItems(Books);
     }
 
@@ -547,24 +536,17 @@ public class BookController implements Initializable {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         String formattedDate = currentDate.format(formatter);
 
-        VBox vbox = new VBox(paidDate, saveButton);
-        vbox.setSpacing(10);
-        Scene scene = new Scene(vbox, 240, 480);
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.setTitle("Borrow");
-        stage.show();
-
         saveButton.setOnAction(e -> {
             LoanSlip loanSlip = new LoanSlip(currentUser.getUsername(), book.getId(), formattedDate, paidDate.getText(), "on loan");
             if (!isValidDate(paidDate.getText(), "yyyy/MM/dd")) {
                 alert.setContentText("Date format: yyyy/MM/dd");
                 alert.show();
-                return;
             } else {
                 loanSlip.setReturnDate(paidDate.getText());
+                book.setStatus("Unactivated");
+                tableUser.refresh();
+                stage.close();
             }
-            stage.close();
         });
     }
 
@@ -572,6 +554,7 @@ public class BookController implements Initializable {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         try {
             LocalDate date = LocalDate.parse(dateStr, formatter);
+
             return true;
         } catch (DateTimeParseException e) {
             return false;
