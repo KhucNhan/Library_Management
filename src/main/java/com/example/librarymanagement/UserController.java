@@ -42,6 +42,7 @@ public class UserController {
         findUser(username).setRole(role);
     }
 
+    public static User currentUser;
     @FXML
     protected boolean login(ActionEvent event) throws IOException {
         String username = this.username.getText();
@@ -53,31 +54,34 @@ public class UserController {
             alert.show();
             return false;
         } else {
-            if (findUser(username).getUsername().equals(username) && findUser(username).getPassword().equals(password)) {
-                if (findUser(username).getRole().equalsIgnoreCase("admin")) {
-                    alert.setContentText("Success! Xin chào admin " + findUser(username).getUsername() + ".");
-                    Parent root = FXMLLoader.load(getClass().getResource("AdminView.fxml"));
-                    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    scene = new Scene(root, 1080, 720);
-                    stage.setTitle("Home");
-                    stage.setScene(scene);
-                    stage.show();
+            currentUser = findUser(username);
+            if (currentUser.getUsername().equals(username) && currentUser.getPassword().equals(password)) {
+                FXMLLoader loader;
+                Parent root;
+                if (currentUser.getRole().equalsIgnoreCase("admin")) {
+                    alert.setContentText("Success! Xin chào admin " + currentUser.getUsername() + ".");
+                    loader = new FXMLLoader(getClass().getResource("AdminView.fxml"));
+                    root = loader.load();
+                    System.out.println(currentUser.getRole());
+                    // Không cần set role ở đây vì không cần truyền thông tin đến AdminView
                 } else {
-                    alert.setContentText("Success! Xin chào user " + findUser(username).getUsername() + ".");
-                    Parent root = FXMLLoader.load(getClass().getResource("UserView.fxml"));
-                    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    scene = new Scene(root, 1080, 720);
-                    stage.setTitle("Home");
-                    stage.setScene(scene);
-                    stage.show();
+                    alert.setContentText("Success! Xin chào user " + currentUser.getUsername() + ".");
+                    loader = new FXMLLoader(getClass().getResource("UserView.fxml"));
+                    root = loader.load();
+                    System.out.println(currentUser.getRole());
                 }
+
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Scene scene = new Scene(root, 1080, 720);
+                stage.setTitle("Home");
+                stage.setScene(scene);
+                stage.show();
             } else {
                 alert.setContentText("Incorrect username or password!");
                 alert.show();
                 return false;
             }
         }
-        alert.show();
         return true;
     }
 

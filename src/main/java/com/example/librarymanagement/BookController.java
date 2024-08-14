@@ -23,8 +23,15 @@ import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import static com.example.librarymanagement.UserController.currentUser;
 
 public class BookController implements Initializable {
     private static ObservableList<Book> Books;
@@ -43,7 +50,7 @@ public class BookController implements Initializable {
     private Parent root;
 
     public void goToLoginScene(ActionEvent event) throws IOException {
-        table.refresh();
+//        table.refresh();
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root, 1080, 720);
@@ -52,7 +59,7 @@ public class BookController implements Initializable {
     }
 
     public void goToLoanSlip(ActionEvent event) throws IOException {
-        table.refresh();
+//        table.refresh();
         Parent root = FXMLLoader.load(getClass().getResource("LoanSlipView.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root, 1080, 720);
@@ -237,6 +244,41 @@ public class BookController implements Initializable {
         Books = FXCollections.observableArrayList();
         loadProductsFromFile();
         table.setItems(Books);
+        if (currentUser != null) {
+            if (currentUser.getRole().equalsIgnoreCase("admin")) {
+                initializeAdminTableView();
+            } else {
+                initializeUserTableView();
+            }
+        } else {
+            System.out.println(currentUser.getRole());
+        }
+    }
+
+    @FXML
+    private TableView<Book> tableUser;
+    @FXML
+    private TableColumn<Book, String> userImgCol;
+    @FXML
+    private TableColumn<Book, String> userTitleCol;
+    @FXML
+    private TableColumn<Book, String> userAuthorCol;
+    @FXML
+    private TableColumn<Book, String> userReleaseYearCol;
+    @FXML
+    private TableColumn<Book, String> userGenreCol;
+    @FXML
+    private TableColumn<Book, String> userStatusCol;
+    @FXML
+    private TableColumn<Book, Void> userActionCol;
+
+    private void initializeAdminTableView() {
+        Books = FXCollections.observableArrayList(
+                new Book("b1", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.Vft2Qo0-MMjvfI4FZ8391CJmhPK9Pvc_vqrS9_7gwxg.jpg", "toan", "nhan", "2018", "Subject", "Activated"),
+                new Book("b2", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.VbhMsFVRRJ3A6vNB7I-_y4OO6EBXUATKAnhnvusjiuU.jpg", "tieng anh", "khanh", "2018", "Subject", "Activated"),
+                new Book("b3", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.3GlCsPxLsXIL-mLj_UvwGJTiGfFB49UYUhZWVQpBUEQ.jpg", "one piece", "oda", "1999", "Animation", "Activated"),
+                new Book("b4", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.cm6mbU9Q3v_YXeHPt4OInVIw2NgL0XNMKsZ_tfIcLCI.jpg", "doraemon", "fuji", "2000", "Animation", "Unactivated")
+        );
         idCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Id"));
         imgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
         imgCol.setCellFactory(column -> new TableCell<Book, String>() {
@@ -348,6 +390,73 @@ public class BookController implements Initializable {
         table.setItems(Books);
     }
 
+    private void initializeUserTableView() {
+        Books = FXCollections.observableArrayList(
+                new Book("b1", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.Vft2Qo0-MMjvfI4FZ8391CJmhPK9Pvc_vqrS9_7gwxg.jpg", "toan", "nhan", "2018", "Subject", "Activated"),
+                new Book("b2", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.VbhMsFVRRJ3A6vNB7I-_y4OO6EBXUATKAnhnvusjiuU.jpg", "tieng anh", "khanh", "2018", "Subject", "Activated"),
+                new Book("b3", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.3GlCsPxLsXIL-mLj_UvwGJTiGfFB49UYUhZWVQpBUEQ.jpg", "one piece", "oda", "1999", "Animation", "Activated"),
+                new Book("b4", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.cm6mbU9Q3v_YXeHPt4OInVIw2NgL0XNMKsZ_tfIcLCI.jpg", "doraemon", "fuji", "2000", "Animation", "Unactivated")
+        );
+        userImgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
+        userImgCol.setCellFactory(column -> new TableCell<Book, String>() {
+            private final ImageView imageView = new ImageView();
+
+            @Override
+            protected void updateItem(String imagePath, boolean empty) {
+                super.updateItem(imagePath, empty);
+                if (empty || imagePath == null) {
+                    setGraphic(null);
+                } else {
+                    imageView.setImage(new Image(imagePath));
+                    imageView.setFitHeight(50); // Chiều cao của ảnh
+                    imageView.setFitWidth(50);  // Chiều rộng của ảnh
+                    setGraphic(imageView);
+                }
+            }
+        });
+        userTitleCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Title"));
+        userAuthorCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Author"));
+        userReleaseYearCol.setCellValueFactory(new PropertyValueFactory<Book, String>("ReleaseYear"));
+        userGenreCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Genre"));
+        userStatusCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Status"));
+        userActionCol.setCellValueFactory(new PropertyValueFactory<Book, Void>(""));
+        Callback<TableColumn<Book, Void>, TableCell<Book, Void>> cellFactory = new Callback<>() {
+            @Override
+            public TableCell<Book, Void> call(TableColumn<Book, Void> bookVoidTableColumn) {
+                final TableCell<Book, Void> cell = new TableCell<>() {
+
+                    private final Button borrowButton = new Button("Borrow");
+
+                    {
+                        borrowButton.setOnAction((ActionEvent event) -> {
+                            Book book = getTableView().getItems().get(getIndex());
+                            showBorrowDialog(book);
+                            book.setStatus("unactivated");
+                            borrowButton.setCancelButton(true);
+                        });
+                        borrowButton.setPrefWidth(75);
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            HBox hBox = new HBox(borrowButton);
+                            hBox.setSpacing(10);
+                            HBox.setMargin(borrowButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Edit
+                            setGraphic(hBox);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+        userActionCol.setCellFactory(cellFactory);
+        tableUser.setItems(Books);
+    }
+
     private void showEditDialog(Book book) {
         // Tạo một dialog để chỉnh sửa sản phẩm
         TextField title = new TextField(book.getTitle());
@@ -358,6 +467,16 @@ public class BookController implements Initializable {
         TextField status = new TextField(book.getStatus());
 
         Button saveButton = new Button("Save");
+
+
+        VBox vbox = new VBox(title, img, author, releaseYear, genre, status, saveButton);
+        vbox.setSpacing(10);
+        Scene scene = new Scene(vbox, 240, 480);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Edit");
+        stage.show();
+
         saveButton.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             if (title.getText().isEmpty() || author.getText().isEmpty() || releaseYear.getText().isEmpty() || genre.getText().isEmpty() || status.getText().isEmpty()) {
@@ -386,32 +505,16 @@ public class BookController implements Initializable {
                 return;
             }
 
-//            for (Book value : Books) {
-//                if (value.getId().equals(id.getText())) {
-//                    alert.setContentText("This id is exist. Try again please.");
-//                    alert.show();
-//                    return;
-//                }
-//            }
-
-//            book.setId(id.getText());
             book.setTitle(title.getText());
             book.setImg(img.getText());
             book.setAuthor(author.getText());
             book.setReleaseYear(releaseYear.getText());
             book.setGenre(genre.getText());
             book.setStatus(status.getText());
-
             table.refresh(); // Cập nhật lại TableView
+            stage.close();
         });
 
-        VBox vbox = new VBox(title, img, author, releaseYear, genre, status, saveButton);
-        vbox.setSpacing(10);
-        Scene scene = new Scene(vbox, 240, 480);
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.setTitle("Edit");
-        stage.show();
     }
 
     public boolean showConfirmation(String sáchĐượcThêmThànhCông) {
@@ -433,6 +536,50 @@ public class BookController implements Initializable {
         } catch (Exception e) {
             return false;
         }
+    }
+}
+
+
+private void showBorrowDialog(Book book) {
+    TextField paidDate = new TextField();
+    Button saveButton = new Button("Save");
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+    // Lấy ngày hiện tại
+    LocalDate currentDate = LocalDate.now();
+
+    // Định dạng ngày
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+    String formattedDate = currentDate.format(formatter);
+
+    VBox vbox = new VBox(paidDate, saveButton);
+    vbox.setSpacing(10);
+    Scene scene = new Scene(vbox, 240, 480);
+    Stage stage = new Stage();
+    stage.setScene(scene);
+    stage.setTitle("Borrow");
+    stage.show();
+
+    saveButton.setOnAction(e -> {
+        LoanSlip loanSlip = new LoanSlip(currentUser.getUsername(), book.getId(), formattedDate, paidDate.getText(), "on loan");
+        if (!isValidDate(paidDate.getText(), "yyyy/MM/dd")) {
+            alert.setContentText("Date format: yyyy/MM/dd");
+            alert.show();
+            return;
+        } else {
+            loanSlip.setReturnDate(paidDate.getText());
+        }
+        stage.close();
+    });
+}
+
+public static boolean isValidDate(String dateStr, String format) {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+    try {
+        LocalDate date = LocalDate.parse(dateStr, formatter);
+        return true;
+    } catch (DateTimeParseException e) {
+        return false;
     }
 }
 
