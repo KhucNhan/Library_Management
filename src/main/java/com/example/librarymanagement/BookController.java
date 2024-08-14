@@ -1,5 +1,10 @@
 package com.example.librarymanagement;
 
+import javafx.collections.ObservableList;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -146,7 +151,7 @@ public class BookController implements Initializable {
     }
 
     private void loadProductsFromFile() {
-        File file = new File("Project.txt");
+        File file = new File("C:\\Users\\theho\\Downloads\\Library_Management\\Project.txt");
         if (!file.exists()) {
             return;
         }
@@ -194,7 +199,7 @@ public class BookController implements Initializable {
     }
 
     public void clearInFile() {
-        File file = new File("C:\\Users\\theho\\Downloads\\Library_Management\\Project.txt");
+        File file = new File("Project.txt");
         try (FileWriter writer = new FileWriter(file, false)) {
             writer.write("");
         } catch (IOException e) {
@@ -242,7 +247,6 @@ public class BookController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Books = FXCollections.observableArrayList();
-        loadProductsFromFile();
         table.setItems(Books);
         if (currentUser != null) {
             if (currentUser.getRole().equalsIgnoreCase("admin")) {
@@ -273,12 +277,8 @@ public class BookController implements Initializable {
     private TableColumn<Book, Void> userActionCol;
 
     private void initializeAdminTableView() {
-        Books = FXCollections.observableArrayList(
-                new Book("b1", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.Vft2Qo0-MMjvfI4FZ8391CJmhPK9Pvc_vqrS9_7gwxg.jpg", "toan", "nhan", "2018", "Subject", "Activated"),
-                new Book("b2", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.VbhMsFVRRJ3A6vNB7I-_y4OO6EBXUATKAnhnvusjiuU.jpg", "tieng anh", "khanh", "2018", "Subject", "Activated"),
-                new Book("b3", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.3GlCsPxLsXIL-mLj_UvwGJTiGfFB49UYUhZWVQpBUEQ.jpg", "one piece", "oda", "1999", "Animation", "Activated"),
-                new Book("b4", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.cm6mbU9Q3v_YXeHPt4OInVIw2NgL0XNMKsZ_tfIcLCI.jpg", "doraemon", "fuji", "2000", "Animation", "Unactivated")
-        );
+        Books = FXCollections.observableArrayList();
+        loadProductsFromFile();
         idCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Id"));
         imgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
         imgCol.setCellFactory(column -> new TableCell<Book, String>() {
@@ -391,12 +391,8 @@ public class BookController implements Initializable {
     }
 
     private void initializeUserTableView() {
-        Books = FXCollections.observableArrayList(
-                new Book("b1", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.Vft2Qo0-MMjvfI4FZ8391CJmhPK9Pvc_vqrS9_7gwxg.jpg", "toan", "nhan", "2018", "Subject", "Activated"),
-                new Book("b2", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.VbhMsFVRRJ3A6vNB7I-_y4OO6EBXUATKAnhnvusjiuU.jpg", "tieng anh", "khanh", "2018", "Subject", "Activated"),
-                new Book("b3", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.3GlCsPxLsXIL-mLj_UvwGJTiGfFB49UYUhZWVQpBUEQ.jpg", "one piece", "oda", "1999", "Animation", "Activated"),
-                new Book("b4", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.cm6mbU9Q3v_YXeHPt4OInVIw2NgL0XNMKsZ_tfIcLCI.jpg", "doraemon", "fuji", "2000", "Animation", "Unactivated")
-        );
+        Books = FXCollections.observableArrayList();
+        loadProductsFromFile();
         userImgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
         userImgCol.setCellFactory(column -> new TableCell<Book, String>() {
             private final ImageView imageView = new ImageView();
@@ -537,49 +533,48 @@ public class BookController implements Initializable {
             return false;
         }
     }
-}
 
 
-private void showBorrowDialog(Book book) {
-    TextField paidDate = new TextField();
-    Button saveButton = new Button("Save");
-    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void showBorrowDialog(Book book) {
+        TextField paidDate = new TextField();
+        Button saveButton = new Button("Save");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
-    // Lấy ngày hiện tại
-    LocalDate currentDate = LocalDate.now();
+        // Lấy ngày hiện tại
+        LocalDate currentDate = LocalDate.now();
 
-    // Định dạng ngày
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-    String formattedDate = currentDate.format(formatter);
+        // Định dạng ngày
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        String formattedDate = currentDate.format(formatter);
 
-    VBox vbox = new VBox(paidDate, saveButton);
-    vbox.setSpacing(10);
-    Scene scene = new Scene(vbox, 240, 480);
-    Stage stage = new Stage();
-    stage.setScene(scene);
-    stage.setTitle("Borrow");
-    stage.show();
+        VBox vbox = new VBox(paidDate, saveButton);
+        vbox.setSpacing(10);
+        Scene scene = new Scene(vbox, 240, 480);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Borrow");
+        stage.show();
 
-    saveButton.setOnAction(e -> {
-        LoanSlip loanSlip = new LoanSlip(currentUser.getUsername(), book.getId(), formattedDate, paidDate.getText(), "on loan");
-        if (!isValidDate(paidDate.getText(), "yyyy/MM/dd")) {
-            alert.setContentText("Date format: yyyy/MM/dd");
-            alert.show();
-            return;
-        } else {
-            loanSlip.setReturnDate(paidDate.getText());
+        saveButton.setOnAction(e -> {
+            LoanSlip loanSlip = new LoanSlip(currentUser.getUsername(), book.getId(), formattedDate, paidDate.getText(), "on loan");
+            if (!isValidDate(paidDate.getText(), "yyyy/MM/dd")) {
+                alert.setContentText("Date format: yyyy/MM/dd");
+                alert.show();
+                return;
+            } else {
+                loanSlip.setReturnDate(paidDate.getText());
+            }
+            stage.close();
+        });
+    }
+
+    public static boolean isValidDate(String dateStr, String format) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        try {
+            LocalDate date = LocalDate.parse(dateStr, formatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
         }
-        stage.close();
-    });
-}
-
-public static boolean isValidDate(String dateStr, String format) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-    try {
-        LocalDate date = LocalDate.parse(dateStr, formatter);
-        return true;
-    } catch (DateTimeParseException e) {
-        return false;
     }
 }
-
