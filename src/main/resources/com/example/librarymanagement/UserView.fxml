@@ -6,9 +6,38 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.librarymanagement.UserController"
-            prefHeight="400.0" prefWidth="600.0">
-<Label text="HEHE"/>
-</AnchorPane>
+<?import javafx.geometry.Insets?>
+<GridPane prefHeight="720.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarymanagement.BookController">
+    <HBox prefHeight="34.0">
+        <Button onAction="#goToLoanSlip" prefWidth="80.0" text="Loan Slip">
+            <HBox.margin>
+                <Insets left="10.0" right="10.0" />
+            </HBox.margin></Button>
+        <Button onAction="#goToLoginScene" prefWidth="80.0" text="Log out">
+            <HBox.margin>
+                <Insets left="10.0" right="10.0" />
+            </HBox.margin></Button>
+    </HBox>
+    <VBox prefHeight="720.0" prefWidth="1079" BorderPane.alignment="CENTER" GridPane.rowIndex="1">
+        <HBox prefHeight="720.0" style="-fx-background-color: white;">
+            <TableView fx:id="tableUser" fixedCellSize="50.0" focusTraversable="false" prefHeight="670.0" style="-fx-border-color: white; -fx-background-color: white;">
+                <columns>
+                    <TableColumn fx:id="userImgCol" prefWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Image"/>
+                    <TableColumn fx:id="userTitleCol" minWidth="100.0" style="-fx-background-color: white; -fx-border-color: lightgray;" text="Title" />
+                    <TableColumn fx:id="userAuthorCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Author" />
+                    <TableColumn fx:id="userReleaseYearCol" minWidth="100.0" style="-fx-background-color: white; -fx-border-color: lightgray;" text="Release Year" />
+                    <TableColumn fx:id="userGenreCol" minWidth="100.0" style="-fx-background-color: white; -fx-border-color: lightgray;" text="Genre" />
+                    <TableColumn fx:id="userStatusCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Status" />
+                    <TableColumn fx:id="userActionCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text=" " />
+                </columns>
+            </TableView>
+        </HBox>
+    </VBox>
+    <columnConstraints>
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+        <RowConstraints />
+    </rowConstraints>
+</GridPane>

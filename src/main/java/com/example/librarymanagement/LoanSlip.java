@@ -61,4 +61,15 @@ public class LoanSlip {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "LoanSlip{" +
+                "idUser='" + idUser + '\'' +
+                ", idBook='" + idBook + '\'' +
+                ", date='" + date + '\'' +
+                ", returnDate='" + returnDate + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }
