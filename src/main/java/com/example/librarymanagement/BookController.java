@@ -34,6 +34,7 @@ import static com.example.librarymanagement.UserController.currentUser;
 
 public class BookController implements Initializable {
     private static ObservableList<Book> Books;
+
     public Book getBook(String text) {
         for (Book book : Books) {
             if (((book.getId()).equals((text)) || (book.getTitle().equals(text)))) {
@@ -138,6 +139,7 @@ public class BookController implements Initializable {
     private TableColumn<Book, String> statusCol;
     @FXML
     private TableColumn<Book, Void> actionCol;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         if (currentUser != null) {
@@ -169,12 +171,7 @@ public class BookController implements Initializable {
     private TableColumn<Book, Void> userActionCol;
 
     private void initializeAdminTableView() {
-        Books = FXCollections.observableArrayList(
-                new Book("b1", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.Vft2Qo0-MMjvfI4FZ8391CJmhPK9Pvc_vqrS9_7gwxg.jpg", "toan", "nhan", "2018", "Subject", "Activated"),
-                new Book("b2", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.VbhMsFVRRJ3A6vNB7I-_y4OO6EBXUATKAnhnvusjiuU.jpg", "tieng anh", "khanh", "2018", "Subject", "Activated"),
-                new Book("b3", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.3GlCsPxLsXIL-mLj_UvwGJTiGfFB49UYUhZWVQpBUEQ.jpg", "one piece", "oda", "1999", "Animation", "Activated"),
-                new Book("b4", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.cm6mbU9Q3v_YXeHPt4OInVIw2NgL0XNMKsZ_tfIcLCI.jpg", "doraemon", "fuji", "2000", "Animation", "Unactivated")
-        );
+        Books = FXCollections.observableArrayList();
         idCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Id"));
         imgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
         imgCol.setCellFactory(column -> new TableCell<Book, String>() {
@@ -204,6 +201,7 @@ public class BookController implements Initializable {
                 final TableCell<Book, String> statusCellFactory = new TableCell<>() {
 
                     private final Button statusButton = new Button();
+
                     {
                         statusButton.setOnAction((ActionEvent event) -> {
                             Book book = getTableView().getItems().get(getIndex());
@@ -286,12 +284,7 @@ public class BookController implements Initializable {
     }
 
     private void initializeUserTableView() {
-        Books = FXCollections.observableArrayList(
-                new Book("b1", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.Vft2Qo0-MMjvfI4FZ8391CJmhPK9Pvc_vqrS9_7gwxg.jpg", "toan", "nhan", "2018", "Subject", "Activated"),
-                new Book("b2", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.VbhMsFVRRJ3A6vNB7I-_y4OO6EBXUATKAnhnvusjiuU.jpg", "tieng anh", "khanh", "2018", "Subject", "Activated"),
-                new Book("b3", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.3GlCsPxLsXIL-mLj_UvwGJTiGfFB49UYUhZWVQpBUEQ.jpg", "one piece", "oda", "1999", "Animation", "Activated"),
-                new Book("b4", "file:///C:/Users/ADMIN/AppData/Local/Messenger/TamStorage/media_bank/AdvancedCrypto/100055416699838/persistent/att.cm6mbU9Q3v_YXeHPt4OInVIw2NgL0XNMKsZ_tfIcLCI.jpg", "doraemon", "fuji", "2000", "Animation", "Unactivated")
-        );
+        Books = FXCollections.observableArrayList();
         userImgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
         userImgCol.setCellFactory(column -> new TableCell<Book, String>() {
             private final ImageView imageView = new ImageView();
@@ -314,41 +307,35 @@ public class BookController implements Initializable {
         userReleaseYearCol.setCellValueFactory(new PropertyValueFactory<Book, String>("ReleaseYear"));
         userGenreCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Genre"));
         userStatusCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Status"));
-        userActionCol.setCellValueFactory(new PropertyValueFactory<Book, Void>(""));
-        Callback<TableColumn<Book, Void>, TableCell<Book, Void>> cellFactory = new Callback<>() {
-            @Override
-            public TableCell<Book, Void> call(TableColumn<Book, Void> bookVoidTableColumn) {
-                final TableCell<Book, Void> cell = new TableCell<>() {
+        userActionCol.setCellFactory(column -> new TableCell<Book, Void>() {
+            private final Button borrowButton = new Button("Borrow");
 
-                    private final Button borrowButton = new Button("Borrow");
-
-                    {
-                        borrowButton.setOnAction((ActionEvent event) -> {
-                            Book book = getTableView().getItems().get(getIndex());
-                            showBorrowDialog(book);
-                            book.setStatus("unactivated");
-                            borrowButton.setCancelButton(true);
-                        });
-                        borrowButton.setPrefWidth(75);
-                    }
-
-                    @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            HBox hBox = new HBox(borrowButton);
-                            hBox.setSpacing(10);
-                            HBox.setMargin(borrowButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Edit
-                            setGraphic(hBox);
-                        }
-                    }
-                };
-                return cell;
+            {
+                borrowButton.setOnAction((ActionEvent event) -> {
+                    Book book = getTableView().getItems().get(getIndex());
+                    showBorrowDialog(book);
+                });
+                borrowButton.setPrefWidth(75);
             }
-        };
-        userActionCol.setCellFactory(cellFactory);
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
+                    setGraphic(null);
+                } else {
+                    Book book = getTableRow().getItem();
+                    if ("Unactivated".equalsIgnoreCase(book.getStatus())) {
+                        setGraphic(null);
+                    } else {
+                        HBox hBox = new HBox(borrowButton);
+                        hBox.setSpacing(10);
+                        HBox.setMargin(borrowButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Borrow
+                        setGraphic(hBox);
+                    }
+                }
+            }
+        });
         tableUser.setItems(Books);
     }
 
@@ -454,15 +441,16 @@ public class BookController implements Initializable {
         stage.show();
 
         saveButton.setOnAction(e -> {
-            LoanSlip loanSlip = new LoanSlip(currentUser.getUsername(),book.getId(), formattedDate,paidDate.getText(),"on loan");
-            if (!isValidDate(paidDate.getText(),"yyyy/MM/dd")) {
+            LoanSlip loanSlip = new LoanSlip(currentUser.getUsername(), book.getId(), formattedDate, paidDate.getText(), "on loan");
+            if (!isValidDate(paidDate.getText(), "yyyy/MM/dd")) {
                 alert.setContentText("Date format: yyyy/MM/dd");
                 alert.show();
-                return;
             } else {
                 loanSlip.setReturnDate(paidDate.getText());
+                book.setStatus("Unactivated");
+                tableUser.refresh();
+                stage.close();
             }
-            stage.close();
         });
     }
 
