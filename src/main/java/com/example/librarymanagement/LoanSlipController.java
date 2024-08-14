@@ -40,7 +40,7 @@ public class LoanSlipController implements Initializable {
     }
 
     public void goToBookScene(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("ListView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("AdminView.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root, 1080, 720);
         stage.setTitle("Home");

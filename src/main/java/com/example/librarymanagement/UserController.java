@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @FXML
-    protected boolean login() {
+    protected boolean login(ActionEvent event) throws IOException {
         String username = this.username.getText();
         String password = this.password.getText();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -56,8 +56,20 @@ public class UserController {
             if (findUser(username).getUsername().equals(username) && findUser(username).getPassword().equals(password)) {
                 if (findUser(username).getRole().equalsIgnoreCase("admin")) {
                     alert.setContentText("Success! Xin chào admin " + findUser(username).getUsername() + ".");
+                    Parent root = FXMLLoader.load(getClass().getResource("AdminView.fxml"));
+                    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    scene = new Scene(root, 1080, 720);
+                    stage.setTitle("Home");
+                    stage.setScene(scene);
+                    stage.show();
                 } else {
                     alert.setContentText("Success! Xin chào user " + findUser(username).getUsername() + ".");
+                    Parent root = FXMLLoader.load(getClass().getResource("UserView.fxml"));
+                    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    scene = new Scene(root, 1080, 720);
+                    stage.setTitle("Home");
+                    stage.setScene(scene);
+                    stage.show();
                 }
             } else {
                 alert.setContentText("Incorrect username or password!");
@@ -90,17 +102,6 @@ public class UserController {
     private Stage stage;
     private Scene scene;
     private Parent root;
-
-    public void login(ActionEvent event) throws IOException {
-        if (login()) {
-            Parent root = FXMLLoader.load(getClass().getResource("ListView.fxml"));
-            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root, 1080, 720);
-            stage.setTitle("Home");
-            stage.setScene(scene);
-            stage.show();
-        }
-    }
 
     public void goToLogin(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
