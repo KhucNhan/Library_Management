@@ -11,7 +11,6 @@ public class Book {
     private String status;
 
     public Book() {
-
     }
 
     public Book(String id, String img, String title, String author, String releaseYear, String genre, String status) {
@@ -23,6 +22,9 @@ public class Book {
         this.genre = genre;
         this.status = status;
     }
+
+//    public Book(String part, String part1, String part2, String part3, String part4, String part5, String part6, String part7) {
+//    }
 
     public String getImg() {
         return img;
@@ -78,5 +80,15 @@ public class Book {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return id + "," + img + "," + title + "," + author + "," + releaseYear + "," + genre + "," + status;
+    }
+
+    public static Book fromString(String bookString) {
+        String[] parts = bookString.split(",");
+        return new Book(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6]);
     }
 }
