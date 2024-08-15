@@ -32,13 +32,23 @@ public class LoanSlipController implements Initializable {
     BookController bookController = new BookController();
 
     public void removeLoanSlip(LoanSlip loanSlip) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        if (bookController.isBookOnLoan(loanSlip.getIdBook())) {
+            alert.setContentText("Cannot remove loan slip. The book is currently on loan.");
+            alert.show();
+            return;
+        }
         loanSlips.remove(loanSlip);
         bookController.updateBookStatus(loanSlip.getIdBook(), "Activated");
         save();
     }
 
+    public ObservableList<LoanSlip> getLoanSlips() {
+        return loanSlips;
+    }
 
-    private void loadLoanSlipFromFile() {
+    void loadLoanSlipFromFile() {
+        loanSlips.clear();
         File file = new File("loanSlip.txt");
         if (!file.exists()) {
             return;

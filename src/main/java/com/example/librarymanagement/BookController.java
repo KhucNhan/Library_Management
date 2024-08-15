@@ -30,10 +30,10 @@ import java.util.ResourceBundle;
 import static com.example.librarymanagement.UserController.currentUser;
 
 public class BookController implements Initializable {
-    private static ObservableList<Book> Books;
+    private static ObservableList<Book> books;
 
     public Book getBook(String text) {
-        for (Book book : Books) {
+        for (Book book : books) {
             if (((book.getId()).equals((text)) || (book.getTitle().equals(text)))) {
                 return book;
             }
@@ -115,7 +115,7 @@ public class BookController implements Initializable {
 
         // Kiểm tra ID đã tồn tại
         if (book == null) {
-            Books.add(new Book(
+            books.add(new Book(
                     idAdd.getText(),
                     imgAdd.getText(),
                     titleAdd.getText(),
@@ -134,6 +134,7 @@ public class BookController implements Initializable {
     }
 
     private void loadBooksFromFile() {
+        books.clear();
         File file = new File("books.txt");
         if (!file.exists()) {
             return;
@@ -144,7 +145,7 @@ public class BookController implements Initializable {
                 String[] parts = line.split(",");
                 if (parts.length == 7) {
                     Book book = new Book(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6]);
-                    Books.add(book);
+                    books.add(book);
                 }
             }
         } catch (IOException e) {
@@ -160,7 +161,7 @@ public class BookController implements Initializable {
         File file = new File("books.txt");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            for (Book book : Books) {
+            for (Book book : books) {
                 // Tạo chuỗi dữ liệu cho từng sách
                 String line = String.join(",",
                         book.getId(),
@@ -218,14 +219,14 @@ public class BookController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Books = FXCollections.observableArrayList();
+        books = FXCollections.observableArrayList();
         loadBooksFromFile();
         if (currentUser != null) {
             if (currentUser.getRole().equalsIgnoreCase("admin")) {
-                table.setItems(Books);
+                table.setItems(books);
                 initializeAdminTableView();
             } else {
-                tableUser.setItems(Books);
+                tableUser.setItems(books);
                 initializeUserTableView();
             }
         } else {
@@ -251,7 +252,7 @@ public class BookController implements Initializable {
     private TableColumn<Book, Void> userActionCol;
 
     private void initializeAdminTableView() {
-        Books = FXCollections.observableArrayList();
+        books = FXCollections.observableArrayList();
         loadBooksFromFile();
         idCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Id"));
         imgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
@@ -285,14 +286,19 @@ public class BookController implements Initializable {
 
                     {
                         statusButton.setOnAction((ActionEvent event) -> {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             Book book = getTableView().getItems().get(getIndex());
                             if (book.getStatus().equalsIgnoreCase("Activated")) {
                                 book.setStatus("Unactivated");
                                 statusButton.setText("Activated");
                             } else {
-                                book.setStatus("Activated");
-                                //
-                                statusButton.setText("Unactivated");
+                                if (!isBookOnLoan(book.getId())) {
+                                    book.setStatus("Activated");
+                                    statusButton.setText("Unactivated");
+                                } else {
+                                    alert.setContentText("This book is on loan, can't change status.");
+                                    alert.show();
+                                }
                             }
                             save();
                             table.refresh();
@@ -364,11 +370,11 @@ public class BookController implements Initializable {
             }
         };
         actionCol.setCellFactory(cellFactory);
-        table.setItems(Books);
+        table.setItems(books);
     }
 
     private void initializeUserTableView() {
-        Books = FXCollections.observableArrayList();
+        books = FXCollections.observableArrayList();
         loadBooksFromFile();
         userImgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
         userImgCol.setCellFactory(column -> new TableCell<Book, String>() {
@@ -431,7 +437,7 @@ public class BookController implements Initializable {
                 }
             }
         });
-        tableUser.setItems(Books);
+        tableUser.setItems(books);
     }
 
     private void showEditDialog(Book book) {
@@ -578,7 +584,7 @@ public class BookController implements Initializable {
     }
 
     public void updateBookStatus(String bookId, String status) {
-        for (Book book : Books) {  // books là danh sách chứa tất cả các đối tượng Book
+        for (Book book : books) {  // books là danh sách chứa tất cả các đối tượng Book
             if (book.getId().equals(bookId)) {
                 book.setStatus(status);
                 saveBookToFile(); // Lưu thay đổi vào tệp
@@ -587,4 +593,18 @@ public class BookController implements Initializable {
         }
     }
 
+    public boolean isBookOnLoan(String bookId) {
+        // Tải danh sách phiếu mượn từ file (hoặc database)
+        LoanSlipController loanSlipController = new LoanSlipController();
+        loanSlipController.loadLoanSlipFromFile();
+
+        // Kiểm tra xem sách có đang ở trạng thái "On loan" trong bất kỳ phiếu mượn nào không
+        for (LoanSlip loanSlip : loanSlipController.getLoanSlips()) {
+            if (loanSlip.getIdBook().equals(bookId) && loanSlip.getStatus().equalsIgnoreCase("On loan")) {
+                return true; // Sách đang được mượn
+            }
+        }
+
+        return false; // Sách không được mượn
+    }
 }
