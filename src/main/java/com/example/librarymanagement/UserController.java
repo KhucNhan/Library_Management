@@ -1,50 +1,60 @@
 package com.example.librarymanagement;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.util.Arrays;
-public class UserController {
+import java.io.*;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class UserController implements Initializable {
+
     @FXML
     public TextField signUpUsername;
     @FXML
     public PasswordField signUpPassword;
     @FXML
     public PasswordField re_password;
-    private int count = 5;
-    static User user1 = new Admin("Nhan12345", "khucnhan", "nhan2005", "admin");
-    static User user2 = new Admin("Khanh23456", "baokhanh", "khanh2005", "admin");
-    static User user3 = new Admin("Dam34567", "vandam", "dam2005", "admin");
-    static User user4 = new User("Phuong45678", "nguyenphuong", "phuong2005");
-    public static User[] users = {user1, user2, user3, user4};
+    private int count = 1;
+
+    // Chuyển từ mảng User[] sang ObservableList<User>
+    static ObservableList<User> users = FXCollections.observableArrayList();
+
     @FXML
     TextField username;
     @FXML
     PasswordField password;
 
-    public void add(User user) {
-        users = Arrays.copyOf(users, users.length + 1);
-        users[users.length - 1] = user;
+    // Implement phương thức setRole để thay đổi role của User
+    public void setRole(String username, String role) {
+        User user = findUser(username);
+        if (user != null) {
+            user.setRole(role);
+        }
     }
 
-    public void setRole(String username, String role) {
-        findUser(username).setRole(role);
-    }
+//    private void addAdmin() {
+//        users.add(new Admin("Nhan12345", "khucnhan", "nhan2005", "admin"));
+//        users.add(new Admin("Khanh23456", "baokhanh", "khanh2005", "admin"));
+//        save();
+//    }
 
     public static User currentUser;
+
     @FXML
     protected boolean login(ActionEvent event) throws IOException {
+        loadUsersFromFile();
         String username = this.username.getText();
         String password = this.password.getText();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -62,13 +72,10 @@ public class UserController {
                     alert.setContentText("Success! Xin chào admin " + currentUser.getUsername() + ".");
                     loader = new FXMLLoader(getClass().getResource("AdminView.fxml"));
                     root = loader.load();
-                    System.out.println(currentUser.getRole());
-                    // Không cần set role ở đây vì không cần truyền thông tin đến AdminView
                 } else {
                     alert.setContentText("Success! Xin chào user " + currentUser.getUsername() + ".");
                     loader = new FXMLLoader(getClass().getResource("UserView.fxml"));
                     root = loader.load();
-                    System.out.println(currentUser.getRole());
                 }
 
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -157,8 +164,8 @@ public class UserController {
             alert.setContentText("Tạo tài khoản thành công! Bạn vui lòng đăng nhập lại.");
             alert.show();
             User newuser = new User(id, username, password);
-            users = Arrays.copyOf(users, users.length + 1);
-            users[users.length - 1] = newuser;
+            users.add(newuser);
+            saveUserToFile();
             Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root, 1080, 720);
@@ -179,5 +186,77 @@ public class UserController {
         stage.setTitle("Home");
         stage.setScene(scene);
         stage.show();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        users = FXCollections.observableArrayList(
+                new Admin("Nhan12345", "khucnhan", "nhan2005", "admin"),
+                new Admin("Khanh23456", "baokhanh", "khanh2005", "admin")
+        );
+        loadUsersFromFile();
+    }
+
+    private void loadUsersFromFile() {
+        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\src\\main\\java\\com\\example\\librarymanagement\\users.txt");
+        if (!file.exists()) {
+            return;
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            users.clear(); // Xóa tất cả các người dùng hiện có trước khi tải lại
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 4) { // Kiểm tra số lượng phần tử
+                    User user = new User(parts[0], parts[1], parts[2]);
+                    user.setRole(parts[3]); // Cập nhật role
+                    users.add(user);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError("Error loading data: Could not load user data from file.");
+        }
+    }
+
+    private void saveUserToFile() {
+        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\src\\main\\java\\com\\example\\librarymanagement\\users.txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (User user : users) {
+                String line = String.join(",",
+                        user.getUserId(),
+                        user.getUsername(),
+                        user.getPassword(),
+                        user.getRole()
+                );
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError("Error saving data: Could not save user data to file.");
+        }
+    }
+
+    private void clearInFile() {
+        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\src\\main\\java\\com\\example\\librarymanagement\\users.txt");
+        try (FileWriter writer = new FileWriter(file, false)) {
+            writer.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void save() {
+        clearInFile();
+        loadUsersFromFile();
     }
 }
