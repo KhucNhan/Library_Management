@@ -33,7 +33,7 @@ public class LoanSlipController implements Initializable {
     ObservableList<LoanSlip> LoanSlip = FXCollections.observableArrayList();
 
     private void loadLoanSlipFromFile() {
-        File file = new File("LoanSlip.txt");
+        File file = new File("loanSlip.txt");
         if (!file.exists()) {
             return;
         }
@@ -56,7 +56,7 @@ public class LoanSlipController implements Initializable {
 
     private void saveProductsToFile() {
         // Xác định đường dẫn file trong thư mục dự án hoặc một thư mục cụ thể
-        File file = new File("LoanSlip.txt");
+        File file = new File("loanSlip.txt");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for (LoanSlip loanSlip : LoanSlip) {
@@ -78,7 +78,7 @@ public class LoanSlipController implements Initializable {
     }
 
     public void clearInFile() {
-        File file = new File("LoanSlip.txt");
+        File file = new File("loanSlip.txt");
         try (FileWriter writer = new FileWriter(file, false)) {
             writer.write("");
         } catch (IOException e) {
