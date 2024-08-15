@@ -343,10 +343,16 @@ public class BookController implements Initializable {
                         editButton.setPrefWidth(75);
 
                         removeButton.setOnAction((ActionEvent event) -> {
-                            if (showConfirmation()) {
-                                Book book = getTableView().getItems().get(getIndex());
-                                getTableView().getItems().remove(book);
-                                save();
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            Book book = getTableView().getItems().get(getIndex());
+                            if (!isBookOnLoan(book.getId())) {
+                                if (showConfirmation()) {
+                                    getTableView().getItems().remove(book);
+                                    save();
+                                }
+                            } else {
+                                alert.setContentText("This book is on loan, can't remove.");
+                                alert.show();
                             }
                         });
                         removeButton.setPrefWidth(75);

@@ -245,8 +245,14 @@ public class LoanSlipController implements Initializable {
 
                     {
                         removeButton.setOnAction((ActionEvent event) -> {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            LoanSlip loanSlip = getTableView().getItems().get(getIndex());
+                            if (bookController.isBookOnLoan(loanSlip.getIdBook())) {
+                                alert.setContentText("Cannot remove loan slip. The book is currently on loan.");
+                                alert.show();
+                                return;
+                            }
                             if(showConfirmation()) {
-                                LoanSlip loanSlip = getTableView().getItems().get(getIndex());
                                 removeLoanSlip(loanSlip);
                                 tableView.refresh();
                             }
