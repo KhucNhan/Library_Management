@@ -33,7 +33,7 @@ public class LoanSlipController implements Initializable {
 
     public void removeLoanSlip(LoanSlip loanSlip) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        if (bookController.isBookOnLoan(loanSlip.getIdBook())) {
+        if (bookController.isBookOnLoan(loanSlip.getIdBook()) && currentUser.getRole().equalsIgnoreCase("admin")) {
             alert.setContentText("Cannot remove loan slip. The book is currently on loan.");
             alert.show();
             return;
