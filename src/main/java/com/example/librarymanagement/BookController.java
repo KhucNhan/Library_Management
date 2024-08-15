@@ -21,13 +21,9 @@ import javafx.util.Callback;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -128,7 +124,7 @@ public class BookController implements Initializable {
                     genreAdd.getText(),
                     statusAdd.getText()
             ));
-            saveProductsToFile(); // Lưu vào file sau khi thêm thành công
+            saveBookToFile(); // Lưu vào file sau khi thêm thành công
             return true;
         } else {
             alert.setContentText("This ID already exists. Please try another.");
@@ -137,7 +133,7 @@ public class BookController implements Initializable {
         }
     }
 
-    private void loadProductsFromFile() {
+    private void loadBooksFromFile() {
         File file = new File("books.txt");
         if (!file.exists()) {
             return;
@@ -159,7 +155,7 @@ public class BookController implements Initializable {
     }
 
 
-    private void saveProductsToFile() {
+    private void saveBookToFile() {
         // Xác định đường dẫn file trong thư mục dự án hoặc một thư mục cụ thể
         File file = new File("books.txt");
 
@@ -223,7 +219,7 @@ public class BookController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Books = FXCollections.observableArrayList();
-        loadProductsFromFile();
+        loadBooksFromFile();
         if (currentUser != null) {
             if (currentUser.getRole().equalsIgnoreCase("admin")) {
                 table.setItems(Books);
@@ -256,7 +252,7 @@ public class BookController implements Initializable {
 
     private void initializeAdminTableView() {
         Books = FXCollections.observableArrayList();
-        loadProductsFromFile();
+        loadBooksFromFile();
         idCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Id"));
         imgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
         imgCol.setCellFactory(column -> new TableCell<Book, String>() {
@@ -293,12 +289,13 @@ public class BookController implements Initializable {
                             if (book.getStatus().equalsIgnoreCase("Activated")) {
                                 book.setStatus("Unactivated");
                                 statusButton.setText("Activated");
-                                table.refresh();
                             } else {
                                 book.setStatus("Activated");
+                                //
                                 statusButton.setText("Unactivated");
-                                table.refresh();
                             }
+                            save();
+                            table.refresh();
                         });
                         statusButton.setPrefWidth(150);
                     }
@@ -372,7 +369,7 @@ public class BookController implements Initializable {
 
     private void initializeUserTableView() {
         Books = FXCollections.observableArrayList();
-        loadProductsFromFile();
+        loadBooksFromFile();
         userImgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
         userImgCol.setCellFactory(column -> new TableCell<Book, String>() {
             private final ImageView imageView = new ImageView();
@@ -401,7 +398,15 @@ public class BookController implements Initializable {
             {
                 borrowButton.setOnAction((ActionEvent event) -> {
                     Book book = getTableView().getItems().get(getIndex());
-                    showBorrowDialog(book);
+
+                    // Kiểm tra điều kiện cho phép mượn sách
+                    if ("Unactivated".equalsIgnoreCase(book.getStatus())) {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setContentText("This book is not available for borrowing.");
+                        alert.show();
+                    } else {
+                        showBorrowDialog(book);
+                    }
                 });
                 borrowButton.setPrefWidth(75);
             }
@@ -414,8 +419,10 @@ public class BookController implements Initializable {
                 } else {
                     Book book = getTableRow().getItem();
                     if ("Unactivated".equalsIgnoreCase(book.getStatus())) {
+                        borrowButton.setDisable(true);
                         setGraphic(null);
                     } else {
+                        borrowButton.setDisable(false);
                         HBox hBox = new HBox(borrowButton);
                         hBox.setSpacing(10);
                         HBox.setMargin(borrowButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Borrow
@@ -483,7 +490,6 @@ public class BookController implements Initializable {
             table.refresh(); // Cập nhật lại TableView
             stage.close();
         });
-
     }
 
     public boolean showConfirmation() {
@@ -507,11 +513,27 @@ public class BookController implements Initializable {
         }
     }
 
-
+    public static LoanSlip newLoanSlip;
     private void showBorrowDialog(Book book) {
+        // Tạo Stage cho dialog
+        Stage dialogStage = new Stage();
+        dialogStage.setTitle("Borrow Book");
+
+        // Tạo các thành phần giao diện
         TextField paidDate = new TextField();
         Button saveButton = new Button("Save");
+        Label paidDateLabel = new Label("Return Date (yyyy/MM/dd):");
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        // Tạo bố cục cho dialog
+        VBox vbox = new VBox(10); // khoảng cách giữa các thành phần là 10
+        vbox.setPadding(new Insets(10));
+        vbox.getChildren().addAll(paidDateLabel, paidDate, saveButton);
+
+        Scene scene = new Scene(vbox, 480, 360);
+        dialogStage.setScene(scene);
+
+        LoanSlipController loanSlipController = new LoanSlipController();
 
         // Lấy ngày hiện tại
         LocalDate currentDate = LocalDate.now();
@@ -521,17 +543,22 @@ public class BookController implements Initializable {
         String formattedDate = currentDate.format(formatter);
 
         saveButton.setOnAction(e -> {
-            LoanSlip loanSlip = new LoanSlip(currentUser.getUsername(), book.getId(), formattedDate, paidDate.getText(), "on loan");
+            newLoanSlip = new LoanSlip(currentUser.getUserId(), book.getId(), formattedDate, paidDate.getText(), "on loan");
             if (!isValidDate(paidDate.getText(), "yyyy/MM/dd")) {
                 alert.setContentText("Date format: yyyy/MM/dd");
                 alert.show();
             } else {
-                loanSlip.setReturnDate(paidDate.getText());
+                newLoanSlip.setReturnDate(paidDate.getText());
                 book.setStatus("Unactivated");
+                loanSlipController.addNewLoanSlip();
+                save();
                 tableUser.refresh();
-                stage.close();
+                dialogStage.close(); // Đóng dialog sau khi lưu
             }
         });
+
+        // Hiển thị dialog và chờ người dùng thao tác
+        dialogStage.showAndWait();
     }
 
     public static boolean isValidDate(String dateStr, String format) {
@@ -547,6 +574,17 @@ public class BookController implements Initializable {
 
     private void save() {
         clearInFile();
-        saveProductsToFile();
+        saveBookToFile();
     }
+
+    public void updateBookStatus(String bookId, String status) {
+        for (Book book : Books) {  // books là danh sách chứa tất cả các đối tượng Book
+            if (book.getId().equals(bookId)) {
+                book.setStatus(status);
+                saveBookToFile(); // Lưu thay đổi vào tệp
+                break;
+            }
+        }
+    }
+
 }
