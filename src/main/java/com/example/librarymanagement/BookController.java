@@ -85,15 +85,13 @@ public class BookController implements Initializable {
 
         // Kiểm tra các trường thông tin
         if (idAdd.getText().isEmpty() || titleAdd.getText().isEmpty() || authorAdd.getText().isEmpty() || releaseYearAdd.getText().isEmpty() || genreAdd.getText().isEmpty() || statusAdd.getText().isEmpty()) {
-            alert.setContentText("No blank fields allowed!");
-            alert.show();
+            alert(alert, "No blank fields allowed!");
             return false;
         }
 
         // Kiểm tra trạng thái
         if (!statusAdd.getText().equalsIgnoreCase("activated") && !statusAdd.getText().equalsIgnoreCase("unactivated")) {
-            alert.setContentText("Status must be activated or unactivated.");
-            alert.show();
+            alert(alert, "Status must be activated or unactivated.");
             return false;
         }
 
@@ -101,15 +99,13 @@ public class BookController implements Initializable {
         try {
             Integer.parseInt(releaseYearAdd.getText());
         } catch (NumberFormatException e) {
-            alert.setContentText("Enter a valid number for Release Year.");
-            alert.show();
+            alert(alert, "Enter a valid number for Release Year.");
             return false;
         }
 
         // Kiểm tra URL
         if (!isValidURL(imgAdd.getText())) {
-            alert.setContentText("Invalid URL.");
-            alert.show();
+            alert(alert, "Invalid URL.");
             return false;
         }
 
@@ -127,8 +123,7 @@ public class BookController implements Initializable {
             saveBookToFile(); // Lưu vào file sau khi thêm thành công
             return true;
         } else {
-            alert.setContentText("This ID already exists. Please try another.");
-            alert.show();
+            alert(alert, "This ID already exists. Please try another.");
             return false;
         }
     }
@@ -296,8 +291,7 @@ public class BookController implements Initializable {
                                     book.setStatus("Activated");
                                     statusButton.setText("Unactivated");
                                 } else {
-                                    alert.setContentText("This book is on loan, can't change status.");
-                                    alert.show();
+                                    alert(alert, "This book is on loan, can't change status.");
                                 }
                             }
                             save();
@@ -342,8 +336,7 @@ public class BookController implements Initializable {
                                 showEditDialog(book);
                                 save();
                             } else {
-                                alert.setContentText("This book is on loan, can't remove.");
-                                alert.show();
+                                alert(alert, "This book is on loan, can't remove.");
                             }
                         });
                         editButton.setPrefWidth(75);
@@ -357,8 +350,7 @@ public class BookController implements Initializable {
                                     save();
                                 }
                             } else {
-                                alert.setContentText("This book is on loan, can't remove.");
-                                alert.show();
+                                alert(alert, "This book is on loan, can't remove.");
                             }
                         });
                         removeButton.setPrefWidth(75);
@@ -383,6 +375,11 @@ public class BookController implements Initializable {
         };
         actionCol.setCellFactory(cellFactory);
         table.setItems(books);
+    }
+
+    private static void alert(Alert alert, String s) {
+        alert.setContentText(s);
+        alert.show();
     }
 
     private void initializeUserTableView() {
@@ -420,8 +417,7 @@ public class BookController implements Initializable {
                     // Kiểm tra điều kiện cho phép mượn sách
                     if ("Unactivated".equalsIgnoreCase(book.getStatus())) {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
-                        alert.setContentText("This book is not available for borrowing.");
-                        alert.show();
+                        alert(alert, "This book is not available for borrowing.");
                     } else {
                         showBorrowDialog(book);
                     }
@@ -475,28 +471,24 @@ public class BookController implements Initializable {
         saveButton.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             if (title.getText().isEmpty() || author.getText().isEmpty() || releaseYear.getText().isEmpty() || genre.getText().isEmpty() || status.getText().isEmpty()) {
-                alert.setContentText("No blank!");
-                alert.show();
+                alert(alert, "No blank!");
                 return;
             }
 
             if (!status.getText().equalsIgnoreCase("Activated") && !status.getText().equalsIgnoreCase("Unactivated")) {
-                alert.setContentText("Status must be activated or unactivated.");
-                alert.show();
+                alert(alert, "Status must be activated or unactivated.");
                 return;
             }
 
             try {
                 Double num = Double.parseDouble(releaseYear.getText());
             } catch (NumberFormatException exception) {
-                alert.setContentText("Enter a numbers in Release year.");
-                alert.show();
+                alert(alert, "Enter a numbers in Release year.");
                 return;
             }
 
             if (!isValidURL(img.getText())) {
-                alert.setContentText("Can't use this url.");
-                alert.show();
+                alert(alert, "Can't use this url.");
                 return;
             }
             book.setTitle(title.getText());
@@ -563,8 +555,7 @@ public class BookController implements Initializable {
         saveButton.setOnAction(e -> {
             newLoanSlip = new LoanSlip(currentUser.getUserId(), book.getId(), formattedDate, paidDate.getText(), "on loan");
             if (!isValidDate(paidDate.getText(), "yyyy/MM/dd")) {
-                alert.setContentText("Date format: yyyy/MM/dd");
-                alert.show();
+                alert(alert, "Date format: yyyy/MM/dd");
             } else {
                 newLoanSlip.setReturnDate(paidDate.getText());
                 book.setStatus("Unactivated");
