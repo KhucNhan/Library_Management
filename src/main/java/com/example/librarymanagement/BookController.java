@@ -146,7 +146,7 @@ public class BookController implements Initializable {
     }
 
     private void loadProductsFromFile() {
-        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\Project.txt");
+        File file = new File("Project.txt");
         if (!file.exists()) {
             return;
         }
@@ -169,7 +169,7 @@ public class BookController implements Initializable {
 
     private void saveProductsToFile() {
         // Xác định đường dẫn file trong thư mục dự án hoặc một thư mục cụ thể
-        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\Project.txt");
+        File file = new File("Project.txt");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for (Book book : Books) {
@@ -193,7 +193,7 @@ public class BookController implements Initializable {
     }
 
     public void clearInFile() {
-        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\Project.txt");
+        File file = new File("Project.txt");
         try (FileWriter writer = new FileWriter(file, false)) {
             writer.write("");
         } catch (IOException e) {
@@ -352,6 +352,7 @@ public class BookController implements Initializable {
                         editButton.setOnAction((ActionEvent event) -> {
                             Book book = getTableView().getItems().get(getIndex());
                             showEditDialog(book);
+                            save();
                         });
                         editButton.setPrefWidth(75);
 
@@ -359,6 +360,7 @@ public class BookController implements Initializable {
                             if (showConfirmation("Sách được thêm thành công")) {
                                 Book book = getTableView().getItems().get(getIndex());
                                 getTableView().getItems().remove(book);
+                                save();
                             }
                         });
                         removeButton.setPrefWidth(75);
@@ -548,6 +550,11 @@ public class BookController implements Initializable {
                 stage.close();
             }
         });
+    }
+
+    public void save() {
+        clearInFile();
+        saveProductsToFile();
     }
 
     public static boolean isValidDate(String dateStr, String format) {

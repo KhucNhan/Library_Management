@@ -22,6 +22,8 @@ public class LoanSlip {
         this.status = status;
     }
 
+    public LoanSlip(String part, String part1, String part2, String part3, String part4, String part5, String part6) {
+    }
     public void setIdUser(String idUser) {
         this.idUser = idUser;
     }

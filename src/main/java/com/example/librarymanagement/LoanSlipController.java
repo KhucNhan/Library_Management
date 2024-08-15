@@ -16,11 +16,11 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Objects;
@@ -30,6 +30,69 @@ public class LoanSlipController implements Initializable {
     private Stage stage;
     private Scene scene;
     private Parent root;
+    ObservableList<LoanSlip> LoanSlip = FXCollections.observableArrayList();
+
+    private void loadLoanSlipFromFile() {
+        File file = new File("LoanSlip.txt");
+        if (!file.exists()) {
+            return;
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 5) {
+                    LoanSlip loanSlip = new LoanSlip(parts[0], parts[1], parts[2], parts[3], parts[4]);
+                    LoanSlip.add(loanSlip);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            showError("Invalid data format, " + "There was an error reading the product data.");
+        }
+    }
+
+
+    private void saveProductsToFile() {
+        // Xác định đường dẫn file trong thư mục dự án hoặc một thư mục cụ thể
+        File file = new File("LoanSlip.txt");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (LoanSlip loanSlip : LoanSlip) {
+                // Tạo chuỗi dữ liệu cho từng sách
+                String line = String.join(",",
+                        loanSlip.getIdUser(),
+                        loanSlip.getIdBook(),
+                        loanSlip.getDate(),
+                        loanSlip.getReturnDate(),
+                        loanSlip.getStatus()
+                );
+                writer.write(line);
+                writer.newLine(); // Thêm dòng mới sau mỗi sản phẩm
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError("Error saving data: Could not save LoanSlip data to file.");
+        }
+    }
+
+    public void clearInFile() {
+        File file = new File("LoanSlip.txt");
+        try (FileWriter writer = new FileWriter(file, false)) {
+            writer.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
     public void goToLoginScene(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
@@ -60,16 +123,14 @@ public class LoanSlipController implements Initializable {
     private TableColumn<LoanSlip, String> returnDateCol;
     @FXML
     private TableColumn<LoanSlip, String> statusCol;
+
     @FXML
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ObservableList<LoanSlip> loanSlips = FXCollections.observableArrayList(
-                new LoanSlip("Nhan12345", "b1", "9/8/2024", "10/9/2024", "On loan"),
-                new LoanSlip("Nhan12345", "b2", "9/8/2024", "10/9/2024", "On loan"),
-                new LoanSlip("Nhan12345", "b3", "9/8/2024", "10/9/2024", "On loan"),
-                new LoanSlip("Nhan12345", "b4", "9/8/2024", "10/9/2024", "On loan")
-        );
+        LoanSlip = FXCollections.observableArrayList();
+        loadLoanSlipFromFile();
+        tableView.setItems(LoanSlip);
 //        idUserCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idUser"));
         idBookCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idBook"));
         dateCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("date"));
@@ -87,10 +148,12 @@ public class LoanSlipController implements Initializable {
                             LoanSlip loanSlip = getTableView().getItems().get(getIndex());
                             if (loanSlip.getStatus().equalsIgnoreCase("On loan")) {
                                 loanSlip.setStatus("Paid");
+                                save();
                                 changeStatusButton.setText("On loan");
                                 tableView.refresh();
                             } else {
                                 loanSlip.setStatus("On loan");
+                                save();
                                 changeStatusButton.setText("Paid");
                                 tableView.refresh();
                             }
@@ -110,6 +173,7 @@ public class LoanSlipController implements Initializable {
                             hBox.setSpacing(10);
                             HBox.setMargin(changeStatusButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Edit
                             setGraphic(hBox);
+                            save();
                         }
                     }
                 };
@@ -117,6 +181,10 @@ public class LoanSlipController implements Initializable {
             }
         };
         statusCol.setCellFactory(cellFactory);
-        tableView.setItems(loanSlips);
     }
+    public void save() {
+        clearInFile();
+        saveProductsToFile();
+    }
+
 }
