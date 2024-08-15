@@ -1,4 +1,0 @@
-Nhan12345,khucnhan,nhan2005,Admin
-Khanh23456,baokhanh,khanh2005,Admin
-Dam34567,vandam,dam2005,Admin
-Phuong45678,nguyenphuong,phuong2005,user

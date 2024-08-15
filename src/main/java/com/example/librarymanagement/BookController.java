@@ -83,14 +83,6 @@ public class BookController implements Initializable {
     @FXML
     TextField statusAdd;
 
-    @FXML
-    private void handleAddAction(ActionEvent event) {
-        if (add()) {
-            table.setItems(Books); // Cập nhật TableView
-            showConfirmation("Sách được thêm thành công");
-        }
-    }
-
     public boolean add() {
         Book book = getBook(idAdd.getText());
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -146,7 +138,7 @@ public class BookController implements Initializable {
     }
 
     private void loadProductsFromFile() {
-        File file = new File("Project.txt");
+        File file = new File("books.txt");
         if (!file.exists()) {
             return;
         }
@@ -169,7 +161,7 @@ public class BookController implements Initializable {
 
     private void saveProductsToFile() {
         // Xác định đường dẫn file trong thư mục dự án hoặc một thư mục cụ thể
-        File file = new File("Project.txt");
+        File file = new File("books.txt");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for (Book book : Books) {
@@ -192,8 +184,8 @@ public class BookController implements Initializable {
         }
     }
 
-    public void clearInFile() {
-        File file = new File("Project.txt");
+    private void clearInFile() {
+        File file = new File("books.txt");
         try (FileWriter writer = new FileWriter(file, false)) {
             writer.write("");
         } catch (IOException e) {
@@ -207,16 +199,6 @@ public class BookController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    @FXML
-    private void handleSaveAction(ActionEvent event) {
-        saveProductsToFile();
-    }
-
-    @FXML
-    private void handleLoadAction(ActionEvent event) {
-        loadProductsFromFile();
     }
 
     @FXML
@@ -242,11 +224,12 @@ public class BookController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Books = FXCollections.observableArrayList();
         loadProductsFromFile();
-        table.setItems(Books);
         if (currentUser != null) {
             if (currentUser.getRole().equalsIgnoreCase("admin")) {
+                table.setItems(Books);
                 initializeAdminTableView();
             } else {
+                tableUser.setItems(Books);
                 initializeUserTableView();
             }
         } else {
@@ -357,7 +340,7 @@ public class BookController implements Initializable {
                         editButton.setPrefWidth(75);
 
                         removeButton.setOnAction((ActionEvent event) -> {
-                            if (showConfirmation("Sách được thêm thành công")) {
+                            if (showConfirmation()) {
                                 Book book = getTableView().getItems().get(getIndex());
                                 getTableView().getItems().remove(book);
                                 save();
@@ -491,7 +474,6 @@ public class BookController implements Initializable {
                 alert.show();
                 return;
             }
-
             book.setTitle(title.getText());
             book.setImg(img.getText());
             book.setAuthor(author.getText());
@@ -504,7 +486,7 @@ public class BookController implements Initializable {
 
     }
 
-    public boolean showConfirmation(String sáchĐượcThêmThànhCông) {
+    public boolean showConfirmation() {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete book");
@@ -552,11 +534,6 @@ public class BookController implements Initializable {
         });
     }
 
-    public void save() {
-        clearInFile();
-        saveProductsToFile();
-    }
-
     public static boolean isValidDate(String dateStr, String format) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         try {
@@ -566,5 +543,10 @@ public class BookController implements Initializable {
         } catch (DateTimeParseException e) {
             return false;
         }
+    }
+
+    private void save() {
+        clearInFile();
+        saveProductsToFile();
     }
 }
