@@ -198,7 +198,7 @@ public class UserController implements Initializable {
     }
 
     private void loadUsersFromFile() {
-        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\src\\main\\java\\com\\example\\librarymanagement\\users.txt");
+        File file = new File("users.txt");
         if (!file.exists()) {
             return;
         }
@@ -220,7 +220,7 @@ public class UserController implements Initializable {
     }
 
     private void saveUserToFile() {
-        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\src\\main\\java\\com\\example\\librarymanagement\\users.txt");
+        File file = new File("users.txt");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for (User user : users) {
                 String line = String.join(",",
@@ -239,7 +239,7 @@ public class UserController implements Initializable {
     }
 
     private void clearInFile() {
-        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\src\\main\\java\\com\\example\\librarymanagement\\users.txt");
+        File file = new File("users.txt");
         try (FileWriter writer = new FileWriter(file, false)) {
             writer.write("");
         } catch (IOException e) {

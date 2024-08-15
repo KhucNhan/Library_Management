@@ -138,7 +138,7 @@ public class BookController implements Initializable {
     }
 
     private void loadProductsFromFile() {
-        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\src\\main\\java\\com\\example\\librarymanagement\\books.txt");
+        File file = new File("books.txt");
         if (!file.exists()) {
             return;
         }
@@ -161,7 +161,7 @@ public class BookController implements Initializable {
 
     private void saveProductsToFile() {
         // Xác định đường dẫn file trong thư mục dự án hoặc một thư mục cụ thể
-        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\src\\main\\java\\com\\example\\librarymanagement\\books.txt");
+        File file = new File("books.txt");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for (Book book : Books) {
@@ -185,7 +185,7 @@ public class BookController implements Initializable {
     }
 
     private void clearInFile() {
-        File file = new File("C:\\Users\\ADMIN\\IdeaProjects\\Library_Management\\src\\main\\java\\com\\example\\librarymanagement\\books.txt");
+        File file = new File("books.txt");
         try (FileWriter writer = new FileWriter(file, false)) {
             writer.write("");
         } catch (IOException e) {
