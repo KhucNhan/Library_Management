@@ -229,6 +229,40 @@ public class BookController implements Initializable {
         }
     }
 
+    private void showBookDetailsDialog(Book book) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Book Details");
+        alert.setHeaderText(null);
+
+        // Tạo một ImageView với hình ảnh từ URL
+        ImageView imageView = new ImageView();
+        Image image = new Image(book.getImg());
+        imageView.setImage(image);
+        imageView.setFitHeight(100); // Thiết lập chiều cao cho hình ảnh
+        imageView.setFitWidth(100);  // Thiết lập chiều rộng cho hình ảnh
+
+        // Tạo nội dung chính bao gồm cả hình ảnh và văn bản
+        VBox content = new VBox();
+        content.setSpacing(10); // Khoảng cách giữa các phần tử trong VBox
+
+        Label bookDetails = new Label(
+                "ID: " + book.getId() + "\n" +
+                        "Title: " + book.getTitle() + "\n" +
+                        "Author: " + book.getAuthor() + "\n" +
+                        "Release Year: " + book.getReleaseYear() + "\n" +
+                        "Genre: " + book.getGenre() + "\n" +
+                        "Status: " + book.getStatus()
+        );
+
+        content.getChildren().addAll(imageView, bookDetails); // Thêm hình ảnh và văn bản vào VBox
+
+        alert.getDialogPane().setContent(content); // Đặt VBox làm nội dung chính của Alert
+
+        alert.getDialogPane().setPrefSize(250, 300);
+
+        alert.showAndWait(); // Hiển thị hộp thoại và chờ người dùng đóng nó
+    }
+
     @FXML
     private TableView<Book> tableUser;
     @FXML
@@ -249,6 +283,14 @@ public class BookController implements Initializable {
     private void initializeAdminTableView() {
         books = FXCollections.observableArrayList();
         loadBooksFromFile();
+        table.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1) { // Kiểm tra xem người dùng có nhấp đúp chuột hay không
+                Book selectedBook = table.getSelectionModel().getSelectedItem(); // Lấy đối tượng được chọn
+                if (selectedBook != null) {
+                    showBookDetailsDialog(selectedBook); // Hiển thị hộp thoại với thông tin chi tiết
+                }
+            }
+        });
         idCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Id"));
         imgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
         imgCol.setCellFactory(column -> new TableCell<Book, String>() {
@@ -334,7 +376,7 @@ public class BookController implements Initializable {
                         editButton.setOnAction((ActionEvent event) -> {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             Book book = getTableView().getItems().get(getIndex());
-                            if(!isBookOnLoan(book.getId())) {
+                            if (!isBookOnLoan(book.getId())) {
                                 showEditDialog(book);
                                 save();
                             } else {
@@ -387,6 +429,14 @@ public class BookController implements Initializable {
     private void initializeUserTableView() {
         books = FXCollections.observableArrayList();
         loadBooksFromFile();
+        tableUser.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1) { // Kiểm tra xem người dùng có nhấp đúp chuột hay không
+                Book selectedBook = tableUser.getSelectionModel().getSelectedItem(); // Lấy đối tượng được chọn
+                if (selectedBook != null) {
+                    showBookDetailsDialog(selectedBook); // Hiển thị hộp thoại với thông tin chi tiết
+                }
+            }
+        });
         userImgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
         userImgCol.setCellFactory(column -> new TableCell<Book, String>() {
             private final ImageView imageView = new ImageView();
@@ -527,6 +577,7 @@ public class BookController implements Initializable {
     }
 
     public static LoanSlip newLoanSlip;
+
     private void showBorrowDialog(Book book) {
         // Tạo Stage cho dialog
         Stage dialogStage = new Stage();
