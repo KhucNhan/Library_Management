@@ -601,7 +601,7 @@ public class BookController implements Initializable {
         LoanSlipController loanSlipController = new LoanSlipController();
         loanSlipController.loadLoanSlipFromFile();
 
-        // Kiểm tra xem sách có đang ở trạng thái "On loan" trong bất kỳ phiếu mượn nào không
+        // Kiểm tra xem phiếu mượn có đang ở trạng thái "On loan" trong bất kỳ phiếu mượn nào không
         for (LoanSlip loanSlip : loanSlipController.getLoanSlips()) {
             if (loanSlip.getIdBook().equals(bookId) && loanSlip.getStatus().equalsIgnoreCase("On loan")) {
                 return true; // Sách đang được mượn

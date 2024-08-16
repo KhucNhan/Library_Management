@@ -29,6 +29,7 @@ public class LoanSlipController implements Initializable {
     private Scene scene;
     private Parent root;
     private static ObservableList<LoanSlip> loanSlips = FXCollections.observableArrayList();
+    private static ObservableList<LoanSlip> userLoanSlips = FXCollections.observableArrayList();
     BookController bookController = new BookController();
 
     public void removeLoanSlip(LoanSlip loanSlip) {
@@ -59,6 +60,31 @@ public class LoanSlipController implements Initializable {
                 String[] parts = line.split(",");
                 if (parts.length == 5) {
                     LoanSlip loanSlip = new LoanSlip(parts[0], parts[1], parts[2], parts[3], parts[4]);
+                    loanSlips.add(loanSlip);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            showError("Invalid data format, There was an error reading the loan slip data.");
+        }
+    }
+
+    void loadLoanSlipFromFileForUser() {
+        loanSlips.clear();
+        File file = new File("loanSlip.txt");
+        if (!file.exists()) {
+            return;
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 5) {
+                    LoanSlip loanSlip = new LoanSlip(parts[0], parts[1], parts[2], parts[3], parts[4]);
+                    if (loanSlip.getIdUser().equals(currentUser.getUserId())) {
+                        userLoanSlips.add(loanSlip);
+                    }
                     loanSlips.add(loanSlip);
                 }
             }
@@ -164,9 +190,9 @@ public class LoanSlipController implements Initializable {
     }
 
     private void initializeUser() {
-        loanSlips = FXCollections.observableArrayList();
-        loadLoanSlipFromFile();
-        tableView.setItems(loanSlips);
+        userLoanSlips = FXCollections.observableArrayList();
+        loadLoanSlipFromFileForUser();
+        tableView.setItems(userLoanSlips);
 //        idUserCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idUser"));
         idUserCol.setVisible(false);
         idBookCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idBook"));
@@ -178,7 +204,6 @@ public class LoanSlipController implements Initializable {
             @Override
             public TableCell<LoanSlip, Void> call(TableColumn<LoanSlip, Void> loanSlipTableColumn) {
                 final TableCell<LoanSlip, Void> cell = new TableCell<>() {
-
                     private final Button changeStatusButton = new Button("Paid");
 
                     {
@@ -187,8 +212,7 @@ public class LoanSlipController implements Initializable {
                             if (loanSlip.getStatus().equalsIgnoreCase("On loan")) {
                                 loanSlip.setStatus("Paid");
                                 bookController.updateBookStatus(loanSlip.getIdBook(), "Activated"); // Cập nhật trạng thái sách
-                                removeLoanSlip(loanSlip);  // Xóa phiếu mượn sau khi trả sách
-                                tableView.refresh();
+
                             }
                         });
                         changeStatusButton.setPrefWidth(150);
@@ -200,11 +224,16 @@ public class LoanSlipController implements Initializable {
                         if (empty) {
                             setGraphic(null);
                         } else {
+                            LoanSlip loanSlip = getTableView().getItems().get(getIndex());
+                            if (loanSlip.getStatus().equalsIgnoreCase("Paid")) {
+                                changeStatusButton.setDisable(true);
+                            }
+                            tableView.refresh(); // Làm mới TableView
+                            save(); // Lưu các thay đổi vào tệp tin
                             HBox hBox = new HBox(changeStatusButton);
                             hBox.setSpacing(10);
                             HBox.setMargin(changeStatusButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Edit
                             setGraphic(hBox);
-                            save();
                         }
                     }
                 };
