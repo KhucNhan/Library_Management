@@ -28,19 +28,20 @@ public class LoanSlipController implements Initializable {
     private Stage stage;
     private Scene scene;
     private Parent root;
-    ObservableList<LoanSlip> loanSlips = FXCollections.observableArrayList();
+    private static ObservableList<LoanSlip> loanSlips = FXCollections.observableArrayList();
+    private static ObservableList<LoanSlip> userLoanSlips = FXCollections.observableArrayList();
     BookController bookController = new BookController();
 
     public void removeLoanSlip(LoanSlip loanSlip) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        if (bookController.isBookOnLoan(loanSlip.getIdBook())) {
+        if (bookController.isBookOnLoan(loanSlip.getIdBook()) && currentUser.getRole().equalsIgnoreCase("admin")) {
             alert.setContentText("Cannot remove loan slip. The book is currently on loan.");
             alert.show();
             return;
         }
         loanSlips.remove(loanSlip);
         bookController.updateBookStatus(loanSlip.getIdBook(), "Activated");
-        save();
+        save(); // Gọi phương thức save() để lưu các thay đổi vào tệp tin
     }
 
     public ObservableList<LoanSlip> getLoanSlips() {
@@ -48,7 +49,7 @@ public class LoanSlipController implements Initializable {
     }
 
     void loadLoanSlipFromFile() {
-        loanSlips.clear();
+        loanSlips.clear(); // Xóa tất cả các phiếu mượn hiện có trước khi tải lại
         File file = new File("loanSlip.txt");
         if (!file.exists()) {
             return;
@@ -65,7 +66,32 @@ public class LoanSlipController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NumberFormatException e) {
-            showError("Invalid data format, " + "There was an error reading the product data.");
+            showError("Invalid data format, There was an error reading the loan slip data.");
+        }
+    }
+
+    void loadLoanSlipFromFileForUser() {
+        loanSlips.clear();
+        File file = new File("loanSlip.txt");
+        if (!file.exists()) {
+            return;
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 5) {
+                    LoanSlip loanSlip = new LoanSlip(parts[0], parts[1], parts[2], parts[3], parts[4]);
+                    if (loanSlip.getIdUser().equals(currentUser.getUserId())) {
+                        userLoanSlips.add(loanSlip);
+                    }
+                    loanSlips.add(loanSlip);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            showError("Invalid data format, There was an error reading the loan slip data.");
         }
     }
 
@@ -75,12 +101,9 @@ public class LoanSlipController implements Initializable {
     }
 
     private void saveProductsToFile() {
-        // Xác định đường dẫn file trong thư mục dự án hoặc một thư mục cụ thể
         File file = new File("loanSlip.txt");
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             for (LoanSlip loanSlip : loanSlips) {
-                // Tạo chuỗi dữ liệu cho từng sách
                 String line = String.join(",",
                         loanSlip.getIdUser(),
                         loanSlip.getIdBook(),
@@ -89,7 +112,7 @@ public class LoanSlipController implements Initializable {
                         loanSlip.getStatus()
                 );
                 writer.write(line);
-                writer.newLine(); // Thêm dòng mới sau mỗi sản phẩm
+                writer.newLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -167,9 +190,9 @@ public class LoanSlipController implements Initializable {
     }
 
     private void initializeUser() {
-        loanSlips = FXCollections.observableArrayList();
-        loadLoanSlipFromFile();
-        tableView.setItems(loanSlips);
+        userLoanSlips = FXCollections.observableArrayList();
+        loadLoanSlipFromFileForUser();
+        tableView.setItems(userLoanSlips);
 //        idUserCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idUser"));
         idUserCol.setVisible(false);
         idBookCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idBook"));
@@ -181,7 +204,6 @@ public class LoanSlipController implements Initializable {
             @Override
             public TableCell<LoanSlip, Void> call(TableColumn<LoanSlip, Void> loanSlipTableColumn) {
                 final TableCell<LoanSlip, Void> cell = new TableCell<>() {
-
                     private final Button changeStatusButton = new Button("Paid");
 
                     {
@@ -190,8 +212,7 @@ public class LoanSlipController implements Initializable {
                             if (loanSlip.getStatus().equalsIgnoreCase("On loan")) {
                                 loanSlip.setStatus("Paid");
                                 bookController.updateBookStatus(loanSlip.getIdBook(), "Activated"); // Cập nhật trạng thái sách
-                                removeLoanSlip(loanSlip);  // Xóa phiếu mượn sau khi trả sách
-                                tableView.refresh();
+
                             }
                         });
                         changeStatusButton.setPrefWidth(150);
@@ -203,11 +224,16 @@ public class LoanSlipController implements Initializable {
                         if (empty) {
                             setGraphic(null);
                         } else {
+                            LoanSlip loanSlip = getTableView().getItems().get(getIndex());
+                            if (loanSlip.getStatus().equalsIgnoreCase("Paid")) {
+                                changeStatusButton.setDisable(true);
+                            }
+                            tableView.refresh(); // Làm mới TableView
+                            save(); // Lưu các thay đổi vào tệp tin
                             HBox hBox = new HBox(changeStatusButton);
                             hBox.setSpacing(10);
                             HBox.setMargin(changeStatusButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Edit
                             setGraphic(hBox);
-                            save();
                         }
                     }
                 };
@@ -245,8 +271,14 @@ public class LoanSlipController implements Initializable {
 
                     {
                         removeButton.setOnAction((ActionEvent event) -> {
-                            if(showConfirmation()) {
-                                LoanSlip loanSlip = getTableView().getItems().get(getIndex());
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            LoanSlip loanSlip = getTableView().getItems().get(getIndex());
+                            if (bookController.isBookOnLoan(loanSlip.getIdBook())) {
+                                alert.setContentText("Cannot remove loan slip. The book is currently on loan.");
+                                alert.show();
+                                return;
+                            }
+                            if (showConfirmation()) {
                                 removeLoanSlip(loanSlip);
                                 tableView.refresh();
                             }

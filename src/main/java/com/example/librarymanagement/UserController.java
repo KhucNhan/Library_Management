@@ -26,7 +26,7 @@ public class UserController implements Initializable {
     public PasswordField signUpPassword;
     @FXML
     public PasswordField re_password;
-    private int count = 1;
+    private static int count;
 
     // Chuyển từ mảng User[] sang ObservableList<User>
     static ObservableList<User> users = FXCollections.observableArrayList();
@@ -166,15 +166,42 @@ public class UserController implements Initializable {
             User newuser = new User(id, username, password);
             users.add(newuser);
             saveUserToFile();
+            saveIdToFile(++count); // Tăng count và lưu lại vào file
+
             Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
-            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root, 1080, 720);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root, 1080, 720);
             stage.setTitle("Home");
             stage.setScene(scene);
             stage.show();
         } else {
             alert.setContentText("Mật khẩu không trùng khớp. Vui lòng nhập lại!");
             alert.show();
+        }
+    }
+
+    private int loadIdFromFile() {
+        File file = new File("user_id.txt");
+        if (!file.exists()) {
+            return 1; // Nếu file không tồn tại, bắt đầu từ 1
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line = reader.readLine();
+            if (line != null) {
+                return Integer.parseInt(line.trim());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 1; // Nếu có lỗi, bắt đầu từ 1
+    }
+
+    private void saveIdToFile(int id) {
+        File file = new File("user_id.txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(String.valueOf(id));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -190,11 +217,13 @@ public class UserController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Khởi tạo danh sách người dùng và load từ file
         users = FXCollections.observableArrayList(
                 new Admin("Nhan12345", "khucnhan", "nhan2005", "admin"),
                 new Admin("Khanh23456", "baokhanh", "khanh2005", "admin")
         );
         loadUsersFromFile();
+        count = loadIdFromFile(); // Load id từ file
     }
 
     private void loadUsersFromFile() {
