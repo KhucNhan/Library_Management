@@ -28,7 +28,7 @@ public class LoanSlipController implements Initializable {
     private Stage stage;
     private Scene scene;
     private Parent root;
-    ObservableList<LoanSlip> loanSlips = FXCollections.observableArrayList();
+    private static ObservableList<LoanSlip> loanSlips = FXCollections.observableArrayList();
     BookController bookController = new BookController();
 
     public void removeLoanSlip(LoanSlip loanSlip) {
@@ -40,7 +40,7 @@ public class LoanSlipController implements Initializable {
         }
         loanSlips.remove(loanSlip);
         bookController.updateBookStatus(loanSlip.getIdBook(), "Activated");
-        save();
+        save(); // Gọi phương thức save() để lưu các thay đổi vào tệp tin
     }
 
     public ObservableList<LoanSlip> getLoanSlips() {
@@ -48,7 +48,7 @@ public class LoanSlipController implements Initializable {
     }
 
     void loadLoanSlipFromFile() {
-        loanSlips.clear();
+        loanSlips.clear(); // Xóa tất cả các phiếu mượn hiện có trước khi tải lại
         File file = new File("loanSlip.txt");
         if (!file.exists()) {
             return;
@@ -65,7 +65,7 @@ public class LoanSlipController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NumberFormatException e) {
-            showError("Invalid data format, " + "There was an error reading the product data.");
+            showError("Invalid data format, There was an error reading the loan slip data.");
         }
     }
 
@@ -75,12 +75,9 @@ public class LoanSlipController implements Initializable {
     }
 
     private void saveProductsToFile() {
-        // Xác định đường dẫn file trong thư mục dự án hoặc một thư mục cụ thể
         File file = new File("loanSlip.txt");
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             for (LoanSlip loanSlip : loanSlips) {
-                // Tạo chuỗi dữ liệu cho từng sách
                 String line = String.join(",",
                         loanSlip.getIdUser(),
                         loanSlip.getIdBook(),
@@ -89,7 +86,7 @@ public class LoanSlipController implements Initializable {
                         loanSlip.getStatus()
                 );
                 writer.write(line);
-                writer.newLine(); // Thêm dòng mới sau mỗi sản phẩm
+                writer.newLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -252,7 +249,7 @@ public class LoanSlipController implements Initializable {
                                 alert.show();
                                 return;
                             }
-                            if(showConfirmation()) {
+                            if (showConfirmation()) {
                                 removeLoanSlip(loanSlip);
                                 tableView.refresh();
                             }
