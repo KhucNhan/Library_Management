@@ -3,6 +3,7 @@ package com.example.librarymanagement;
 import javafx.scene.Parent;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LoanSlip {
     private String idUser;
@@ -73,5 +74,22 @@ public class LoanSlip {
                 ", returnDate='" + returnDate + '\'' +
                 ", status='" + status + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LoanSlip loanSlip = (LoanSlip) o;
+        return Objects.equals(idUser, loanSlip.idUser) &&
+                Objects.equals(idBook, loanSlip.idBook) &&
+                Objects.equals(date, loanSlip.date) &&
+                Objects.equals(returnDate, loanSlip.returnDate) &&
+                Objects.equals(status, loanSlip.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idUser, idBook, date, returnDate, status);
     }
 }

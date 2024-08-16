@@ -643,7 +643,11 @@ public class BookController implements Initializable {
                 alert(alert, "Date format: yyyy/MM/dd");
             } else {
                 newLoanSlip.setReturnDate(paidDate.getText());
-                book.setStatus("Unactivated");
+                if(Integer.parseInt(getBook(book.getId()).getQuantity()) == 0) {
+                    book.setStatus("Unactivated");
+                    alert(alert, "All of this book has been borrowed.");
+                    return;
+                }
                 loanSlipController.addNewLoanSlip();
                 save();
                 tableUser.refresh();

@@ -34,13 +34,12 @@ public class LoanSlipController implements Initializable {
 
     public void removeLoanSlip(LoanSlip loanSlip) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        if (bookController.isBookOnLoan(loanSlip.getIdBook()) && currentUser.getRole().equalsIgnoreCase("admin")) {
+        if (loanSlip.getStatus().equalsIgnoreCase("On loan") && currentUser.getRole().equalsIgnoreCase("admin")) {
             alert.setContentText("Cannot remove loan slip. The book is currently on loan.");
             alert.show();
             return;
         }
         loanSlips.remove(loanSlip);
-        bookController.updateBookStatus(loanSlip.getIdBook(), "Activated");
         save(); // Gọi phương thức save() để lưu các thay đổi vào tệp tin
     }
 
@@ -211,9 +210,8 @@ public class LoanSlipController implements Initializable {
                             LoanSlip loanSlip = getTableView().getItems().get(getIndex());
                             if (loanSlip.getStatus().equalsIgnoreCase("On loan")) {
                                 loanSlip.setStatus("Paid");
-                                bookController.updateBookStatus(loanSlip.getIdBook(), "Activated"); // Cập nhật trạng thái sách
-                                bookController.increaseQuantity(loanSlip.getIdBook());
                                 save();
+                                bookController.increaseQuantity(loanSlip.getIdBook());
                                 tableView.refresh();
                             }
                         });
@@ -228,7 +226,6 @@ public class LoanSlipController implements Initializable {
                         } else {
                             LoanSlip loanSlip = getTableView().getItems().get(getIndex());
                             changeStatusButton.setDisable(loanSlip.getStatus().equalsIgnoreCase("Paid"));
-
                             HBox hBox = new HBox(changeStatusButton);
                             hBox.setSpacing(10);
                             HBox.setMargin(changeStatusButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Edit
