@@ -9,11 +9,19 @@ public class Book {
     private String releaseYear;
     private String genre;
     private String status;
+    private String quantity;
 
     public Book() {
     }
 
-    public Book(String id, String img, String title, String author, String releaseYear, String genre, String status) {
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
+    }
+    public Book(String id, String img, String title, String author, String releaseYear, String genre, String status, String quantity) {
         this.id = id;
         this.img = img;
         this.title = title;
@@ -21,6 +29,7 @@ public class Book {
         this.releaseYear = releaseYear;
         this.genre = genre;
         this.status = status;
+        this.quantity = quantity;
     }
 
 //    public Book(String part, String part1, String part2, String part3, String part4, String part5, String part6, String part7) {
@@ -89,6 +98,6 @@ public class Book {
 
     public static Book fromString(String bookString) {
         String[] parts = bookString.split(",");
-        return new Book(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6]);
+        return new Book(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], parts[7]);
     }
 }

@@ -212,7 +212,9 @@ public class LoanSlipController implements Initializable {
                             if (loanSlip.getStatus().equalsIgnoreCase("On loan")) {
                                 loanSlip.setStatus("Paid");
                                 bookController.updateBookStatus(loanSlip.getIdBook(), "Activated"); // Cập nhật trạng thái sách
-
+                                bookController.increaseQuantity(loanSlip.getIdBook());
+                                save();
+                                tableView.refresh();
                             }
                         });
                         changeStatusButton.setPrefWidth(150);
@@ -225,11 +227,8 @@ public class LoanSlipController implements Initializable {
                             setGraphic(null);
                         } else {
                             LoanSlip loanSlip = getTableView().getItems().get(getIndex());
-                            if (loanSlip.getStatus().equalsIgnoreCase("Paid")) {
-                                changeStatusButton.setDisable(true);
-                            }
-                            tableView.refresh(); // Làm mới TableView
-                            save(); // Lưu các thay đổi vào tệp tin
+                            changeStatusButton.setDisable(loanSlip.getStatus().equalsIgnoreCase("Paid"));
+
                             HBox hBox = new HBox(changeStatusButton);
                             hBox.setSpacing(10);
                             HBox.setMargin(changeStatusButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Edit

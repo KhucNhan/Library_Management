@@ -27,7 +27,8 @@
                     <TableColumn fx:id="releaseYearCol" minWidth="100.0" style="-fx-background-color: white; -fx-border-color: lightgray;" text="Release Year" />
                     <TableColumn fx:id="genreCol" minWidth="100.0" style="-fx-background-color: white; -fx-border-color: lightgray;" text="Genre" />
                     <TableColumn fx:id="statusCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Status" />
-                    <TableColumn fx:id="actionCol" minWidth="300.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text=" " />
+                    <TableColumn fx:id="quantityCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Quantity" />
+                    <TableColumn fx:id="actionCol" minWidth="200.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text=" " />
                 </columns>
             </TableView>
         </HBox>
@@ -67,6 +68,11 @@
                             </HBox.margin>
                         </TextField>
                         <TextField fx:id="statusAdd" prefWidth="90.0" promptText="Status">
+                            <HBox.margin>
+                                <Insets left="5.0" right="5.0" />
+                            </HBox.margin>
+                        </TextField>
+                        <TextField fx:id="quantityAdd" prefWidth="90.0" promptText="Quantity">
                             <HBox.margin>
                                 <Insets left="5.0" right="5.0" />
                             </HBox.margin>

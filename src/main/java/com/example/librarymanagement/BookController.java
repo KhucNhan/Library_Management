@@ -78,6 +78,8 @@ public class BookController implements Initializable {
     TextField genreAdd;
     @FXML
     TextField statusAdd;
+    @FXML
+    TextField quantityAdd;
 
     public boolean add() {
         Book book = getBook(idAdd.getText());
@@ -118,7 +120,8 @@ public class BookController implements Initializable {
                     authorAdd.getText(),
                     releaseYearAdd.getText(),
                     genreAdd.getText(),
-                    statusAdd.getText()
+                    statusAdd.getText(),
+                    quantityAdd.getText()
             ));
             saveBookToFile(); // Lưu vào file sau khi thêm thành công
             return true;
@@ -138,8 +141,8 @@ public class BookController implements Initializable {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 7) {
-                    Book book = new Book(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6]);
+                if (parts.length == 8) {
+                    Book book = new Book(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], parts[7]);
                     books.add(book);
                 }
             }
@@ -165,7 +168,8 @@ public class BookController implements Initializable {
                         book.getAuthor(),
                         book.getReleaseYear(),
                         book.getGenre(),
-                        book.getStatus()
+                        book.getStatus(),
+                        book.getQuantity()
                 );
                 writer.write(line);
                 writer.newLine(); // Thêm dòng mới sau mỗi sản phẩm
@@ -210,6 +214,8 @@ public class BookController implements Initializable {
     @FXML
     private TableColumn<Book, String> statusCol;
     @FXML
+    private TableColumn<Book, String> quantityCol;
+    @FXML
     private TableColumn<Book, Void> actionCol;
 
     @Override
@@ -227,6 +233,40 @@ public class BookController implements Initializable {
         } else {
             System.out.println(currentUser.getRole());
         }
+    }
+
+    private void showBookDetailsDialog(Book book) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Book Details");
+        alert.setHeaderText(null);
+
+        // Tạo một ImageView với hình ảnh từ URL
+        ImageView imageView = new ImageView();
+        Image image = new Image(book.getImg());
+        imageView.setImage(image);
+        imageView.setFitHeight(100); // Thiết lập chiều cao cho hình ảnh
+        imageView.setFitWidth(100);  // Thiết lập chiều rộng cho hình ảnh
+
+        // Tạo nội dung chính bao gồm cả hình ảnh và văn bản
+        VBox content = new VBox();
+        content.setSpacing(10); // Khoảng cách giữa các phần tử trong VBox
+
+        Label bookDetails = new Label(
+                "ID: " + book.getId() + "\n" +
+                        "Title: " + book.getTitle() + "\n" +
+                        "Author: " + book.getAuthor() + "\n" +
+                        "Release Year: " + book.getReleaseYear() + "\n" +
+                        "Genre: " + book.getGenre() + "\n" +
+                        "Status: " + book.getStatus()
+        );
+
+        content.getChildren().addAll(imageView, bookDetails); // Thêm hình ảnh và văn bản vào VBox
+
+        alert.getDialogPane().setContent(content); // Đặt VBox làm nội dung chính của Alert
+
+        alert.getDialogPane().setPrefSize(250, 300);
+
+        alert.showAndWait(); // Hiển thị hộp thoại và chờ người dùng đóng nó
     }
 
     @FXML
@@ -249,9 +289,18 @@ public class BookController implements Initializable {
     private void initializeAdminTableView() {
         books = FXCollections.observableArrayList();
         loadBooksFromFile();
+        table.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1) { // Kiểm tra xem người dùng có nhấp đúp chuột hay không
+                Book selectedBook = table.getSelectionModel().getSelectedItem(); // Lấy đối tượng được chọn
+                if (selectedBook != null) {
+                    showBookDetailsDialog(selectedBook); // Hiển thị hộp thoại với thông tin chi tiết
+                }
+            }
+        });
         idCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Id"));
         imgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
         imgCol.setCellFactory(column -> new TableCell<Book, String>() {
+
             private final ImageView imageView = new ImageView();
 
             @Override
@@ -318,7 +367,9 @@ public class BookController implements Initializable {
                 return statusCellFactory;
             }
         };
+
         statusCol.setCellFactory(statusCellFactory);
+        quantityCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Quantity"));
         actionCol.setCellValueFactory(new PropertyValueFactory<Book, Void>(""));
         Callback<TableColumn<Book, Void>, TableCell<Book, Void>> cellFactory = new Callback<>() {
             @Override
@@ -332,7 +383,7 @@ public class BookController implements Initializable {
                         editButton.setOnAction((ActionEvent event) -> {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             Book book = getTableView().getItems().get(getIndex());
-                            if(!isBookOnLoan(book.getId())) {
+                            if (!isBookOnLoan(book.getId())) {
                                 showEditDialog(book);
                                 save();
                             } else {
@@ -385,6 +436,14 @@ public class BookController implements Initializable {
     private void initializeUserTableView() {
         books = FXCollections.observableArrayList();
         loadBooksFromFile();
+        tableUser.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1) { // Kiểm tra xem người dùng có nhấp đúp chuột hay không
+                Book selectedBook = tableUser.getSelectionModel().getSelectedItem(); // Lấy đối tượng được chọn
+                if (selectedBook != null) {
+                    showBookDetailsDialog(selectedBook); // Hiển thị hộp thoại với thông tin chi tiết
+                }
+            }
+        });
         userImgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
         userImgCol.setCellFactory(column -> new TableCell<Book, String>() {
             private final ImageView imageView = new ImageView();
@@ -420,6 +479,7 @@ public class BookController implements Initializable {
                         alert(alert, "This book is not available for borrowing.");
                     } else {
                         showBorrowDialog(book);
+                        decreaseQuantity(book.getId());
                     }
                 });
                 borrowButton.setPrefWidth(75);
@@ -448,6 +508,7 @@ public class BookController implements Initializable {
         tableUser.setItems(books);
     }
 
+
     private void showEditDialog(Book book) {
         // Tạo một dialog để chỉnh sửa sản phẩm
         TextField title = new TextField(book.getTitle());
@@ -456,11 +517,12 @@ public class BookController implements Initializable {
         TextField releaseYear = new TextField(book.getReleaseYear());
         TextField genre = new TextField(book.getGenre());
         TextField status = new TextField(book.getStatus());
+        TextField quantity = new TextField(book.getQuantity());
 
         Button saveButton = new Button("Save");
 
 
-        VBox vbox = new VBox(title, img, author, releaseYear, genre, status, saveButton);
+        VBox vbox = new VBox(title, img, author, releaseYear, genre, status, quantity, saveButton);
         vbox.setSpacing(10);
         Scene scene = new Scene(vbox, 240, 480);
         Stage stage = new Stage();
@@ -487,6 +549,13 @@ public class BookController implements Initializable {
                 return;
             }
 
+            try {
+                Double num = Double.parseDouble(quantity.getText());
+            } catch (NumberFormatException exception) {
+                alert(alert, "Enter a numbers in Quantity.");
+                return;
+            }
+
             if (!isValidURL(img.getText())) {
                 alert(alert, "Can't use this url.");
                 return;
@@ -497,6 +566,7 @@ public class BookController implements Initializable {
             book.setReleaseYear(releaseYear.getText());
             book.setGenre(genre.getText());
             book.setStatus(status.getText());
+            book.setQuantity(quantity.getText());
             table.refresh(); // Cập nhật lại TableView
             stage.close();
         });
@@ -523,7 +593,22 @@ public class BookController implements Initializable {
         }
     }
 
+    public void increaseQuantity(String bookId) {
+        Book book = getBook(bookId);
+        int newQuantity = Integer.parseInt(book.getQuantity()) + 1;
+        book.setQuantity("" + newQuantity);
+        save();
+    }
+
+    public void decreaseQuantity(String bookId) {
+        Book book = getBook(bookId);
+        int newQuantity = Integer.parseInt(book.getQuantity()) - 1;
+        book.setQuantity("" + newQuantity);
+        save();
+    }
+
     public static LoanSlip newLoanSlip;
+
     private void showBorrowDialog(Book book) {
         // Tạo Stage cho dialog
         Stage dialogStage = new Stage();
