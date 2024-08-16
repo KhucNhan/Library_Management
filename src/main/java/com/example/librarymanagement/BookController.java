@@ -257,6 +257,7 @@ public class BookController implements Initializable {
         idCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Id"));
         imgCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Img"));
         imgCol.setCellFactory(column -> new TableCell<Book, String>() {
+
             private final ImageView imageView = new ImageView();
 
             @Override
@@ -324,6 +325,7 @@ public class BookController implements Initializable {
                 return statusCellFactory;
             }
         };
+
         statusCol.setCellFactory(statusCellFactory);
         actionCol.setCellValueFactory(new PropertyValueFactory<Book, Void>(""));
         Callback<TableColumn<Book, Void>, TableCell<Book, Void>> cellFactory = new Callback<>() {
@@ -439,6 +441,7 @@ public class BookController implements Initializable {
         });
         tableUser.setItems(books);
     }
+
 
     private void showEditDialog(Book book) {
         // Tạo một dialog để chỉnh sửa sản phẩm
