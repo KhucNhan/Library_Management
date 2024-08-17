@@ -12,6 +12,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -57,8 +59,8 @@ public class LoanSlipController implements Initializable {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 5) {
-                    LoanSlip loanSlip = new LoanSlip(parts[0], parts[1], parts[2], parts[3], parts[4]);
+                if (parts.length == 6) {
+                    LoanSlip loanSlip = new LoanSlip(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
                     loanSlips.add(loanSlip);
                 }
             }
@@ -79,8 +81,8 @@ public class LoanSlipController implements Initializable {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 5) {
-                    LoanSlip loanSlip = new LoanSlip(parts[0], parts[1], parts[2], parts[3], parts[4]);
+                if (parts.length == 6) {
+                    LoanSlip loanSlip = new LoanSlip(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
                     if (loanSlip.getIdUser().equals(currentUser.getUserId())) {
                         userLoanSlips.add(loanSlip);
                     }
@@ -105,6 +107,7 @@ public class LoanSlipController implements Initializable {
             for (LoanSlip loanSlip : loanSlips) {
                 String line = String.join(",",
                         loanSlip.getIdUser(),
+                        loanSlip.getImgBook(),
                         loanSlip.getIdBook(),
                         loanSlip.getDate(),
                         loanSlip.getReturnDate(),
@@ -167,6 +170,8 @@ public class LoanSlipController implements Initializable {
     @FXML
     private TableColumn<LoanSlip, String> idUserCol;
     @FXML
+    private TableColumn<LoanSlip, String> imgUserCol;
+    @FXML
     private TableColumn<LoanSlip, String> idBookCol;
     @FXML
     private TableColumn<LoanSlip, String> dateCol;
@@ -194,7 +199,25 @@ public class LoanSlipController implements Initializable {
         tableView.setItems(userLoanSlips);
 //        idUserCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idUser"));
         idUserCol.setVisible(false);
-        idBookCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idBook"));
+        // Cột ảnh
+        TableColumn<LoanSlip, String> imgUserCol = new TableColumn<>("Image");
+        imgUserCol.setCellValueFactory(new PropertyValueFactory<>("imgBook"));
+        imgUserCol.setCellFactory(column -> new TableCell<LoanSlip, String>() {
+            private final ImageView imageView = new ImageView();
+
+            @Override
+            protected void updateItem(String imagePath, boolean empty) {
+                super.updateItem(imagePath, empty);
+                if (empty || imagePath == null) {
+                    setGraphic(null);
+                } else {
+                    imageView.setImage(new Image(imagePath));
+                    imageView.setFitHeight(50);
+                    imageView.setFitWidth(50);
+                    setGraphic(imageView);
+                }
+            }
+        });
         dateCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("date"));
         returnDateCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("returnDate"));
         statusCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("status"));
@@ -255,6 +278,24 @@ public class LoanSlipController implements Initializable {
         loadLoanSlipFromFile();
         tableView.setItems(loanSlips);
         idUserCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idUser"));
+        TableColumn<LoanSlip, String> imgUserCol = new TableColumn<>("Image");
+        imgUserCol.setCellValueFactory(new PropertyValueFactory<>("imgBook"));
+        imgUserCol.setCellFactory(column -> new TableCell<LoanSlip, String>() {
+            private final ImageView imageView = new ImageView();
+
+            @Override
+            protected void updateItem(String imagePath, boolean empty) {
+                super.updateItem(imagePath, empty);
+                if (empty || imagePath == null) {
+                    setGraphic(null);
+                } else {
+                    imageView.setImage(new Image(imagePath));
+                    imageView.setFitHeight(50);
+                    imageView.setFitWidth(50);
+                    setGraphic(imageView);
+                }
+            }
+        });
         idBookCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idBook"));
         dateCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("date"));
         returnDateCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("returnDate"));

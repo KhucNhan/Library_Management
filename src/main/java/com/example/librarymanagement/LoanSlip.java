@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public class LoanSlip {
     private String idUser;
+    private String imgBook;
     private String idBook;
     private String date;
     private String returnDate;
@@ -15,16 +16,29 @@ public class LoanSlip {
     public LoanSlip() {
     }
 
-    public LoanSlip(String idUser, String idBook, String date, String returnDate, String status) {
+    public LoanSlip(String idUser, String imgBook, String idBook, String date, String returnDate, String status) {
         this.idUser = idUser;
         this.idBook = idBook;
+        this.imgBook = imgBook;
         this.date = date;
         this.returnDate = returnDate;
         this.status = status;
     }
 
+    public LoanSlip(String userId, String id, String formattedDate, String text, String onLoan) {
+    }
+
+    public void setImgBook(String imgBook) {
+        this.imgBook = imgBook;
+    }
+
+    public String getImgBook() {
+        return imgBook;
+    }
+
     public LoanSlip(String part, String part1, String part2, String part3, String part4, String part5, String part6) {
     }
+
     public void setIdUser(String idUser) {
         this.idUser = idUser;
     }
@@ -82,14 +96,16 @@ public class LoanSlip {
         if (o == null || getClass() != o.getClass()) return false;
         LoanSlip loanSlip = (LoanSlip) o;
         return Objects.equals(idUser, loanSlip.idUser) &&
+                Objects.equals(imgBook, loanSlip.imgBook) &&
                 Objects.equals(idBook, loanSlip.idBook) &&
                 Objects.equals(date, loanSlip.date) &&
                 Objects.equals(returnDate, loanSlip.returnDate) &&
                 Objects.equals(status, loanSlip.status);
     }
 
+
     @Override
     public int hashCode() {
-        return Objects.hash(idUser, idBook, date, returnDate, status);
+        return Objects.hash(idUser, imgBook, idBook, date, returnDate, status);
     }
 }
