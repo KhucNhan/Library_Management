@@ -140,8 +140,10 @@ public class BookController implements Initializable {
             save();
             table.refresh();
             return true;
+        } else {
+            alert(alert, "This id is existed!");
+            return false;
         }
-        return false;
     }
 
     private void loadBooksFromFile() {
