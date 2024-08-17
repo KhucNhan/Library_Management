@@ -18,8 +18,8 @@ public class LoanSlip {
 
     public LoanSlip(String idUser, String imgBook, String idBook, String date, String returnDate, String status) {
         this.idUser = idUser;
-        this.idBook = idBook;
         this.imgBook = imgBook;
+        this.idBook = idBook;
         this.date = date;
         this.returnDate = returnDate;
         this.status = status;

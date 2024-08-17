@@ -170,7 +170,7 @@ public class LoanSlipController implements Initializable {
     @FXML
     private TableColumn<LoanSlip, String> idUserCol;
     @FXML
-    private TableColumn<LoanSlip, String> imgUserCol;
+    private TableColumn<LoanSlip, String> imgCol;
     @FXML
     private TableColumn<LoanSlip, String> idBookCol;
     @FXML
@@ -200,9 +200,8 @@ public class LoanSlipController implements Initializable {
 //        idUserCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idUser"));
         idUserCol.setVisible(false);
         // Cột ảnh
-        TableColumn<LoanSlip, String> imgUserCol = new TableColumn<>("Image");
-        imgUserCol.setCellValueFactory(new PropertyValueFactory<>("imgBook"));
-        imgUserCol.setCellFactory(column -> new TableCell<LoanSlip, String>() {
+        imgCol.setCellValueFactory(new PropertyValueFactory<>("imgBook"));
+        imgCol.setCellFactory(column -> new TableCell<LoanSlip, String>() {
             private final ImageView imageView = new ImageView();
 
             @Override
@@ -218,6 +217,7 @@ public class LoanSlipController implements Initializable {
                 }
             }
         });
+        idBookCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idBook"));
         dateCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("date"));
         returnDateCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("returnDate"));
         statusCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("status"));
@@ -278,9 +278,8 @@ public class LoanSlipController implements Initializable {
         loadLoanSlipFromFile();
         tableView.setItems(loanSlips);
         idUserCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idUser"));
-        TableColumn<LoanSlip, String> imgUserCol = new TableColumn<>("Image");
-        imgUserCol.setCellValueFactory(new PropertyValueFactory<>("imgBook"));
-        imgUserCol.setCellFactory(column -> new TableCell<LoanSlip, String>() {
+        imgCol.setCellValueFactory(new PropertyValueFactory<>("imgBook"));
+        imgCol.setCellFactory(column -> new TableCell<LoanSlip, String>() {
             private final ImageView imageView = new ImageView();
 
             @Override

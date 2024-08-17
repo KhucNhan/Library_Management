@@ -638,7 +638,7 @@ public class BookController implements Initializable {
         String formattedDate = currentDate.format(formatter);
 
         saveButton.setOnAction(e -> {
-            newLoanSlip = new LoanSlip(currentUser.getUserId(), book.getId(), formattedDate, paidDate.getText(), "on loan");
+            newLoanSlip = new LoanSlip(currentUser.getUserId(), book.getImg(), book.getId(), formattedDate, paidDate.getText(), "on loan");
             if (!isValidDate(paidDate.getText(), "yyyy/MM/dd")) {
                 alert(alert, "Date format: yyyy/MM/dd");
             } else {
