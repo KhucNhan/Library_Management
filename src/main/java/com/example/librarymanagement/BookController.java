@@ -86,14 +86,8 @@ public class BookController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
         // Kiểm tra các trường thông tin
-        if (idAdd.getText().isEmpty() || titleAdd.getText().isEmpty() || authorAdd.getText().isEmpty() || releaseYearAdd.getText().isEmpty() || genreAdd.getText().isEmpty() || statusAdd.getText().isEmpty()) {
+        if (idAdd.getText().isEmpty() || titleAdd.getText().isEmpty() || authorAdd.getText().isEmpty() || releaseYearAdd.getText().isEmpty() || genreAdd.getText().isEmpty() || quantityAdd.getText().isEmpty()) {
             alert(alert, "No blank fields allowed!");
-            return false;
-        }
-
-        // Kiểm tra trạng thái
-        if (!statusAdd.getText().equalsIgnoreCase("activated") && !statusAdd.getText().equalsIgnoreCase("unactivated")) {
-            alert(alert, "Status must be activated or unactivated.");
             return false;
         }
 
@@ -105,6 +99,13 @@ public class BookController implements Initializable {
             return false;
         }
 
+        try {
+            Integer.parseInt(quantityAdd.getText());
+        } catch (NumberFormatException e) {
+            alert(alert, "Enter a valid number for Quantity.");
+            return false;
+        }
+
         // Kiểm tra URL
         if (!isValidURL(imgAdd.getText())) {
             alert(alert, "Invalid URL.");
@@ -113,22 +114,34 @@ public class BookController implements Initializable {
 
         // Kiểm tra ID đã tồn tại
         if (book == null) {
-            books.add(new Book(
-                    idAdd.getText(),
-                    imgAdd.getText(),
-                    titleAdd.getText(),
-                    authorAdd.getText(),
-                    releaseYearAdd.getText(),
-                    genreAdd.getText(),
-                    statusAdd.getText(),
-                    quantityAdd.getText()
-            ));
-            saveBookToFile(); // Lưu vào file sau khi thêm thành công
+            if (!statusAdd.getText().isEmpty()) {
+                alert(alert, "No blank fields allowed!");
+                return false;
+            } if (!statusAdd.getText().equalsIgnoreCase("activated") && !statusAdd.getText().equalsIgnoreCase("unactivated")) {
+                alert(alert, "Status must be activated or unactivated.");
+                return false;
+            } else {
+                books.add(new Book(
+                        idAdd.getText(),
+                        imgAdd.getText(),
+                        titleAdd.getText(),
+                        authorAdd.getText(),
+                        releaseYearAdd.getText(),
+                        genreAdd.getText(),
+                        statusAdd.getText(),
+                        quantityAdd.getText()
+                ));
+                saveBookToFile(); // Lưu vào file sau khi thêm thành công
+                return true;
+            }
+        } else if (idAdd.getText().equals(getBook(idAdd.getText()).getId()) || titleAdd.getText().equals(getBook(idAdd.getText()).getTitle()) || authorAdd.getText().equals(getBook(idAdd.getText()).getAuthor()) || releaseYearAdd.getText().equals(getBook(idAdd.getText()).getReleaseYear()) || genreAdd.getText().equals(getBook(idAdd.getText()).getGenre())){
+            int newQuantity = Integer.parseInt(getBook(idAdd.getText()).getQuantity()) + Integer.parseInt(quantityAdd.getText());
+            getBook(idAdd.getText()).setQuantity("" + newQuantity);
+            save();
+            table.refresh();
             return true;
-        } else {
-            alert(alert, "This ID already exists. Please try another.");
-            return false;
         }
+        return false;
     }
 
     private void loadBooksFromFile() {
