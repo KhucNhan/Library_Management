@@ -114,7 +114,7 @@ public class BookController implements Initializable {
 
         // Kiểm tra ID đã tồn tại
         if (book == null) {
-            if (!statusAdd.getText().isEmpty()) {
+            if (statusAdd.getText().isEmpty()) {
                 alert(alert, "No blank fields allowed!");
                 return false;
             } if (!statusAdd.getText().equalsIgnoreCase("activated") && !statusAdd.getText().equalsIgnoreCase("unactivated")) {
