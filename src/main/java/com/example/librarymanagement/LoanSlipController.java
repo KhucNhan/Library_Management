@@ -142,7 +142,7 @@ public class LoanSlipController implements Initializable {
     public void goToLoginScene(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1080, 720);
+        scene = new Scene(root, 1200, 800);
         stage.setScene(scene);
         stage.show();
     }
@@ -151,14 +151,14 @@ public class LoanSlipController implements Initializable {
         if (currentUser.getRole().equalsIgnoreCase("admin")) {
             Parent root = FXMLLoader.load(getClass().getResource("AdminView.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root, 1080, 720);
+            scene = new Scene(root, 1200, 800);
             stage.setTitle("Home");
             stage.setScene(scene);
             stage.show();
         } else {
             Parent root = FXMLLoader.load(getClass().getResource("UserView.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root, 1080, 720);
+            scene = new Scene(root, 1200, 800);
             stage.setTitle("Home");
             stage.setScene(scene);
             stage.show();

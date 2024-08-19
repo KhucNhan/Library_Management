@@ -49,7 +49,7 @@ public class BookController implements Initializable {
 //        table.refresh();
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1080, 720);
+        scene = new Scene(root, 1200, 800);
         stage.setScene(scene);
         stage.show();
     }
@@ -58,7 +58,7 @@ public class BookController implements Initializable {
 //        table.refresh();
         Parent root = FXMLLoader.load(getClass().getResource("LoanSlipView.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1080, 720);
+        scene = new Scene(root, 1200, 800);
         stage.setTitle("Loan Slip");
         stage.setScene(scene);
         stage.show();

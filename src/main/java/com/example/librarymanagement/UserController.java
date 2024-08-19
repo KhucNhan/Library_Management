@@ -79,7 +79,7 @@ public class UserController implements Initializable {
                 }
 
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Scene scene = new Scene(root, 1080, 720);
+                Scene scene = new Scene(root, 1200, 800);
                 stage.setTitle("Home");
                 stage.setScene(scene);
                 stage.show();
@@ -114,13 +114,21 @@ public class UserController implements Initializable {
     private Scene scene;
     private Parent root;
 
-    public void goToLogin(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1080, 720);
-        stage.setTitle("Home");
+    private void switchScene(ActionEvent event, String fxmlFile, String title) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root, 1200, 800);
+        stage.setTitle(title);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void goToLogin(ActionEvent event) throws IOException {
+        switchScene(event, "Login.fxml", "Home");
+    }
+
+    public void goToSignup(ActionEvent event) throws IOException {
+        switchScene(event, "SignUp.fxml", "Home");
     }
 
     @FXML
@@ -170,7 +178,7 @@ public class UserController implements Initializable {
 
             Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root, 1080, 720);
+            Scene scene = new Scene(root, 1200, 800);
             stage.setTitle("Home");
             stage.setScene(scene);
             stage.show();
@@ -203,16 +211,6 @@ public class UserController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @FXML
-    public void goToSignup(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1080, 720);
-        stage.setTitle("Home");
-        stage.setScene(scene);
-        stage.show();
     }
 
     @Override
