@@ -20,6 +20,8 @@ import javafx.util.Callback;
 
 import java.io.*;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -165,6 +167,14 @@ public class LoanSlipController implements Initializable {
         }
     }
 
+    public void goToHistoricScene(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("HistoricsView.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, 1200, 800);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     @FXML
     private TableView<LoanSlip> tableView;
     @FXML
@@ -191,6 +201,8 @@ public class LoanSlipController implements Initializable {
         } else {
             initializeUser();
         }
+        start.valueProperty().addListener((obs, oldDate, newDate) -> refreshTableView());
+        end.valueProperty().addListener((obs, oldDate, newDate) -> refreshTableView());
     }
 
     private void initializeUser() {
@@ -343,5 +355,42 @@ public class LoanSlipController implements Initializable {
     public void save() {
         clearInFile();
         saveProductsToFile();
+    }
+
+    public ObservableList<LoanSlip> filterLoanSlipsByDateRange(String startDate, String endDate) {
+        ObservableList<LoanSlip> filteredLoanSlips = FXCollections.observableArrayList();
+        loadLoanSlipFromFile();
+        for (LoanSlip loanSlip : loanSlips) {
+            if (loanSlip.getDate().compareTo(startDate) >= 0 && loanSlip.getReturnDate().compareTo(endDate) <= 0) {
+                filteredLoanSlips.add(loanSlip);
+            }
+        }
+        return filteredLoanSlips;
+    }
+
+    @FXML
+    private DatePicker start;
+    @FXML
+    private DatePicker end;
+
+    private static ObservableList<LoanSlip> historicLoanSlip = FXCollections.observableArrayList();
+
+    public void search() {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        historicLoanSlip = filterLoanSlipsByDateRange(start.getValue().format(format), end.getValue().format(format));
+        tableView.setItems(historicLoanSlip);
+        tableView.refresh();
+    }
+
+    private void refreshTableView() {
+        if (start.getValue() != null && end.getValue() != null) {
+            DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            historicLoanSlip = filterLoanSlipsByDateRange(
+                    start.getValue().format(format),
+                    end.getValue().format(format)
+            );
+            tableView.setItems(historicLoanSlip);
+            tableView.refresh();
+        }
     }
 }

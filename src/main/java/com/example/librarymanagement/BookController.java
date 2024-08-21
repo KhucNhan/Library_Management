@@ -630,15 +630,15 @@ public class BookController implements Initializable {
         dialogStage.setTitle("Borrow Book");
 
         // Tạo các thành phần giao diện
-        TextField paidDate = new TextField();
+        DatePicker datePicker = new DatePicker();
         Button saveButton = new Button("Save");
-        Label paidDateLabel = new Label("Return Date (yyyy/MM/dd):");
+        Label paidDateLabel = new Label("Return Date (dd/MM/yyyy):");
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         // Tạo bố cục cho dialog
         VBox vbox = new VBox(10); // khoảng cách giữa các thành phần là 10
         vbox.setPadding(new Insets(10));
-        vbox.getChildren().addAll(paidDateLabel, paidDate, saveButton);
+        vbox.getChildren().addAll(paidDateLabel, datePicker, saveButton);
 
         Scene scene = new Scene(vbox, 480, 360);
         dialogStage.setScene(scene);
@@ -649,15 +649,14 @@ public class BookController implements Initializable {
         LocalDate currentDate = LocalDate.now();
 
         // Định dạng ngày
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        String formattedDate = currentDate.format(formatter);
+        String formattedDate = currentDate.format(format);
 
         saveButton.setOnAction(e -> {
-            newLoanSlip = new LoanSlip(currentUser.getUserId(), book.getImg(), book.getId(), formattedDate, paidDate.getText(), "on loan");
-            if (!isValidDate(paidDate.getText(), "yyyy/MM/dd")) {
-                alert(alert, "Date format: yyyy/MM/dd");
+            newLoanSlip = new LoanSlip(currentUser.getUserId(), book.getImg(), book.getId(), formattedDate, datePicker.getValue().format(format), "on loan");
+            if (!isValidDate(datePicker.getValue().format(format), "dd/MM/yyyy")) {
+                alert(alert, "Date format: dd/MM/yyyy");
             } else {
-                newLoanSlip.setReturnDate(paidDate.getText());
+                newLoanSlip.setReturnDate(datePicker.getValue().format(format));
                 if(Integer.parseInt(getBook(book.getId()).getQuantity()) == 0) {
                     book.setStatus("Unactivated");
                     alert(alert, "All of this book has been borrowed.");
