@@ -4,127 +4,140 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarymanagement.BookController">
+<GridPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarymanagement.BookController">
     <VBox>
-            <VBox alignment="CENTER" prefHeight="56.0" prefWidth="1079">
-                <children>
-              <HBox prefHeight="0.0" prefWidth="1200.0">
-                  <Button onAction="#goToLoanSlip" prefWidth="80.0" text="Loan Slip">
-                      <HBox.margin>
-                          <Insets left="10.0" right="10.0" />
-                      </HBox.margin>
-                  </Button>
-                  <Button onAction="#goToLoginScene" prefWidth="80.0" text="Log out">
-                      <HBox.margin>
-                          <Insets left="10.0" right="10.0" />
-                      </HBox.margin>
-                  </Button>
-              </HBox>
-                    <HBox alignment="TOP_CENTER" focusTraversable="true" prefHeight="23.0" prefWidth="1200.0" style="-fx-border-color: lightgray;">
-                        <children>
-                            <TextField fx:id="idSearch" prefWidth="100.0" promptText="ID">
-                                <HBox.margin>
-                                    <Insets left="5.0" right="5.0" />
-                                </HBox.margin>
-                            </TextField>
-                            <TextField fx:id="titleSearch" prefWidth="200.0" promptText="Title">
-                                <HBox.margin>
-                                    <Insets left="5.0" right="5.0" />
-                                </HBox.margin>
-                            </TextField>
-                            <TextField fx:id="authorSearch" prefWidth="200.0" promptText="Author">
-                                <HBox.margin>
-                                    <Insets left="5.0" right="5.0" />
-                                </HBox.margin>
-                            </TextField>
-                            <TextField fx:id="statusSearch" prefWidth="100.0" promptText="Status">
-                                <HBox.margin>
-                                    <Insets left="5.0" right="5.0" />
-                                </HBox.margin>
-                            </TextField>
-                            <Button mnemonicParsing="false" onAction="#search" prefWidth="100.0" text="Search">
-                                <HBox.margin>
-                                    <Insets left="10.0" />
-                                </HBox.margin>
-                            </Button>
-                        </children>
-                        <VBox.margin>
-                            <Insets bottom="20.0" top="10.0" />
-                        </VBox.margin>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-                    </HBox>
-                </children>
-                <HBox.margin>
-                    <Insets />
-                </HBox.margin>
-            </VBox>
+        <VBox alignment="CENTER" prefHeight="56.0" prefWidth="1079">
+            <children>
+                <HBox prefHeight="0.0" prefWidth="1200.0">
+                    <Button onAction="#goToLoanSlip" prefWidth="80.0" text="Loan Slip">
+                        <HBox.margin>
+                            <Insets left="10.0" right="10.0"/>
+                        </HBox.margin>
+                    </Button>
+                    <Button onAction="#goToLoginScene" prefWidth="80.0" text="Log out">
+                        <HBox.margin>
+                            <Insets left="10.0" right="10.0"/>
+                        </HBox.margin>
+                    </Button>
+                </HBox>
+                <HBox alignment="TOP_CENTER" focusTraversable="true" prefHeight="23.0" prefWidth="1200.0"
+                      style="-fx-border-color: lightgray;">
+                    <children>
+                        <TextField fx:id="idSearch" prefWidth="100.0" promptText="ID">
+                            <HBox.margin>
+                                <Insets left="5.0" right="5.0"/>
+                            </HBox.margin>
+                        </TextField>
+                        <TextField fx:id="titleSearch" prefWidth="200.0" promptText="Title">
+                            <HBox.margin>
+                                <Insets left="5.0" right="5.0"/>
+                            </HBox.margin>
+                        </TextField>
+                        <TextField fx:id="authorSearch" prefWidth="200.0" promptText="Author">
+                            <HBox.margin>
+                                <Insets left="5.0" right="5.0"/>
+                            </HBox.margin>
+                        </TextField>
+                        <TextField fx:id="statusSearch" prefWidth="100.0" promptText="Status">
+                            <HBox.margin>
+                                <Insets left="5.0" right="5.0"/>
+                            </HBox.margin>
+                        </TextField>
+                        <Button mnemonicParsing="false" onAction="#search" prefWidth="100.0" text="Search">
+                            <HBox.margin>
+                                <Insets left="10.0"/>
+                            </HBox.margin>
+                        </Button>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="20.0" top="10.0"/>
+                    </VBox.margin>
+                    <opaqueInsets>
+                        <Insets/>
+                    </opaqueInsets>
+                </HBox>
+            </children>
+            <HBox.margin>
+                <Insets/>
+            </HBox.margin>
+        </VBox>
     </VBox>
     <VBox prefHeight="760.0" prefWidth="1200" BorderPane.alignment="CENTER" GridPane.rowIndex="1">
         <HBox fillHeight="true" prefHeight="680.0" style="-fx-background-color: white;">
-            <TableView fx:id="table" fixedCellSize="50.0" focusTraversable="false" prefWidth="1150.0" style="-fx-border-color: white; -fx-background-color: white;">
+            <TableView fx:id="table" fixedCellSize="50.0" focusTraversable="false" prefWidth="1150.0"
+                       style="-fx-border-color: white; -fx-background-color: white;">
                 <columns>
-                    <TableColumn fx:id="idCol" minWidth="80.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="ID" />
-                    <TableColumn fx:id="imgCol" prefWidth="120.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Image" />
-                    <TableColumn fx:id="titleCol" minWidth="150.0" style="-fx-background-color: white; -fx-border-color: lightgray;" text="Title" />
-                    <TableColumn fx:id="authorCol" minWidth="150.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Author" />
-                    <TableColumn fx:id="releaseYearCol" minWidth="100.0" style="-fx-background-color: white; -fx-border-color: lightgray;" text="Release Year" />
-                    <TableColumn fx:id="genreCol" minWidth="100.0" style="-fx-background-color: white; -fx-border-color: lightgray;" text="Genre" />
-                    <TableColumn fx:id="statusCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Status" />
-                    <TableColumn fx:id="quantityCol" minWidth="100.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="Quantity" />
-                    <TableColumn fx:id="actionCol" minWidth="174.00006103515625" prefWidth="237.60003662109375" style="-fx-border-color: lightgray; -fx-background-color: white;" text=" " />
+                    <TableColumn fx:id="idCol" minWidth="80.0"
+                                 style="-fx-border-color: lightgray; -fx-background-color: white;" text="ID"/>
+                    <TableColumn fx:id="imgCol" prefWidth="120.0"
+                                 style="-fx-border-color: lightgray; -fx-background-color: white;" text="Image"/>
+                    <TableColumn fx:id="titleCol" minWidth="150.0"
+                                 style="-fx-background-color: white; -fx-border-color: lightgray;" text="Title"/>
+                    <TableColumn fx:id="authorCol" minWidth="150.0"
+                                 style="-fx-border-color: lightgray; -fx-background-color: white;" text="Author"/>
+                    <TableColumn fx:id="releaseYearCol" minWidth="100.0"
+                                 style="-fx-background-color: white; -fx-border-color: lightgray;" text="Release Year"/>
+                    <TableColumn fx:id="genreCol" minWidth="100.0"
+                                 style="-fx-background-color: white; -fx-border-color: lightgray;" text="Genre"/>
+                    <TableColumn fx:id="statusCol" minWidth="100.0"
+                                 style="-fx-border-color: lightgray; -fx-background-color: white;" text="Status"/>
+                    <TableColumn fx:id="quantityCol" minWidth="100.0"
+                                 style="-fx-border-color: lightgray; -fx-background-color: white;" text="Quantity"/>
+                    <TableColumn fx:id="actionCol" minWidth="174.00006103515625" prefWidth="237.60003662109375"
+                                 style="-fx-border-color: lightgray; -fx-background-color: white;" text=" "/>
                 </columns>
             </TableView>
         </HBox>
 
         <VBox prefHeight="100.0" prefWidth="1079">
             <children>
-                <HBox alignment="CENTER_LEFT" focusTraversable="true" prefHeight="52.0" prefWidth="719.0" style="-fx-border-color: lightgray;">
+                <HBox alignment="CENTER_LEFT" focusTraversable="true" prefHeight="52.0" prefWidth="719.0"
+                      style="-fx-border-color: lightgray;">
                     <children>
                         <TextField fx:id="idAdd" prefWidth="100.0" promptText="ID">
                             <HBox.margin>
-                                <Insets left="5.0" right="5.0" />
+                                <Insets left="5.0" right="5.0"/>
                             </HBox.margin>
                         </TextField>
                         <TextField fx:id="imgAdd" prefWidth="200.0" promptText="Image URL">
                             <HBox.margin>
-                                <Insets left="5.0" right="5.0" />
+                                <Insets left="5.0" right="5.0"/>
                             </HBox.margin>
                         </TextField>
                         <TextField fx:id="titleAdd" prefWidth="200.0" promptText="Title">
                             <HBox.margin>
-                                <Insets left="5.0" right="5.0" />
+                                <Insets left="5.0" right="5.0"/>
                             </HBox.margin>
                         </TextField>
                         <TextField fx:id="authorAdd" prefWidth="200.0" promptText="Author">
                             <HBox.margin>
-                                <Insets left="5.0" right="5.0" />
+                                <Insets left="5.0" right="5.0"/>
                             </HBox.margin>
                         </TextField>
                         <TextField fx:id="releaseYearAdd" prefWidth="100.0" promptText="Release year">
                             <HBox.margin>
-                                <Insets left="5.0" right="5.0" />
+                                <Insets left="5.0" right="5.0"/>
                             </HBox.margin>
                         </TextField>
                         <TextField fx:id="genreAdd" prefWidth="100.0" promptText="Genre">
                             <HBox.margin>
-                                <Insets left="5.0" right="5.0" />
+                                <Insets left="5.0" right="5.0"/>
                             </HBox.margin>
                         </TextField>
                         <TextField fx:id="statusAdd" prefWidth="100.0" promptText="Status">
                             <HBox.margin>
-                                <Insets left="5.0" right="5.0" />
+                                <Insets left="5.0" right="5.0"/>
                             </HBox.margin>
                         </TextField>
                         <TextField fx:id="quantityAdd" prefWidth="100.0" promptText="Quantity">
                             <HBox.margin>
-                                <Insets left="5.0" right="5.0" />
+                                <Insets left="5.0" right="5.0"/>
                             </HBox.margin>
                         </TextField>
                         <Button mnemonicParsing="false" onAction="#add" prefWidth="100.0" text="Add">
                             <HBox.margin>
-                                <Insets left="10.0" />
+                                <Insets left="10.0"/>
                             </HBox.margin>
                         </Button>
                     </children>
@@ -133,10 +146,10 @@
         </VBox>
     </VBox>
     <columnConstraints>
-        <ColumnConstraints />
+        <ColumnConstraints/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints />
-        <RowConstraints />
+        <RowConstraints/>
+        <RowConstraints/>
     </rowConstraints>
 </GridPane>
