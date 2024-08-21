@@ -634,7 +634,7 @@ public class BookController implements Initializable {
         Button saveButton = new Button("Save");
         Label paidDateLabel = new Label("Return Date (dd/MM/yyyy):");
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         // Tạo bố cục cho dialog
         VBox vbox = new VBox(10); // khoảng cách giữa các thành phần là 10
         vbox.setPadding(new Insets(10));
