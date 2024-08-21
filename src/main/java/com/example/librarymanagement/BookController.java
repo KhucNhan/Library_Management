@@ -714,4 +714,12 @@ public class BookController implements Initializable {
 
         return false; // Sách không được mượn
     }
+
+    public int getAmount() {
+        return books.size();
+    }
+
+    public void search(ActionEvent actionEvent) {
+
+    }
 }
