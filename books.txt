@@ -1,5 +1,6 @@
-1,https://th.bing.com/th?id=OIP.8bgP1GOO7knJr5XqxFf_lwAAAA&w=234&h=266&c=8&rs=1&qlt=90&o=6&dpr=2&pid=3.1&rm=2,cute cat,nhan,2024,picture,Activated,9
-2,https://th.bing.com/th?id=OIP.7XXlrYMJofEM47o9Md74jAHaEo&w=316&h=197&c=8&rs=1&qlt=90&o=6&dpr=2&pid=3.1&rm=2,hehe,nate,2000,picture,Activated,11
-3,https://th.bing.com/th?id=OIP.UyjzdAEMw8rUOYkcws456wHaGl&w=265&h=235&c=8&rs=1&qlt=90&o=6&dpr=2&pid=3.1&rm=2,haha,khanh,2005,picture,Activated,10
-4,https://th.bing.com/th?id=OIP.xNmHVmGh6h-YMTSalWZIAAHaEK&w=333&h=187&c=8&rs=1&qlt=90&o=6&dpr=2&pid=3.1&rm=2,khuc,nhan,123,picture,Activated,3
-5,https://th.bing.com/th/id/OIP.AW8VfeeCp9v_xzlVdciPpAHaEo?w=281&h=180&c=7&r=0&o=5&dpr=2&pid=1.7,khucnhan,khucnhan,2005,picture,activated,5
+1,https://th.bing.com/th?id=OIP.8bgP1GOO7knJr5XqxFf_lwAAAA&w=234&h=266&c=8&rs=1&qlt=90&o=6&dpr=2&pid=3.1&rm=2,cute cat,nhan,2024,picture,Activated,3,3
+2,https://th.bing.com/th?id=OIP.7XXlrYMJofEM47o9Md74jAHaEo&w=316&h=197&c=8&rs=1&qlt=90&o=6&dpr=2&pid=3.1&rm=2,hehe,nate,2000,picture,Activated,4,1
+3,https://th.bing.com/th?id=OIP.UyjzdAEMw8rUOYkcws456wHaGl&w=265&h=235&c=8&rs=1&qlt=90&o=6&dpr=2&pid=3.1&rm=2,haha,khanh,2005,picture,Activated,3,2
+4,https://th.bing.com/th?id=OIP.xNmHVmGh6h-YMTSalWZIAAHaEK&w=333&h=187&c=8&rs=1&qlt=90&o=6&dpr=2&pid=3.1&rm=2,khuc,nhan,123,picture,Activated,5,0
+5,https://th.bing.com/th/id/OIP.AW8VfeeCp9v_xzlVdciPpAHaEo?w=281&h=180&c=7&r=0&o=5&dpr=2&pid=1.7,khucnhan,khucnhan,2005,picture,activated,5,0
+6,http://ts1.mm.bing.net/th?id=OIP.xshLoNgET_H1sUjZ5o7ahQHaE8&pid=15.1,hihi,nathan,2000,picture,Activated,4,1

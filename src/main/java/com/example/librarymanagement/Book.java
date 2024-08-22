@@ -10,6 +10,7 @@ public class Book {
     private String genre;
     private String status;
     private String quantity;
+    private String count = "0";
 
     public Book() {
     }
@@ -34,6 +35,15 @@ public class Book {
 
 //    public Book(String part, String part1, String part2, String part3, String part4, String part5, String part6, String part7) {
 //    }
+
+
+    public String getCount() {
+        return count;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
+    }
 
     public String getImg() {
         return img;

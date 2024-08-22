@@ -13,6 +13,10 @@
             <HBox.margin>
                 <Insets left="10.0" right="10.0" />
             </HBox.margin></Button>
+        <Button onAction="#goToTopBorrowed" prefWidth="200.0" text="Top borrowed">
+            <HBox.margin>
+                <Insets left="10.0" right="10.0" />
+            </HBox.margin></Button>
         <Button onAction="#goToLoginScene" prefWidth="100.0" text="Log out">
             <HBox.margin>
                 <Insets left="10.0" right="10.0" />

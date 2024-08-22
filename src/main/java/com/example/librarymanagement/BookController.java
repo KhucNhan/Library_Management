@@ -41,6 +41,11 @@ public class BookController implements Initializable {
         return null;
     }
 
+    public ObservableList<Book> getBooks() {
+        loadBooksFromFile();
+        return books;
+    }
+
     private Stage stage;
     private Scene scene;
     private Parent root;
@@ -156,8 +161,9 @@ public class BookController implements Initializable {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 8) {
+                if (parts.length == 9) {
                     Book book = new Book(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], parts[7]);
+                    book.setCount(parts[8]);
                     books.add(book);
                 }
             }
@@ -184,7 +190,8 @@ public class BookController implements Initializable {
                         book.getReleaseYear(),
                         book.getGenre(),
                         book.getStatus(),
-                        book.getQuantity()
+                        book.getQuantity(),
+                        book.getCount()
                 );
                 writer.write(line);
                 writer.newLine(); // Thêm dòng mới sau mỗi sản phẩm
@@ -230,6 +237,8 @@ public class BookController implements Initializable {
     private TableColumn<Book, String> statusCol;
     @FXML
     private TableColumn<Book, String> quantityCol;
+    @FXML
+    private TableColumn<Book, String> countCol;
     @FXML
     private TableColumn<Book, Void> actionCol;
 
@@ -385,6 +394,7 @@ public class BookController implements Initializable {
 
         statusCol.setCellFactory(statusCellFactory);
         quantityCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Quantity"));
+        countCol.setVisible(false);
         actionCol.setCellValueFactory(new PropertyValueFactory<Book, Void>(""));
         Callback<TableColumn<Book, Void>, TableCell<Book, Void>> cellFactory = new Callback<>() {
             @Override
@@ -663,6 +673,7 @@ public class BookController implements Initializable {
                     return;
                 }
                 loanSlipController.addNewLoanSlip();
+                increaseCount(getBook(book.getId()));
                 save();
                 tableUser.refresh();
                 dialogStage.close(); // Đóng dialog sau khi lưu
@@ -671,6 +682,19 @@ public class BookController implements Initializable {
 
         // Hiển thị dialog và chờ người dùng thao tác
         dialogStage.showAndWait();
+    }
+
+    public void increaseCount(Book book) {
+        int newCount = Integer.parseInt(book.getCount()) + 1;
+        book.setCount("" + newCount);
+    }
+
+    public void decreaseCount(Book book) {
+        if(book.getCount().equals("0")) {
+            return;
+        }
+        int newCount = Integer.parseInt(book.getCount()) - 1;
+        book.setCount("" + newCount);
     }
 
     public static boolean isValidDate(String dateStr, String format) {
@@ -712,6 +736,15 @@ public class BookController implements Initializable {
         }
 
         return false; // Sách không được mượn
+    }
+
+    public void goToTopBorrowed(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("TopBorrowedBooks.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, 1200, 800);
+        stage.setTitle("Top borrowed");
+        stage.setScene(scene);
+        stage.show();
     }
 
     public int getAmount() {
