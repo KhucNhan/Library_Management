@@ -3,6 +3,7 @@ package com.example.librarymanagement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,6 +21,9 @@ import javafx.util.Callback;
 
 import java.io.*;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -191,6 +195,8 @@ public class LoanSlipController implements Initializable {
         } else {
             initializeUser();
         }
+        start.valueProperty().addListener((obs, oldDate, newDate) -> refreshTableView());
+        end.valueProperty().addListener((obs, oldDate, newDate) -> refreshTableView());
     }
 
     private void initializeUser() {
@@ -343,5 +349,120 @@ public class LoanSlipController implements Initializable {
     public void save() {
         clearInFile();
         saveProductsToFile();
+    }
+
+    public ObservableList<LoanSlip> filterAdmin(String startDate, String endDate) {
+        ObservableList<LoanSlip> filteredLoanSlips = FXCollections.observableArrayList();
+        loadLoanSlipFromFile();
+        for (LoanSlip loanSlip : loanSlips) {
+            if (loanSlip.getDate().compareTo(startDate) >= 0 && loanSlip.getReturnDate().compareTo(endDate) <= 0) {
+                filteredLoanSlips.add(loanSlip);
+            }
+        }
+        return filteredLoanSlips;
+    }
+
+    public ObservableList<LoanSlip> filterUser(String startDate, String endDate) {
+        ObservableList<LoanSlip> filteredLoanSlips = FXCollections.observableArrayList();
+        loadLoanSlipFromFileForUser();
+        for (LoanSlip loanSlip : userLoanSlips) {
+            if (loanSlip.getDate().compareTo(startDate) >= 0 && loanSlip.getReturnDate().compareTo(endDate) <= 0) {
+                filteredLoanSlips.add(loanSlip);
+            }
+        }
+        return filteredLoanSlips;
+    }
+
+    @FXML
+    private DatePicker start;
+    @FXML
+    private DatePicker end;
+
+    private static ObservableList<LoanSlip> historicLoanSlip = FXCollections.observableArrayList();
+
+    public void search() {
+        filter();
+    }
+
+    private void refreshTableView() {
+        if (start.getValue() != null && end.getValue() != null) {
+            filter();
+        }
+    }
+
+    private void filter() {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        if (currentUser.getRole().equalsIgnoreCase("admin")) {
+            historicLoanSlip = filterAdmin(start.getValue().format(format), end.getValue().format(format));
+        } else {
+            historicLoanSlip = filterUser(start.getValue().format(format), end.getValue().format(format));
+        }
+        tableView.setItems(historicLoanSlip);
+        tableView.refresh();
+    }
+
+    public ObservableList<Book> getTop5Books() {
+        // Lấy danh sách tất cả sách
+        ObservableList<Book> allBooks = bookController.getBooks(); // Phương thức này cần có trong BookController
+
+        // Tạo một danh sách để lưu số lần mượn của mỗi sách
+        List<BookBorrowCount> borrowCounts = new ArrayList<>();
+
+        // Khởi tạo số lần mượn cho tất cả sách
+        for (Book book : allBooks) {
+            borrowCounts.add(new BookBorrowCount(book, 0));
+        }
+
+        // Cập nhật số lần mượn từ danh sách phiếu mượn
+        for (LoanSlip loanSlip : loanSlips) {
+            String bookId = loanSlip.getIdBook();
+            for (BookBorrowCount borrowCount : borrowCounts) {
+                if (borrowCount.getBook().getId().equals(bookId)) {
+                    borrowCount.setCount(borrowCount.getCount() + 1);
+                    break;
+                }
+            }
+        }
+
+        // Sắp xếp danh sách theo số lần mượn giảm dần
+        borrowCounts.sort((bc1, bc2) -> Integer.compare(bc2.getCount(), bc1.getCount()));
+
+        // Lấy top 5 sách được mượn nhiều nhất
+        ObservableList<Book> top5Books = FXCollections.observableArrayList();
+        for (int i = 0; i < Math.min(5, borrowCounts.size()); i++) {
+            top5Books.add(borrowCounts.get(i).getBook());
+        }
+        return top5Books;
+    }
+
+    class BookBorrowCount {
+        private Book book;
+        private int count;
+
+        public BookBorrowCount(Book book, int count) {
+            this.book = book;
+            this.count = count;
+        }
+
+        public Book getBook() {
+            return book;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+    }
+
+    public void goToTopBorrowed(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("TopBorrowedBooks.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, 1200, 800);
+        stage.setTitle("Top borrowed");
+        stage.setScene(scene);
+        stage.show();
     }
 }

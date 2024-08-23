@@ -11,12 +11,32 @@
             <HBox.margin>
                 <Insets left="10.0" right="10.0" />
             </HBox.margin></Button>
+        <Button onAction="#goToTopBorrowed" prefWidth="200.0" text="Top borrowed">
+            <HBox.margin>
+                <Insets left="10.0" right="10.0" />
+            </HBox.margin></Button>
         <Button onAction="#goToLoginScene" prefWidth="80.0" text="Log out">
             <HBox.margin>
                 <Insets left="10.0" right="10.0" />
             </HBox.margin></Button>
     </HBox>
-
+    <HBox GridPane.rowIndex="1" prefHeight="40.0">
+        <DatePicker fx:id="start">
+            <HBox.margin>
+                <Insets left="10.0" right="10.0"/>
+            </HBox.margin>
+        </DatePicker>
+        <DatePicker fx:id="end">
+            <HBox.margin>
+                <Insets left="10.0" right="10.0"/>
+            </HBox.margin>
+        </DatePicker>
+        <Button text="Filter" onAction="#search">
+            <HBox.margin>
+                <Insets left="10.0" right="10.0"/>
+            </HBox.margin>
+        </Button>
+    </HBox>
     <TableView fx:id="tableView" fixedCellSize="50.0" focusTraversable="false" prefHeight="719" prefWidth="1079">
         <columns>
             <TableColumn fx:id="idUserCol" minWidth="50.0" style="-fx-border-color: lightgray; -fx-background-color: white;" text="User ID" />

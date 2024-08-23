@@ -43,6 +43,11 @@ public class BookController implements Initializable {
         return null;
     }
 
+    public ObservableList<Book> getBooks() {
+        loadBooksFromFile();
+        return books;
+    }
+
     private Stage stage;
     private Scene scene;
     private Parent root;
@@ -96,109 +101,6 @@ public class BookController implements Initializable {
         table.setItems(filteredBooks);
         table.refresh();
     }
-
-
-//    public void search() {
-//        ObservableList<Book> filteredBooks = FXCollections.observableArrayList();
-//        loadBooksFromFile();
-//        int numberSituation = 0;
-//
-//        // Chuyển đổi các giá trị tìm kiếm thành chữ thường và loại bỏ dấu
-//        String title = Normalizer.normalize(titleSearch.getText().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-//        String author = Normalizer.normalize(authorSearch.getText().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-//        String releaseYear = Normalizer.normalize(releaseYearSearch.getText().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-//
-//        if (titleSearch.getText().isEmpty()) {
-//            numberSituation = 1;
-//        } else if (authorSearch.getText().isEmpty()) {
-//            numberSituation = 2;
-//        } else if (releaseYearSearch.getText().isEmpty()) {
-//            numberSituation = 3;
-//        } else if (titleSearch.getText().isEmpty() && authorSearch.getText().isEmpty() && releaseYearSearch.getText().isEmpty()) {
-//            numberSituation = 4;
-//        } else if (titleSearch.getText().isEmpty() && authorSearch.getText().isEmpty()) {
-//            numberSituation = 5;
-//        } else if (titleSearch.getText().isEmpty() && releaseYearSearch.getText().isEmpty()) {
-//            numberSituation = 6;
-//        } else if (authorSearch.getText().isEmpty() && releaseYearSearch.getText().isEmpty()) {
-//            numberSituation = 7;
-//        }
-//
-//        switch (numberSituation) {
-//            case 1:
-//                for (Book book : books) {
-//                    String bookTitle = Normalizer.normalize(book.getTitle().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-//                    if (bookTitle.contains(title)) {
-//                        filteredBooks.add(book);
-//                    }
-//                }
-//                break;
-//            case 2:
-//                for (Book book : books) {
-//                    String bookAuthor = Normalizer.normalize(book.getAuthor().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-//                    if (bookAuthor.contains(author)) {
-//                        filteredBooks.add(book);
-//                    }
-//                }
-//                break;
-//            case 3:
-//                for (Book book : books) {
-//                    if (book.getReleaseYear().equals(releaseYear)) {
-//                        filteredBooks.add(book);
-//                    }
-//                }
-//                break;
-//            case 4:
-//                for (Book book : books) {
-//                    String bookTitle = Normalizer.normalize(book.getTitle().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-//                    String bookAuthor = Normalizer.normalize(book.getAuthor().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-//                    if (bookTitle.contains(title) && bookAuthor.contains(author)) {
-//                        filteredBooks.add(book);
-//                    }
-//                }
-//                break;
-//            case 5:
-//                for (Book book : books) {
-//                    String bookTitle = Normalizer.normalize(book.getTitle().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-//                    String releaseYears = Normalizer.normalize(book.getReleaseYear().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-//                    if (bookTitle.contains(title) && releaseYears.contains(releaseYear)) {
-//                        filteredBooks.add(book);
-//                    }
-//                }
-//                break;
-//            case 6:
-//                for (Book book : books) {
-//                    String bookAuthor = Normalizer.normalize(book.getAuthor().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-//                    String releaseYears = Normalizer.normalize(book.getReleaseYear().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-//                    if (bookAuthor.contains(author) && releaseYears.contains(releaseYear)) {
-//                        filteredBooks.add(book);
-//                    }
-//                }
-//                break;
-//            case 7:
-//                for (Book book : books) {
-//                    String releaseYears = Normalizer.normalize(book.getReleaseYear().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-//                    if (releaseYears.contains(releaseYear)) {
-//                        filteredBooks.add(book);
-//                    }
-//                }
-//                break;
-//        }
-//        table.setItems(filteredBooks);
-//        table.refresh();
-//    }
-//    for (Book book : books) {
-//        // Chuyển đổi các thuộc tính của book thành chữ thường và loại bỏ dấu
-//        String bookTitle = Normalizer.normalize(book.getTitle().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-//
-//        if ((title.isEmpty() || bookTitle.contains(title))) {
-//            filteredBooks.add(book);
-//        }
-//    }
-//
-//            table.setItems(filteredBooks);
-//            table.refresh();
-
 
 @FXML
 TextField idAdd;
@@ -446,6 +348,22 @@ private void initializeAdminTableView() {
             Book selectedBook = table.getSelectionModel().getSelectedItem(); // Lấy đối tượng được chọn
             if (selectedBook != null) {
                 showBookDetailsDialog(selectedBook); // Hiển thị hộp thoại với thông tin chi tiết
+
+    private void loadBooksFromFile() {
+        books.clear();
+        File file = new File("books.txt");
+        if (!file.exists()) {
+            return;
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 9) {
+                    Book book = new Book(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], parts[7]);
+                    book.setCount(parts[8]);
+                    books.add(book);
+                }
             }
         }
     });
@@ -455,11 +373,88 @@ private void initializeAdminTableView() {
 
         private final ImageView imageView = new ImageView();
 
+
         @Override
         protected void updateItem(String imagePath, boolean empty) {
             super.updateItem(imagePath, empty);
             if (empty || imagePath == null) {
                 setGraphic(null);
+
+    private void saveBookToFile() {
+        // Xác định đường dẫn file trong thư mục dự án hoặc một thư mục cụ thể
+        File file = new File("books.txt");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (Book book : books) {
+                // Tạo chuỗi dữ liệu cho từng sách
+                String line = String.join(",",
+                        book.getId(),
+                        book.getImg(),
+                        book.getTitle(),
+                        book.getAuthor(),
+                        book.getReleaseYear(),
+                        book.getGenre(),
+                        book.getStatus(),
+                        book.getQuantity(),
+                        book.getCount()
+                );
+                writer.write(line);
+                writer.newLine(); // Thêm dòng mới sau mỗi sản phẩm
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError("Error saving data: Could not save product data to file.");
+        }
+    }
+
+    private void clearInFile() {
+        File file = new File("books.txt");
+        try (FileWriter writer = new FileWriter(file, false)) {
+            writer.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    @FXML
+    private TableView<Book> table;
+    @FXML
+    private TableColumn<Book, String> idCol;
+    @FXML
+    private TableColumn<Book, String> imgCol;
+    @FXML
+    private TableColumn<Book, String> titleCol;
+    @FXML
+    private TableColumn<Book, String> authorCol;
+    @FXML
+    private TableColumn<Book, String> releaseYearCol;
+    @FXML
+    private TableColumn<Book, String> genreCol;
+    @FXML
+    private TableColumn<Book, String> statusCol;
+    @FXML
+    private TableColumn<Book, String> quantityCol;
+    @FXML
+    private TableColumn<Book, String> countCol;
+    @FXML
+    private TableColumn<Book, Void> actionCol;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        books = FXCollections.observableArrayList();
+        loadBooksFromFile();
+        if (currentUser != null) {
+            if (currentUser.getRole().equalsIgnoreCase("admin")) {
+                table.setItems(books);
+                initializeAdminTableView();
             } else {
                 imageView.setImage(new Image(imagePath));
                 imageView.setFitHeight(50); // Chiều cao của ảnh
@@ -488,6 +483,35 @@ private void initializeAdminTableView() {
                             book.setStatus("Unactivated");
                             statusButton.setText("Activated");
                         } else {
+                            Book book = getTableView().getItems().get(getIndex());
+                            statusButton.setText(book.getStatus());
+                            HBox hBox = new HBox(statusButton);
+                            hBox.setSpacing(10);
+                            HBox.setMargin(statusButton, new Insets(0, 5, 0, 5)); // Thiết lập margin cho nút Edit
+                            setGraphic(hBox);
+                        }
+                    }
+                };
+                return statusCellFactory;
+            }
+        };
+
+        statusCol.setCellFactory(statusCellFactory);
+        quantityCol.setCellValueFactory(new PropertyValueFactory<Book, String>("Quantity"));
+        countCol.setVisible(false);
+        actionCol.setCellValueFactory(new PropertyValueFactory<Book, Void>(""));
+        Callback<TableColumn<Book, Void>, TableCell<Book, Void>> cellFactory = new Callback<>() {
+            @Override
+            public TableCell<Book, Void> call(TableColumn<Book, Void> bookVoidTableColumn) {
+                final TableCell<Book, Void> cell = new TableCell<>() {
+
+                    private final Button editButton = new Button("Edit");
+                    private final Button removeButton = new Button("Remove");
+
+                    {
+                        editButton.setOnAction((ActionEvent event) -> {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            Book book = getTableView().getItems().get(getIndex());
                             if (!isBookOnLoan(book.getId())) {
                                 book.setStatus("Activated");
                                 statusButton.setText("Unactivated");
@@ -593,6 +617,49 @@ private void initializeUserTableView() {
             Book selectedBook = tableUser.getSelectionModel().getSelectedItem(); // Lấy đối tượng được chọn
             if (selectedBook != null) {
                 showBookDetailsDialog(selectedBook); // Hiển thị hộp thoại với thông tin chi tiết
+    private void showBorrowDialog(Book book) {
+        // Tạo Stage cho dialog
+        Stage dialogStage = new Stage();
+        dialogStage.setTitle("Borrow Book");
+
+        // Tạo các thành phần giao diện
+        DatePicker datePicker = new DatePicker();
+        Button saveButton = new Button("Save");
+        Label paidDateLabel = new Label("Return Date (dd/MM/yyyy):");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        // Tạo bố cục cho dialog
+        VBox vbox = new VBox(10); // khoảng cách giữa các thành phần là 10
+        vbox.setPadding(new Insets(10));
+        vbox.getChildren().addAll(paidDateLabel, datePicker, saveButton);
+
+        Scene scene = new Scene(vbox, 480, 360);
+        dialogStage.setScene(scene);
+
+        LoanSlipController loanSlipController = new LoanSlipController();
+
+        // Lấy ngày hiện tại
+        LocalDate currentDate = LocalDate.now();
+
+        // Định dạng ngày
+        String formattedDate = currentDate.format(format);
+
+        saveButton.setOnAction(e -> {
+            newLoanSlip = new LoanSlip(currentUser.getUserId(), book.getImg(), book.getId(), formattedDate, datePicker.getValue().format(format), "on loan");
+            if (!isValidDate(datePicker.getValue().format(format), "dd/MM/yyyy")) {
+                alert(alert, "Date format: dd/MM/yyyy");
+            } else {
+                newLoanSlip.setReturnDate(datePicker.getValue().format(format));
+                if(Integer.parseInt(getBook(book.getId()).getQuantity()) == 0) {
+                    book.setStatus("Unactivated");
+                    alert(alert, "All of this book has been borrowed.");
+                    return;
+                }
+                loanSlipController.addNewLoanSlip();
+                increaseCount(getBook(book.getId()));
+                save();
+                tableUser.refresh();
+                dialogStage.close(); // Đóng dialog sau khi lưu
             }
         }
     });
@@ -694,6 +761,22 @@ private void showEditDialog(Book book) {
             return;
         }
 
+
+    public void increaseCount(Book book) {
+        int newCount = Integer.parseInt(book.getCount()) + 1;
+        book.setCount("" + newCount);
+    }
+
+    public void decreaseCount(Book book) {
+        if(book.getCount().equals("0")) {
+            return;
+        }
+        int newCount = Integer.parseInt(book.getCount()) - 1;
+        book.setCount("" + newCount);
+    }
+
+    public static boolean isValidDate(String dateStr, String format) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         try {
             Double num = Double.parseDouble(releaseYear.getText());
         } catch (NumberFormatException exception) {
@@ -849,6 +932,39 @@ public boolean isBookOnLoan(String bookId) {
         }
     }
 
+
     return false; // Sách không được mượn
 }
+}
+    public boolean isBookOnLoan(String bookId) {
+        // Tải danh sách phiếu mượn từ file (hoặc database)
+        LoanSlipController loanSlipController = new LoanSlipController();
+        loanSlipController.loadLoanSlipFromFile();
+
+        // Kiểm tra xem phiếu mượn có đang ở trạng thái "On loan" trong bất kỳ phiếu mượn nào không
+        for (LoanSlip loanSlip : loanSlipController.getLoanSlips()) {
+            if (loanSlip.getIdBook().equals(bookId) && loanSlip.getStatus().equalsIgnoreCase("On loan")) {
+                return true; // Sách đang được mượn
+            }
+        }
+
+        return false; // Sách không được mượn
+    }
+
+    public void goToTopBorrowed(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("TopBorrowedBooks.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root, 1200, 800);
+        stage.setTitle("Top borrowed");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public int getAmount() {
+        return books.size();
+    }
+
+    public void search(ActionEvent actionEvent) {
+
+    }
 }
