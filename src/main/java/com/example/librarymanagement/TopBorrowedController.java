@@ -1,6 +1,7 @@
 package com.example.librarymanagement;
 
-import javafx.collections.FXCollections;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,10 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -46,35 +44,36 @@ public class TopBorrowedController implements Initializable {
     private TableColumn<Book, String> quantityTop;
     @FXML
     private TableColumn<Book, Integer> countTop;
+    LoanSlipController loanSlipController = new LoanSlipController();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if(currentUser.getRole().equalsIgnoreCase("admin")) {
+        if (currentUser.getRole().equalsIgnoreCase("admin")) {
             initializeAdmin();
         } else {
             initializeUser();
         }
-    }
 
-    public void filteredBook(String startDate, String endDate) {
-        BookController bookController = new BookController();
-        LoanSlipController loanSlipController = new LoanSlipController();
-        ObservableList<Book> filteredBook = FXCollections.observableArrayList();
-
-        for (LoanSlip loanSlip : loanSlipController.getLoanSlips()) {
-            if (loanSlip.getDate().compareTo(startDate) >= 0 && loanSlip.getReturnDate().compareTo(endDate) <= 0) {
-                filteredBook.add(bookController.getBook(loanSlip.getIdBook()));
-                if (filteredBook.size() == 5) {
-                    tableTop.setItems(filteredBook);
-                    tableTop.refresh();
-                    return;
+        // Đảm bảo ChoiceBox có dữ liệu trước khi thêm Listener
+        choiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                try {
+                    ObservableList<Book> top5ByTime = loanSlipController.getTop5BooksByTime(newValue);
+                    tableTop.setItems(top5ByTime);
+                    tableTop.getSortOrder().add(countTop);
+                    countTop.setSortType(TableColumn.SortType.DESCENDING);
+                    tableTop.sort();
+                } catch (NumberFormatException e) {
+                    System.out.println("Giá trị lựa chọn không hợp lệ: " + newValue);
                 }
             }
-        }
+        });
     }
+
 
     public void search() {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        filteredBook(start.getValue().format(format), end.getValue().format(format));
+//        filteredBook(start.getValue().format(format), end.getValue().format(format));
     }
 
     @FXML
@@ -112,6 +111,9 @@ public class TopBorrowedController implements Initializable {
         quantityTop.setCellValueFactory(new PropertyValueFactory<Book, String>("Quantity"));
         countTop.setCellValueFactory(new PropertyValueFactory<Book, Integer>("Count"));
         tableTop.setItems(top5);
+        tableTop.getSortOrder().add(countTop);
+        countTop.setSortType(TableColumn.SortType.DESCENDING);
+        tableTop.sort();
     }
 
     private void initializeUser() {
@@ -144,6 +146,9 @@ public class TopBorrowedController implements Initializable {
         quantityTop.setVisible(false);
         countTop.setCellValueFactory(new PropertyValueFactory<Book, Integer>("Count"));
         tableTop.setItems(top5);
+        tableTop.getSortOrder().add(countTop);
+        countTop.setSortType(TableColumn.SortType.DESCENDING);
+        tableTop.sort();
     }
 
     private Stage stage;
@@ -183,5 +188,12 @@ public class TopBorrowedController implements Initializable {
         stage.setTitle("Loan SLip");
         stage.setScene(scene);
         stage.show();
+    }
+
+    @FXML
+    private ChoiceBox choiceBox;
+
+    public void filteredTopBorrowedByMonth(String month) {
+
     }
 }

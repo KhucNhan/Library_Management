@@ -151,7 +151,7 @@ public class BookController implements Initializable {
         }
     }
 
-    private void loadBooksFromFile() {
+     void loadBooksFromFile() {
         books.clear();
         File file = new File("books.txt");
         if (!file.exists()) {
@@ -708,7 +708,7 @@ public class BookController implements Initializable {
         }
     }
 
-    private void save() {
+    void save() {
         clearInFile();
         saveBookToFile();
     }
@@ -753,5 +753,12 @@ public class BookController implements Initializable {
 
     public void search(ActionEvent actionEvent) {
 
+    }
+
+    public void resetCount() {
+        for (Book book : books) {
+            book.setCount("0");
+        }
+        save();
     }
 }

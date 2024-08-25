@@ -3,7 +3,6 @@ package com.example.librarymanagement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,9 +18,11 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import java.io.*;
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,7 @@ import java.util.ResourceBundle;
 
 import static com.example.librarymanagement.BookController.newLoanSlip;
 import static com.example.librarymanagement.UserController.currentUser;
+import static java.lang.CharSequence.compare;
 
 public class LoanSlipController implements Initializable {
     private Stage stage;
@@ -434,6 +436,50 @@ public class LoanSlipController implements Initializable {
         }
         return top5Books;
     }
+
+    public ObservableList<Book> getTop5BooksByTime(String time) {
+
+        bookController.resetCount();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = switch (time) {
+            case "Today" -> today;
+            case "Yesterday" -> today.minusDays(1);
+            case "Last 7 days" -> today.minusDays(7);
+            case "Last 30 days" -> today.minusDays(30);
+            default -> null;
+        };
+
+        loadLoanSlipFromFile();
+        for (LoanSlip loanSlip : loanSlips) {
+            String bookId = loanSlip.getIdBook();
+            LocalDate loanDate = LocalDate.parse(loanSlip.getDate(), formatter);
+
+            if (!loanDate.isAfter(startDate)) { // Chọn tất cả các sách mượn sau ngày bắt đầu
+                for (Book book : bookController.getBooks()) {
+                    if (book.getId().equals(bookId)) {
+                        int newCount = Integer.parseInt(book.getCount()) + 1;
+                        book.setCount("" + newCount);
+                        bookController.save();
+                        break;
+                    }
+                }
+            }
+        }
+
+        bookController.getBooks().sort((bc1, bc2) -> compare(bc2.getCount(), bc1.getCount()));
+
+        bookController.save();
+
+        ObservableList<Book> top5Books = FXCollections.observableArrayList();
+        for (int i = 0; i < Math.min(5, bookController.getBooks().size()); i++) {
+            top5Books.add(bookController.getBooks().get(i));
+        }
+
+        return top5Books;
+    }
+
 
     class BookBorrowCount {
         private Book book;
