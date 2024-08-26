@@ -21,6 +21,7 @@ import javafx.util.Callback;
 
 import java.io.*;
 import java.net.URL;
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -122,7 +123,8 @@ public class BookController implements Initializable {
             if (statusAdd.getText().isEmpty()) {
                 alert(alert, "No blank fields allowed!");
                 return false;
-            } if (!statusAdd.getText().equalsIgnoreCase("activated") && !statusAdd.getText().equalsIgnoreCase("unactivated")) {
+            }
+            if (!statusAdd.getText().equalsIgnoreCase("activated") && !statusAdd.getText().equalsIgnoreCase("unactivated")) {
                 alert(alert, "Status must be activated or unactivated.");
                 return false;
             } else {
@@ -139,7 +141,7 @@ public class BookController implements Initializable {
                 saveBookToFile(); // Lưu vào file sau khi thêm thành công
                 return true;
             }
-        } else if (idAdd.getText().equals(getBook(idAdd.getText()).getId()) || titleAdd.getText().equals(getBook(idAdd.getText()).getTitle()) || authorAdd.getText().equals(getBook(idAdd.getText()).getAuthor()) || releaseYearAdd.getText().equals(getBook(idAdd.getText()).getReleaseYear()) || genreAdd.getText().equals(getBook(idAdd.getText()).getGenre())){
+        } else if (idAdd.getText().equals(getBook(idAdd.getText()).getId()) || titleAdd.getText().equals(getBook(idAdd.getText()).getTitle()) || authorAdd.getText().equals(getBook(idAdd.getText()).getAuthor()) || releaseYearAdd.getText().equals(getBook(idAdd.getText()).getReleaseYear()) || genreAdd.getText().equals(getBook(idAdd.getText()).getGenre())) {
             int newQuantity = Integer.parseInt(getBook(idAdd.getText()).getQuantity()) + Integer.parseInt(quantityAdd.getText());
             getBook(idAdd.getText()).setQuantity("" + newQuantity);
             save();
@@ -151,7 +153,7 @@ public class BookController implements Initializable {
         }
     }
 
-     void loadBooksFromFile() {
+    void loadBooksFromFile() {
         books.clear();
         File file = new File("books.txt");
         if (!file.exists()) {
@@ -634,6 +636,26 @@ public class BookController implements Initializable {
 
     public static LoanSlip newLoanSlip;
 
+//        saveButton.setOnAction(e -> {
+//            newLoanSlip = new LoanSlip(currentUser.getUserId(), book.getImg(), book.getId(), formattedDate, datePicker.getValue().format(format), "on loan");
+//            if (!isValidDate(datePicker.getValue().format(format), "dd/MM/yyyy")) {
+//                alert(alert, "Date format: dd/MM/yyyy");
+//            } else {
+//                newLoanSlip.setReturnDate(datePicker.getValue().format(format));
+//                if(Integer.parseInt(getBook(book.getId()).getQuantity()) == 0) {
+//                    book.setStatus("Unactivated");
+//                    alert(alert, "All of this book has been borrowed.");
+//                    return;
+//                }
+//                loanSlipController.addNewLoanSlip();
+//                increaseCount(getBook(book.getId()));
+//                save();
+//                tableUser.refresh();
+//                dialogStage.close(); // Đóng dialog sau khi lưu
+//            }
+//        });
+//
+
     private void showBorrowDialog(Book book) {
         // Tạo Stage cho dialog
         Stage dialogStage = new Stage();
@@ -662,18 +684,18 @@ public class BookController implements Initializable {
         String formattedDate = currentDate.format(format);
 
         saveButton.setOnAction(e -> {
-            newLoanSlip = new LoanSlip(currentUser.getUserId(), book.getImg(), book.getId(), formattedDate, datePicker.getValue().format(format), "on loan");
             if (!isValidDate(datePicker.getValue().format(format), "dd/MM/yyyy")) {
                 alert(alert, "Date format: dd/MM/yyyy");
             } else {
-                newLoanSlip.setReturnDate(datePicker.getValue().format(format));
-                if(Integer.parseInt(getBook(book.getId()).getQuantity()) == 0) {
+                if (Integer.parseInt(getBook(book.getId()).getQuantity()) == 0) {
                     book.setStatus("Unactivated");
-                    alert(alert, "All of this book has been borrowed.");
+                    alert(alert, "Tất cả cuốn sách này đã được mượn hết");
                     return;
                 }
+                newLoanSlip = new LoanSlip(currentUser.getUserId(), book.getImg(), book.getId(), formattedDate, datePicker.getValue().format(format), "Waiting");
+//                newLoanSlip.setReturnDate(datePicker.getValue().format(format));
+
                 loanSlipController.addNewLoanSlip();
-                increaseCount(getBook(book.getId()));
                 save();
                 tableUser.refresh();
                 dialogStage.close(); // Đóng dialog sau khi lưu
@@ -690,7 +712,7 @@ public class BookController implements Initializable {
     }
 
     public void decreaseCount(Book book) {
-        if(book.getCount().equals("0")) {
+        if (book.getCount().equals("0")) {
             return;
         }
         int newCount = Integer.parseInt(book.getCount()) - 1;
@@ -711,16 +733,6 @@ public class BookController implements Initializable {
     void save() {
         clearInFile();
         saveBookToFile();
-    }
-
-    public void updateBookStatus(String bookId, String status) {
-        for (Book book : books) {  // books là danh sách chứa tất cả các đối tượng Book
-            if (book.getId().equals(bookId)) {
-                book.setStatus(status);
-                saveBookToFile(); // Lưu thay đổi vào tệp
-                break;
-            }
-        }
     }
 
     public boolean isBookOnLoan(String bookId) {
@@ -751,9 +763,41 @@ public class BookController implements Initializable {
         return books.size();
     }
 
-    public void search(ActionEvent actionEvent) {
+    @FXML
+    private ChoiceBox<String> myChoiceBox;
+    @FXML
+    private TextField searchByInfor;
 
+    public void search() {
+        ObservableList<Book> filteredBooks = FXCollections.observableArrayList();
+        loadBooksFromFile();
+
+        // Lấy lựa chọn từ ChoiceBox và giá trị tìm kiếm từ TextField
+        String selectedChoice = myChoiceBox.getValue();
+        String searchText = Normalizer.normalize(searchByInfor.getText().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+
+        for (Book book : books) {
+            boolean matches = false;
+
+            // Kiểm tra lựa chọn và thực hiện tìm kiếm tương ứng
+            if ("Search by Title".equals(selectedChoice)) {
+                matches = Normalizer.normalize(book.getTitle().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "").contains(searchText);
+            } else if ("Search by Author".equals(selectedChoice)) {
+                matches = Normalizer.normalize(book.getAuthor().toLowerCase(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "").contains(searchText);
+            } else if ("Search by Release year".equals(selectedChoice)) {
+                matches = book.getReleaseYear().equalsIgnoreCase(searchText);
+            }
+
+            // Nếu sách phù hợp với lựa chọn, thêm vào danh sách kết quả
+            if (matches) {
+                filteredBooks.add(book);
+            }
+        }
+
+        table.setItems(filteredBooks);
+        table.refresh();
     }
+
 
     public void resetCount() {
         for (Book book : books) {

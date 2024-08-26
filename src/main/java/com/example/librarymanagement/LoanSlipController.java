@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -105,6 +106,7 @@ public class LoanSlipController implements Initializable {
     public void addNewLoanSlip() {
         loanSlips.add(newLoanSlip);
         save();
+        loadLoanSlipFromFile();
     }
 
     private void saveProductsToFile() {
@@ -306,46 +308,73 @@ public class LoanSlipController implements Initializable {
         idBookCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("idBook"));
         dateCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("date"));
         returnDateCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("returnDate"));
-        statusCol.setCellValueFactory(new PropertyValueFactory<LoanSlip, String>("status"));
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        // Tạo cellFactory cho cột hành động
         Callback<TableColumn<LoanSlip, Void>, TableCell<LoanSlip, Void>> cellFactory = new Callback<>() {
             @Override
             public TableCell<LoanSlip, Void> call(final TableColumn<LoanSlip, Void> param) {
-                final TableCell<LoanSlip, Void> cell = new TableCell<>() {
+                return new TableCell<>() {
                     private final Button removeButton = new Button("Remove");
+                    private final Button acceptedButton = new Button("Accepted");
+                    private final Button cancelButton = new Button("Cancel");
 
                     {
                         removeButton.setOnAction((ActionEvent event) -> {
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             LoanSlip loanSlip = getTableView().getItems().get(getIndex());
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             if (bookController.isBookOnLoan(loanSlip.getIdBook())) {
                                 alert.setContentText("Cannot remove loan slip. The book is currently on loan.");
                                 alert.show();
-                                return;
-                            }
-                            if (showConfirmation()) {
+                            } else if (showConfirmation()) {
                                 removeLoanSlip(loanSlip);
                                 tableView.refresh();
                             }
                         });
-                        removeButton.setPrefWidth(150);
+                        removeButton.setPrefWidth(80);
+
+                        acceptedButton.setOnAction((ActionEvent event) -> {
+                            LoanSlip loanSlip = getTableView().getItems().get(getIndex());
+                            loanSlip.setStatus("On loan");
+                            bookController.increaseCount(bookController.getBook(loanSlip.getIdBook()));
+                            tableView.refresh();
+                        });
+                        acceptedButton.setPrefWidth(80);
+
+                        cancelButton.setOnAction((ActionEvent event) -> {
+                            LoanSlip loanSlip = getTableView().getItems().get(getIndex());
+                            loanSlips.remove(loanSlip);
+                            tableView.refresh();
+                        });
+                        cancelButton.setPrefWidth(80);
                     }
 
                     @Override
-                    public void updateItem(Void item, boolean empty) {
+                    protected void updateItem(Void item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty) {
                             setGraphic(null);
                         } else {
-                            HBox hBox = new HBox(removeButton);
+                            LoanSlip loanSlip = getTableView().getItems().get(getIndex());
+                            HBox hBox;
+                            if (!loanSlip.getStatus().equalsIgnoreCase("waiting")) {
+                                hBox = new HBox(removeButton);
+
+                            } else {
+                                hBox = new HBox(cancelButton, acceptedButton);
+                            }
                             hBox.setSpacing(10);
                             setGraphic(hBox);
                         }
                     }
                 };
-                return cell;
             }
         };
+
+        // Tạo và thêm cột hành động vào TableView
+        TableColumn<LoanSlip, Void> actionCol = new TableColumn<>("Actions");
         actionCol.setCellFactory(cellFactory);
+        tableView.getColumns().add(actionCol);
     }
 
     public void save() {
@@ -419,7 +448,7 @@ public class LoanSlipController implements Initializable {
         for (LoanSlip loanSlip : loanSlips) {
             String bookId = loanSlip.getIdBook();
             for (BookBorrowCount borrowCount : borrowCounts) {
-                if (borrowCount.getBook().getId().equals(bookId)) {
+                if (borrowCount.getBook().getId().equals(bookId) && !loanSlip.getStatus().equalsIgnoreCase("Waiting")) {
                     borrowCount.setCount(borrowCount.getCount() + 1);
                     break;
                 }
@@ -458,7 +487,7 @@ public class LoanSlipController implements Initializable {
 
             if (!loanDate.isAfter(startDate)) { // Chọn tất cả các sách mượn sau ngày bắt đầu
                 for (Book book : bookController.getBooks()) {
-                    if (book.getId().equals(bookId)) {
+                    if (book.getId().equals(bookId) && !loanSlip.getStatus().equalsIgnoreCase("Waiting")) {
                         int newCount = Integer.parseInt(book.getCount()) + 1;
                         book.setCount("" + newCount);
                         bookController.save();

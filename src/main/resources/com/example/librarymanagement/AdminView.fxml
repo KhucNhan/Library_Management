@@ -4,6 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <GridPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
           xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarymanagement.BookController">
     <VBox>
@@ -29,22 +31,16 @@
                 <HBox alignment="TOP_CENTER" focusTraversable="true" prefHeight="23.0" prefWidth="1200.0"
                       style="-fx-border-color: lightgray;">
                     <children>
-                        <TextField fx:id="idSearch" prefWidth="100.0" promptText="ID">
-                            <HBox.margin>
-                                <Insets left="5.0" right="5.0"/>
-                            </HBox.margin>
-                        </TextField>
-                        <TextField fx:id="titleSearch" prefWidth="200.0" promptText="Title">
-                            <HBox.margin>
-                                <Insets left="5.0" right="5.0"/>
-                            </HBox.margin>
-                        </TextField>
-                        <TextField fx:id="authorSearch" prefWidth="200.0" promptText="Author">
-                            <HBox.margin>
-                                <Insets left="5.0" right="5.0"/>
-                            </HBox.margin>
-                        </TextField>
-                        <TextField fx:id="statusSearch" prefWidth="100.0" promptText="Status">
+                        <ChoiceBox fx:id="myChoiceBox">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Search by Title"/>
+                                    <String fx:value="Search by Author"/>
+                                    <String fx:value="Search by Release year"/>
+                                </FXCollections>
+                            </items>
+                        </ChoiceBox>
+                        <TextField fx:id="searchByInfor" prefWidth="200.0" promptText="Enter your information you want to search">
                             <HBox.margin>
                                 <Insets left="5.0" right="5.0"/>
                             </HBox.margin>
