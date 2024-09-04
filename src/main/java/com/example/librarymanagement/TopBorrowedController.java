@@ -70,17 +70,6 @@ public class TopBorrowedController implements Initializable {
         });
     }
 
-
-    public void search() {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//        filteredBook(start.getValue().format(format), end.getValue().format(format));
-    }
-
-    @FXML
-    private DatePicker start;
-    @FXML
-    private DatePicker end;
-
     private void initializeAdmin() {
         LoanSlipController loanSlipController = new LoanSlipController();
         ObservableList<Book> top5 = loanSlipController.getTop5Books();
@@ -192,8 +181,4 @@ public class TopBorrowedController implements Initializable {
 
     @FXML
     private ChoiceBox choiceBox;
-
-    public void filteredTopBorrowedByMonth(String month) {
-
-    }
 }

@@ -52,7 +52,6 @@ public class BookController implements Initializable {
     private Parent root;
 
     public void goToLoginScene(ActionEvent event) throws IOException {
-//        table.refresh();
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root, 1200, 800);
@@ -61,7 +60,6 @@ public class BookController implements Initializable {
     }
 
     public void goToLoanSlip(ActionEvent event) throws IOException {
-//        table.refresh();
         Parent root = FXMLLoader.load(getClass().getResource("LoanSlipView.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root, 1200, 800);
@@ -358,17 +356,16 @@ public class BookController implements Initializable {
                         statusButton.setOnAction((ActionEvent event) -> {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             Book book = getTableView().getItems().get(getIndex());
-                            if (book.getStatus().equalsIgnoreCase("Activated")) {
+                            if (book.getStatus().equalsIgnoreCase("Activated") && !isBookOnLoan(book.getId())) {
                                 book.setStatus("Unactivated");
                                 statusButton.setText("Activated");
+                            } else if (book.getStatus().equalsIgnoreCase("Unactivated")) {
+                                book.setStatus("Activated");
+                                statusButton.setText("Unactivated");
                             } else {
-                                if (!isBookOnLoan(book.getId())) {
-                                    book.setStatus("Activated");
-                                    statusButton.setText("Unactivated");
-                                } else {
-                                    alert(alert, "This book is on loan, can't change status.");
-                                }
+                                alert(alert, "This book is on loan, can not change status!");
                             }
+
                             save();
                             table.refresh();
                         });
@@ -636,26 +633,6 @@ public class BookController implements Initializable {
 
     public static LoanSlip newLoanSlip;
 
-//        saveButton.setOnAction(e -> {
-//            newLoanSlip = new LoanSlip(currentUser.getUserId(), book.getImg(), book.getId(), formattedDate, datePicker.getValue().format(format), "on loan");
-//            if (!isValidDate(datePicker.getValue().format(format), "dd/MM/yyyy")) {
-//                alert(alert, "Date format: dd/MM/yyyy");
-//            } else {
-//                newLoanSlip.setReturnDate(datePicker.getValue().format(format));
-//                if(Integer.parseInt(getBook(book.getId()).getQuantity()) == 0) {
-//                    book.setStatus("Unactivated");
-//                    alert(alert, "All of this book has been borrowed.");
-//                    return;
-//                }
-//                loanSlipController.addNewLoanSlip();
-//                increaseCount(getBook(book.getId()));
-//                save();
-//                tableUser.refresh();
-//                dialogStage.close(); // Đóng dialog sau khi lưu
-//            }
-//        });
-//
-
     private void showBorrowDialog(Book book) {
         // Tạo Stage cho dialog
         Stage dialogStage = new Stage();
@@ -794,10 +771,14 @@ public class BookController implements Initializable {
             }
         }
 
-        table.setItems(filteredBooks);
-        table.refresh();
+        if (currentUser.getRole().equalsIgnoreCase("admin")) {
+            table.setItems(filteredBooks);
+            table.refresh();
+        } else {
+            tableUser.setItems(filteredBooks);
+            tableUser.refresh();
+        }
     }
-
 
     public void resetCount() {
         for (Book book : books) {
