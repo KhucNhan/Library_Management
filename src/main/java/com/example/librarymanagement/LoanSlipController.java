@@ -338,13 +338,15 @@ public class LoanSlipController implements Initializable {
                             loanSlip.setStatus("On loan");
                             bookController.increaseCount(bookController.getBook(loanSlip.getIdBook()));
                             tableView.refresh();
+                            save();
                         });
                         acceptedButton.setPrefWidth(80);
 
                         cancelButton.setOnAction((ActionEvent event) -> {
                             LoanSlip loanSlip = getTableView().getItems().get(getIndex());
-                            loanSlips.remove(loanSlip);
+                            loanSlip.setStatus("Canceled");
                             tableView.refresh();
+                            save();
                         });
                         cancelButton.setPrefWidth(80);
                     }
@@ -359,7 +361,6 @@ public class LoanSlipController implements Initializable {
                             HBox hBox;
                             if (!loanSlip.getStatus().equalsIgnoreCase("waiting")) {
                                 hBox = new HBox(removeButton);
-
                             } else {
                                 hBox = new HBox(cancelButton, acceptedButton);
                             }
