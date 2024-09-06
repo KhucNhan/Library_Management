@@ -383,22 +383,26 @@ public class LoanSlipController implements Initializable {
         saveProductsToFile();
     }
 
-    public ObservableList<LoanSlip> filterAdmin(String startDate, String endDate) {
+    public ObservableList<LoanSlip> filterAdmin(LocalDate startDate, LocalDate endDate, DateTimeFormatter formatter) {
         ObservableList<LoanSlip> filteredLoanSlips = FXCollections.observableArrayList();
         loadLoanSlipFromFile();
         for (LoanSlip loanSlip : loanSlips) {
-            if (loanSlip.getDate().compareTo(startDate) >= 0 && loanSlip.getReturnDate().compareTo(endDate) <= 0) {
+            LocalDate startLoanSlip = LocalDate.parse(loanSlip.getDate(), formatter);
+            LocalDate endLoanSlip = LocalDate.parse(loanSlip.getReturnDate(), formatter);
+            if ((startDate.isEqual(startLoanSlip) || startDate.isBefore(startLoanSlip)) && (endDate.isEqual(endLoanSlip) || endDate.isAfter(endLoanSlip))) {
                 filteredLoanSlips.add(loanSlip);
             }
         }
         return filteredLoanSlips;
     }
 
-    public ObservableList<LoanSlip> filterUser(String startDate, String endDate) {
+    public ObservableList<LoanSlip> filterUser(LocalDate startDate, LocalDate endDate, DateTimeFormatter formatter) {
         ObservableList<LoanSlip> filteredLoanSlips = FXCollections.observableArrayList();
         loadLoanSlipFromFileForUser();
         for (LoanSlip loanSlip : userLoanSlips) {
-            if (loanSlip.getDate().compareTo(startDate) >= 0 && loanSlip.getReturnDate().compareTo(endDate) <= 0) {
+            LocalDate startLoanSlip = LocalDate.parse(loanSlip.getDate(), formatter);
+            LocalDate endLoanSlip = LocalDate.parse(loanSlip.getReturnDate(), formatter);
+            if ((startDate.isEqual(startLoanSlip) || startDate.isBefore(startLoanSlip)) && (endDate.isEqual(endLoanSlip) || endDate.isAfter(endLoanSlip))) {
                 filteredLoanSlips.add(loanSlip);
             }
         }
@@ -424,10 +428,12 @@ public class LoanSlipController implements Initializable {
 
     private void filter() {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate startDate = LocalDate.parse(end.getValue().format(format), format);
+        LocalDate endDate = LocalDate.parse(start.getValue().format(format), format);
         if (currentUser.getRole().equalsIgnoreCase("admin")) {
-            historicLoanSlip = filterAdmin(start.getValue().format(format), end.getValue().format(format));
+            historicLoanSlip = filterAdmin(start.getValue(), end.getValue(), format);
         } else {
-            historicLoanSlip = filterUser(start.getValue().format(format), end.getValue().format(format));
+            historicLoanSlip = filterUser(start.getValue(), end.getValue(), format);
         }
         tableView.setItems(historicLoanSlip);
         tableView.refresh();
