@@ -126,16 +126,9 @@ public class BookController implements Initializable {
                 alert(alert, "Status must be activated or unactivated.");
                 return false;
             } else {
-                books.add(new Book(
-                        idAdd.getText(),
-                        imgAdd.getText(),
-                        titleAdd.getText(),
-                        authorAdd.getText(),
-                        releaseYearAdd.getText(),
-                        genreAdd.getText(),
-                        statusAdd.getText(),
-                        quantityAdd.getText()
-                ));
+                Book newBook = new Book(idAdd.getText(), imgAdd.getText(), titleAdd.getText(), authorAdd.getText(), releaseYearAdd.getText(), genreAdd.getText(), statusAdd.getText(), quantityAdd.getText());
+                newBook.setCount("0");
+                books.add(newBook);
                 saveBookToFile(); // Lưu vào file sau khi thêm thành công
                 return true;
             }
